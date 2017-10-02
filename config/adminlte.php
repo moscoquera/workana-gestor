@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'skin' => 'purple-light',
+    'skin' => 'black',
 
     /*
     |--------------------------------------------------------------------------
@@ -108,18 +108,14 @@ return [
     */
 
     'menu' => [
-        'MAIN NAVIGATION',
+        [
+            'header'=>'MAIN NAVIGATION',
+            'can' => 'manage-blog'
+        ],
         [
             'text' => 'Blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
-        ],
-        [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
         ],
         'ACCOUNT SETTINGS',
         [

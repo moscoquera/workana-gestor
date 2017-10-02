@@ -12,9 +12,11 @@ class AdminsSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name'=>'admin',
+            'first_name'=>'admin',
+            'last_name'=>'',
             'email'=>'admin@admin.com',
-            'password'=>  bcrypt('admin')
+            'password'=>  bcrypt('admin'),
+            'rol_id'=>1
         ]);
     }
 }
