@@ -21,7 +21,7 @@ class CreateCurriculumsTable extends Migration
             $table->string('document');
             $table->unsignedInteger('birth_city_id');
             $table->unsignedInteger('birth_dep_id');
-            $table->unsignedInteger('nationality');
+            $table->unsignedInteger('nationality_id');
             $table->string('current_address',1024);
             $table->unsignedInteger('current_dep_id');
             $table->unsignedInteger('current_city_id');
@@ -36,7 +36,7 @@ class CreateCurriculumsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('birth_city_id')->references('id')->on('cities');
             $table->foreign('birth_dep_id')->references('id')->on('departments');
-            $table->foreign('nationality')->references('id')->on('countries');
+            $table->foreign('nationality_id')->references('id')->on('countries');
 
             $table->foreign('current_city_id')->references('id')->on('cities');
             $table->foreign('current_dep_id')->references('id')->on('departments');
@@ -59,7 +59,7 @@ class CreateCurriculumsTable extends Migration
             $table->dropForeign(['user_id']);
             $table->dropForeign(['birth_city_id']);
             $table->dropForeign(['birth_dep_id']);
-            $table->dropForeign(['nationality']);
+            $table->dropForeign(['nationality_id']);
 
             $table->dropForeign(['current_city_id']);
             $table->dropForeign(['current_dep_id']);
