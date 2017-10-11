@@ -156,9 +156,20 @@ class CurriculumCrudController extends CrudController
                 'entity'=>'company',
                 'attribute'=>'name',
                 'model'=>'App\Models\Company'
+            ],
+            [       // Select2Multiple = n-n relationship (with pivot table)
+                'label' => "Habilidades",
+                'type' => 'select2_multiple',
+                'name' => 'skills', // the method that defines the relationship in your Model
+                'entity' => 'skills', // the method that defines the relationship in your Model
+                'attribute' => 'name', // foreign key attribute that is shown to user
+                'model' => "App\Models\Skill", // foreign key model
+                'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
             ]
 
         ]);
+
+
 
         $this->crud->child_resource_included = ['select' => true, 'number' => false];
         $this->crud->child_resource_initialized = ['select' => false, 'number' => false];
@@ -209,8 +220,6 @@ class CurriculumCrudController extends CrudController
             'min' => 1 // minimum rows allowed in the table
         ]);
 
-
-
         $this->crud->addField([
             'name' => 'languages',
             'label' => 'Idiomas',
@@ -220,32 +229,118 @@ class CurriculumCrudController extends CrudController
                 [
                     'label' => 'Idioma',
                     'type' => 'child_select',
-                    'name' => '',
+                    'name' => 'language',
                     'entity' => 'type',
                     'attribute' => 'name',
                     'size' => '3',
-                    'model' => "App\Models\Education"
+                    'model' => "App\Models\Language"
                 ],
                 [
-                    'label' => 'Título',
-                    'type' => 'child_text',
-                    'name' => 'course_name',
+                    'label' => 'Nivel escrito',
+                    'type' => 'child_select_array',
+                    'name' => 'writing',
+                    'options'=>[
+                        [
+                            'id'=>'0',
+                            'label'=>'Bajo'
+                        ],
+                        [
+                            'id'=>'1',
+                            'label'=>'Medio'
+                        ],
+                        [
+                            'id'=>'2',
+                            'label'=>'Alto'
+                        ],
+                        [
+                            'id'=>'3',
+                            'label'=>'Nativo'
+                        ]
+                    ]
                 ],
                 [
-                    'label' => 'Institución',
-                    'type' => 'child_text',
-                    'name' => 'institution',
-                ],
-                [
-                    'label' => 'Fecha de finalización',
-                    'type' => 'child_date',
-                    'name' => 'completion_year',
-                ],
+                    'label' => 'Nivel hablado',
+                    'type' => 'child_select_array',
+                    'name' => 'speaking',
+                    'options'=>[
+                        [
+                            'id'=>'0',
+                            'label'=>'Bajo'
+                        ],
+                        [
+                            'id'=>'1',
+                            'label'=>'Medio'
+                        ],
+                        [
+                            'id'=>'2',
+                            'label'=>'Alto'
+                        ],
+                        [
+                            'id'=>'3',
+                            'label'=>'Nativo'
+                        ]
+                    ]
+                ]
+
             ],
             'max' => 12, // maximum rows allowed in the table
             'min' => 1 // minimum rows allowed in the table
         ]);
 
+        $this->crud->addField([
+            'name' => 'references_fam',
+            'label' => 'Referencias familiares',
+            'type' => 'child',
+            'entity_singular' => 'referencia', // used on the "Add X" button
+            'columns' => [
+                [
+                    'label' => 'Nombre completo',
+                    'type' => 'child_text',
+                    'name' => 'fullname',
+                ],
+                [
+                    'label' => 'Profesión',
+                    'type' => 'child_text',
+                    'name' => 'profession',
+                ],
+                [
+                    'label' => 'Teléfono',
+                    'type' => 'child_text',
+                    'name' => 'phone',
+                ],
+
+            ],
+            'max' => 3, // maximum rows allowed in the table
+            'min' => 3 // minimum rows allowed in the table
+        ]);
+
+
+        $this->crud->addField([
+            'name' => 'references_personal',
+            'label' => 'Referencias personales',
+            'type' => 'child',
+            'entity_singular' => 'referencia', // used on the "Add X" button
+            'columns' => [
+                [
+                    'label' => 'Nombre completo',
+                    'type' => 'child_text',
+                    'name' => 'fullname',
+                ],
+                [
+                    'label' => 'Profesión',
+                    'type' => 'child_text',
+                    'name' => 'profession',
+                ],
+                [
+                    'label' => 'Teléfono',
+                    'type' => 'child_text',
+                    'name' => 'phone',
+                ],
+
+            ],
+            'max' => 3, // maximum rows allowed in the table
+            'min' => 3 // minimum rows allowed in the table
+        ]);
 
     }
 
