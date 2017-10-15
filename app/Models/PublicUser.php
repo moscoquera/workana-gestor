@@ -18,8 +18,6 @@ class PublicUser extends User
         });
     }
 
-    public function curriculum(){
-        $this->hasOne('App\Models\Curriculum');
-    }
+
 
 }

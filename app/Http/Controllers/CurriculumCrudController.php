@@ -2,12 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Curriculum\CreateCurriculumRequest;
+use App\Models\Curriculum;
+use App\Models\CurriculumEducation;
+use App\Models\PublicUser;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\Exception\AccessDeniedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Backpack\CRUD\app\Http\Controllers\CrudFeatures\SaveActions;
+use Illuminate\Routing\Route;
+
 
 class CurriculumCrudController extends CrudController
 {
+
+    use SaveActions{
+        getSaveActionButtonName as protected getSaveActionButtonNameTrait;
+    }
+
 
     public function setup()
     {
@@ -20,11 +33,12 @@ class CurriculumCrudController extends CrudController
 
         $this->crud->denyAccess(['list', 'create', 'delete','update']);
 
-
         if(Auth::check() && (Auth::user()->isAdmin())){
             $this->crud->denyAccess(['list', 'create', 'delete','update']);
         }else if (Auth::check() && !Auth::user()->curriculum){
             $this->crud->allowAccess('create');
+        }else if (Auth::check() && Auth::user()->curriculum){
+            $this->crud->allowAccess('update');
         }
 
         if (Auth::user()->isAdmin()){
@@ -151,7 +165,7 @@ class CurriculumCrudController extends CrudController
             ],
             [
                 'name'=>'company_id',
-                'label'=>'Compañia',
+                'label'=>'Empresa',
                 'type'=>'select2',
                 'entity'=>'company',
                 'attribute'=>'name',
@@ -165,13 +179,26 @@ class CurriculumCrudController extends CrudController
                 'attribute' => 'name', // foreign key attribute that is shown to user
                 'model' => "App\Models\Skill", // foreign key model
                 'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
+            ],
+            [
+                'label'=>'Resumen',
+                'type'=>'textarea',
+                'name'=>'resume',
+                'hint'=>'Cuentenos sobre usted',
+            ],
+            [ // image
+                'label' => "Fotografía",
+                'name' => "photo",
+                'type' => 'image',
+                'upload' => true,
+                'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
+                'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
             ]
-
         ]);
 
 
 
-        $this->crud->child_resource_included = ['select' => true, 'number' => false];
+        $this->crud->child_resource_included = ['angular'=>false,'select' => true, 'number' => false];
         $this->crud->child_resource_initialized = ['select' => false, 'number' => false];
 
         $this->crud->addField([
@@ -203,6 +230,9 @@ class CurriculumCrudController extends CrudController
                     'label' => 'Fecha de finalización',
                     'type' => 'child_date',
                     'name' => 'completion_year',
+                    'date_picker_options'=>[
+                        'format'=>'dd-mm-yyyy'
+                    ]
                 ],
             ],
             'max' => 12, // maximum rows allowed in the table
@@ -217,19 +247,20 @@ class CurriculumCrudController extends CrudController
             'view' => 'experience',
             'size'=>11,
             'max' => 12, // maximum rows allowed in the table
-            'min' => 1 // minimum rows allowed in the table
+            'min' => 0 // minimum rows allowed in the table
         ]);
 
         $this->crud->addField([
             'name' => 'languages',
             'label' => 'Idiomas',
             'type' => 'child',
+            'child_pivot'=>'proficency',
             'entity_singular' => 'idioma', // used on the "Add X" button
             'columns' => [
                 [
                     'label' => 'Idioma',
                     'type' => 'child_select',
-                    'name' => 'language',
+                    'name' => 'language_id',
                     'entity' => 'type',
                     'attribute' => 'name',
                     'size' => '3',
@@ -288,7 +319,7 @@ class CurriculumCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'name' => 'references_fam',
+            'name' => 'familiar_references',
             'label' => 'Referencias familiares',
             'type' => 'child',
             'entity_singular' => 'referencia', // used on the "Add X" button
@@ -316,7 +347,7 @@ class CurriculumCrudController extends CrudController
 
 
         $this->crud->addField([
-            'name' => 'references_personal',
+            'name' => 'personal_references',
             'label' => 'Referencias personales',
             'type' => 'child',
             'entity_singular' => 'referencia', // used on the "Add X" button
@@ -342,6 +373,86 @@ class CurriculumCrudController extends CrudController
             'min' => 3 // minimum rows allowed in the table
         ]);
 
+    }
+
+
+    public function store(CreateCurriculumRequest $request){
+
+        if($request->user()->curriculum){
+            return redirect('/');
+        }
+        return $this->storeCrud($request);
+
+    }
+
+    public function update(CreateCurriculumRequest $request)
+    {
+
+        if ($request->input('user_id')!=Auth::user()->id){
+            return redirect('/');
+        }
+
+        return $this->updateCrud($request); // TODO: Change the autogenerated stub
+
+    }
+
+
+
+
+
+    public function performSaveAction($itemId = null)
+    {
+        if (Auth::user()->isAdmin()){return parent::performSaveAction($itemId);}
+
+        $saveAction = \Request::input('save_action', config('backpack.crud.default_save_action', 'save_and_back'));
+        $itemId = $itemId ? $itemId : \Request::input('id');
+        switch ($saveAction) {
+            case 'save_and_new':
+                $redirectUrl = $this->crud->route.'/create';
+                break;
+            case 'save_and_edit':
+                $redirectUrl = $this->crud->route.'/'.$itemId.'/edit';
+                if (\Request::has('locale')) {
+                    $redirectUrl .= '?locale='.\Request::input('locale');
+                }
+                break;
+            case 'save_and_back':
+            default:
+                $redirectUrl = URL::previous();
+                break;
+        }
+        return \Redirect::to($redirectUrl);
+    }
+
+    public function getSaveAction(){
+        if (Auth::user()->isAdmin()){return parent::getSaveAction();}
+        $saveOptions = [];
+        $saveCurrent = [
+            'value' => 'save_and_edit',
+            'label' => $this->getSaveActionButtonNameTrait('save_and_edit'),
+        ];
+        return [
+            'active' => $saveCurrent,
+            'options' => $saveOptions,
+        ];
+    }
+
+    public function create()
+    {
+        try{
+            return parent::create(); // TODO: Change the autogenerated stub
+        }catch (AccessDeniedException $ex){
+            return redirect('/');
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            return parent::edit($id); // TODO: Change the autogenerated stub
+        }catch(AccessDeniedException $ex){
+            return redirect('/');
+        }
     }
 
 }
