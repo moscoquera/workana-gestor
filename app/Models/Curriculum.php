@@ -2,15 +2,29 @@
 
 namespace App\Models;
 
+use App\Events\CurriculumSave;
 use Backpack\CRUD\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class Curriculum extends Model
 {
 
     use CrudTrait;
+    use Notifiable;
+
+
 
     protected $table='curriculums';
+
+    protected $fillable=['user_id','sex','date_of_birth','document',
+        'birth_city_id','birth_dep_id','nationality_id','current_address',
+        'current_dep_id','current_city_id','current_country_id','phone',
+        'mobile','profession_id','company_id','resume'];
+
+    protected $appends=['photo'];
+
 
     protected static function boot()
     {
@@ -43,6 +57,71 @@ class Curriculum extends Model
 
     public function currentCountry(){
         return $this->hasOne('App\Models\Country','current_country_id');
+    }
+
+    public function skills(){
+        return $this->belongsToMany('App\Models\Skill')->using('App\Models\CurriculumSkill');
+    }
+
+    public function educations(){
+        return $this->hasMany('App\Models\CurriculumEducation');
+    }
+
+    public function experiences(){
+        return $this->hasMany('App\Models\Experience');
+    }
+
+    public function languages(){
+        return $this->belongsToMany('App\Models\Language')
+            ->as('proficency')->using('App\Models\CurriculumLanguage')
+            ->withTimestamps()->withPivot('writing','speaking');
+    }
+
+    public function personal_references(){
+        return $this->hasMany('App\Models\Reference')->where('type','p');
+    }
+
+    public function familiar_references(){
+        return $this->hasMany('App\Models\Reference')->where('type','f');
+    }
+
+
+    public function setPhotoAttribute($value)
+    {
+        $attribute_name = "photo";
+        $disk = "public";
+        $destination_path = "uploads/curriculum_photos";
+
+        // if the image was erased
+        if ($value==null) {
+            // delete the image from disk
+            \Storage::disk($disk)->delete($this->user->photo);
+
+            // set null in the database column
+            $this->user->photo = null;
+            $this->user->save();
+        }
+
+        // if a base64 was sent, store it in the db
+        if (starts_with($value, 'data:image'))
+        {
+            // 0. Make the image
+            $image = \Image::make($value);
+            // 1. Generate a filename.
+            $filename = md5($value.time()).'.jpg';
+            // 2. Store the image on disk.
+            \Storage::disk($disk)->put($destination_path.'/'.$filename, $image->stream());
+            // 3. Save the path to the database
+            if ($this->user->photo){
+                \Storage::disk($disk)->delete($this->user->photo);
+            }
+            $this->user->photo = $destination_path.'/'.$filename;
+            $this->user->save();
+        }
+    }
+
+    public function getPhotoAttribute(){
+        return $this->user->photo;
     }
 
 }
