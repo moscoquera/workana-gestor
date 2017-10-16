@@ -3,7 +3,8 @@
 
     <?php $entity_model = $crud->model; ?>
     <select
-            ng-model="item.{{ $field['name'] }}"
+            ng-model="item.{{isset($super['child_pivot'])?$super['child_pivot'].'.':''}}{{ $field['name'] }}"
+            convert-number
             @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2'])
     >
         <option value="">-</option>

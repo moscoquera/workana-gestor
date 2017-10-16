@@ -30,6 +30,11 @@ class CurriculumObserver
         $educations = $this->request->input('educations');
         if ($educations){
             $educations=json_decode($educations);
+            for($i=0;$i<sizeof($educations);$i++){
+                if(!isset($educations[$i]->completion_year) || !$educations[$i]->completion_year){
+                    $educations[$i]->completion_year=null;
+                }
+            }
         }else{
             $educations=[];
         }
@@ -37,6 +42,14 @@ class CurriculumObserver
         $experiences = $this->request->input('experiences');
         if ($experiences){
             $experiences=json_decode($experiences);
+            for($i=0;$i<sizeof($experiences);$i++){
+                if(!isset($experiences[$i]->start_date) || !$experiences[$i]->start_date){
+                    $experiences[$i]->start_date=null;
+                }
+                if(!isset($experiences[$i]->end_date) || !$experiences[$i]->end_date){
+                    $experiences[$i]->end_date=null;
+                }
+            }
         }else{
             $experiences=[];
         }

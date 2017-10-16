@@ -42,7 +42,6 @@ if (is_array($items)) {
                 <th style="font-weight: 600!important;">
 
                 </th>
-                <th class="text-center" ng-if="max == -1 || max > 1"> {{-- <i class="fa fa-sort"></i> --}} </th>
                 <th class="text-center" ng-if="max == -1 || max > 1"> {{-- <i class="fa fa-trash"></i> --}} </th>
             </tr>
             </thead>
@@ -66,9 +65,6 @@ if (is_array($items)) {
                     @endif
                 </td>
 
-                <td ng-if="max == -1 || max > 1">
-                    <span class="btn btn-sm btn-default sort-handle"><span class="sr-only">sort item</span><i class="fa fa-sort" role="presentation" aria-hidden="true"></i></span>
-                </td>
                 <td ng-if="max == -1 || max > 1">
                     <button ng-hide="min > -1 && $index < min" class="btn btn-sm btn-default" type="button" ng-click="removeItem(item);"><span class="sr-only">delete item</span><i class="fa fa-trash" role="presentation" aria-hidden="true"></i></button>
                 </td>
@@ -188,6 +184,99 @@ if (is_array($items)) {
                     }
                 }
             });
+
+            window.angularApp.directive('datetimez', function() {
+                return {
+                    restrict: 'A',
+                    replace: true,
+                    transclude: true,
+                    scope: {
+                        label: '@',
+                        ngModel: '='
+                    },
+                    link: function(scope, element, attrs, ngModelCtrl) {
+                        $('[data-bs-datepicker]',$(element).parent()).each(function (i, obj) {
+
+                            if (!$(obj).data("datepicker")) {
+
+                                var $fake = $(this),
+                                    $field = $fake.closest('input[type="hidden"]'),
+                                    $customConfig = $.extend({
+                                        format: 'dd/mm/yyyy'
+                                    }, $fake.data('bs-datepicker'));
+                                $picker = $fake.bootstrapDP($customConfig);
+
+                                var $existingVal = $field.val();
+                                if (scope.ngModel){
+                                    $existingVal=scope.ngModel;
+                                }
+
+                                if ($existingVal!=undefined && $existingVal.length) {
+                                    // Passing an ISO-8601 date string (YYYY-MM-DD) to the Date constructor results in
+                                    // varying behavior across browsers. Splitting and passing in parts of the date
+                                    // manually gives us more defined behavior.
+                                    // See https://stackoverflow.com/questions/2587345/why-does-date-parse-give-incorrect-results
+                                    var parts = $existingVal.split('-')
+                                    var year = parts[0]
+                                    var month = parts[1] - 1 // Date constructor expects a zero-indexed month
+                                    var day = parts[2]
+                                    preparedDate = new Date(year, month, day).format($customConfig.format);
+                                    $fake.val(preparedDate);
+                                    $picker.bootstrapDP('update', preparedDate);
+                                }
+
+                                $fake.on('keydown', function (e) {
+                                    e.preventDefault();
+                                    return false;
+                                });
+
+                                $picker.on('show hide change onChange', function (e) {
+                                    if (e.date) {
+                                        var sqlDate = e.format('yyyy-mm-dd');
+                                    } else {
+                                        try {
+                                            var sqlDate = $fake.val();
+
+                                            if ($customConfig.format === 'dd/mm/yyyy') {
+                                                sqlDate = new Date(sqlDate.split('/')[2], sqlDate.split('/')[1] - 1, sqlDate.split('/')[0]).format('yyyy-mm-dd');
+                                            }
+                                        } catch (e) {
+                                            if ($fake.val()) {
+                                                PNotify.removeAll();
+                                                new PNotify({
+                                                    title: 'Whoops!',
+                                                    text: 'Sorry we did not recognise that date format, please make sure it uses a yyyy mm dd combination',
+                                                    type: 'error',
+                                                    icon: false
+                                                });
+                                            }
+                                        }
+                                    }
+                                    $field.val(sqlDate);
+                                    var $e = angular.element($field);
+                                    $e.triggerHandler('input');
+                                    scope.$apply(function(scope){
+                                        $field.val(sqlDate);
+                                        $field.trigger('input'); // Use for Chrome/Firefox/Edge
+                                        $field.trigger('change'); // Use for Chrome/Firefox/Edge + IE11
+                                        element.trigger('change'); // Use for Chrome/Firefox/Edge + IE11
+                                        scope.ngModel=sqlDate;
+                                        /*console.log(sqlDate);
+                                        console.log($field.val());
+                                        console.log(scope.items);
+                                        console.log(attrs);
+                                        console.log(scope.ngModel);
+                                        console.log("*******************************");*/
+                                    });
+
+
+                                });
+                            }
+                        });
+                    }
+                };
+            });
+
 
             angular.element(document).ready(function(){
                 angular.forEach(angular.element('[ng-app]'), function(ctrl){

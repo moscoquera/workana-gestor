@@ -36,27 +36,27 @@ class Curriculum extends Model
     }
 
     public function birthDepartment(){
-        return $this->hasOne('App\Models\Department','birth_dep_id');
+        return $this->belongsTo('App\Models\Department','birth_dep_id');
     }
 
     public function birthCity(){
-        return $this->hasOne('App\Models\City','birth_city_id');
+        return $this->belongsTo('App\Models\City','birth_city_id');
     }
 
     public function nationality(){
-        return $this->hasOne('App\Models\Country','nationality_id');
+        return $this->belongsTo('App\Models\Country','nationality_id');
     }
 
     public function currentDepartment(){
-        return $this->hasOne('App\Models\Department','current_dep_id');
+        return $this->belongsTo('App\Models\Department','current_dep_id');
     }
 
     public function currentCity(){
-        return $this->hasOne('App\Models\City','current_city_id');
+        return $this->belongsTo('App\Models\City','current_city_id');
     }
 
     public function currentCountry(){
-        return $this->hasOne('App\Models\Country','current_country_id');
+        return $this->belongsTo('App\Models\Country','current_country_id');
     }
 
     public function skills(){
@@ -69,6 +69,14 @@ class Curriculum extends Model
 
     public function experiences(){
         return $this->hasMany('App\Models\Experience');
+    }
+
+    public function profession(){
+        return $this->belongsTo('App\Models\Profession');
+    }
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
     }
 
     public function languages(){
@@ -122,6 +130,10 @@ class Curriculum extends Model
 
     public function getPhotoAttribute(){
         return $this->user->photo;
+    }
+
+    public function getGenreAttribute(){
+        return $this->sex=='m'?'Masculino':'Femenino';
     }
 
 }

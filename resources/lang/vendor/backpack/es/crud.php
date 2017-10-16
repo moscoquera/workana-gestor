@@ -115,5 +115,5 @@ return [
     'internal_link' => 'Enlace interno',
     'internal_link_placeholder' => 'Slug interno. Ejplo: \'admin/page\' (sin comillas) para \':url\'',
     'external_link' => 'Enlace externo',
-
+    'choose_file'=>'Selecione un archivo'
 ];

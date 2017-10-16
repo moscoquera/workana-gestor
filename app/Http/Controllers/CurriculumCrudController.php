@@ -8,11 +8,12 @@ use App\Models\CurriculumEducation;
 use App\Models\PublicUser;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\Exception\AccessDeniedException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Backpack\CRUD\app\Http\Controllers\CrudFeatures\SaveActions;
 use Illuminate\Routing\Route;
-
+use niklasravnsborg\LaravelPdf\Facades\Pdf as PDF;
 
 class CurriculumCrudController extends CrudController
 {
@@ -38,7 +39,8 @@ class CurriculumCrudController extends CrudController
         }else if (Auth::check() && !Auth::user()->curriculum){
             $this->crud->allowAccess('create');
         }else if (Auth::check() && Auth::user()->curriculum){
-            $this->crud->allowAccess('update');
+            $this->crud->allowAccess(['update','show']);
+            $this->crud->setShowView('curriculum.show');
         }
 
         if (Auth::user()->isAdmin()){
@@ -191,6 +193,7 @@ class CurriculumCrudController extends CrudController
                 'name' => "photo",
                 'type' => 'image',
                 'upload' => true,
+                'crop'=>true,
                 'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
                 'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
             ]
@@ -454,5 +457,34 @@ class CurriculumCrudController extends CrudController
             return redirect('/');
         }
     }
+
+    public function show($id)
+    {
+        try {
+            $curriculum = Curriculum::findOrFail($id);
+            if (!Auth::user()->isAdmin() && $curriculum->user->id != Auth::user()->id) {
+                return redirect('/');
+            }
+            return view('curriculum.show', ['curriculum' => $curriculum]);
+        } catch (ModelNotFoundException $mnfe) {
+            return parent::show($id);
+        }
+    }
+
+        public function export($id)
+        {
+            try {
+                $curriculum = Curriculum::findOrFail($id);
+                if (!Auth::user()->isAdmin() && $curriculum->user->id != Auth::user()->id) {
+                    return redirect('/');
+                }
+                $pdf = PDF::loadView('curriculum.pdf', ['curriculum' => $curriculum]);
+                return $pdf->stream('invoice.pdf');
+                //return view('curriculum.pdf', ['curriculum' => $curriculum]);
+            } catch (ModelNotFoundException $mnfe) {
+                return parent::show($id);
+            }
+        }
+
 
 }

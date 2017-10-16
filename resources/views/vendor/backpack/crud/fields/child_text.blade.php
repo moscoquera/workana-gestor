@@ -5,7 +5,7 @@
 
         <input
                 type="text"
-                ng-model="item.{{ $field['name'] }}"
+                ng-model="item.{{isset($super['child_pivot'])?$super['child_pivot'].'.':''}}{{ $field['name'] }}"
                 @include('crud::inc.field_attributes', ['default_class' =>  'form-control'])
 
         >
