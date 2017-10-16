@@ -2,18 +2,14 @@
 <div clas="col-md-12">
 
     <?php $entity_model = $crud->model; ?>
-    <select
-            ng-model="item.{{ $field['name'] }}"
+    <select select2
+            ng-model="item.{{isset($super['child_pivot'])?$super['child_pivot'].'.':''}}{{ $field['name'] }}"
+            convert-number
             @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2'])
-    >
-        <option value="">-</option>
 
-        @if (isset($field['model']))
-            @foreach ($field['model']::all() as $connected_entity_entry)
-                <option value="{{ $connected_entity_entry->getKey() }}"
-                >{{ $connected_entity_entry->{$field['attribute']} }}</option>
-            @endforeach
-        @endif
+    >
+        <option ng-selected="type.id == item.{{ $field['name'] }}" ng-repeat="type in {{$field['name']}}_fields" value="<%type.id%>"><% {{ 'type.'.$field['attribute'] }} %></option>
+
     </select>
 
     {{-- HINT --}}

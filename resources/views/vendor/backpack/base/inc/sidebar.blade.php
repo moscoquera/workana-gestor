@@ -6,7 +6,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
           <div class="pull-left image">
-            <img src="https://placehold.it/160x160/00a65a/ffffff/&text={{ mb_substr(Auth::user()->name, 0, 1) }}" class="img-circle" alt="User Image">
+            <img src="{{ (Auth::user()->photo)?url(Storage::url(Auth::user()->photo)):'https://placehold.it/160x160/00a65a/ffffff/&text='.mb_substr(Auth::user()->name, 0, 1) }}" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
             <p>{{ Auth::user()->name }}</p>
@@ -49,7 +49,9 @@
 
           @if(!Auth::user()->isAdmin())
               @if(Auth::user()->curriculum)
-                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum') }}"><i class="fa fa-file-text-o"></i> <span>Editar Curriculum</span></a></li>
+                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/'.Auth::user()->curriculum->id) }}"><i class="fa fa-file-text-o"></i><span>Curriculum</span></a></li>
+                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/'.Auth::user()->curriculum->id.'/edit' ) }}"><i class="fa fa-file-text-o"></i> <span>Editar Curriculum</span></a></li>
+
               @else
                       <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/create') }}"><i class="fa fa-file-text-o"></i> <span>Crear Curriculum</span></a></li>
               @endif

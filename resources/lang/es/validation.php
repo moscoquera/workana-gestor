@@ -116,6 +116,18 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'document'=>'documento',
+        'date_of_birth'=>'fecha de nacimiento',
+        'birth_city_id'=>'ciudad de nacimiento',
+        'current_address'=>'Dirección de Residencia actual',
+        'current_city'=>'Ciudad de Residencia actual',
+        'phone'=>'Teléfono',
+        'mobile'=>'Celular',
+        'profession'=>'Profesión',
+        'company'=>'Empresa',
+        'resume'=>'resumen',
+        'photo'=>'foto'
+    ],
 
 ];

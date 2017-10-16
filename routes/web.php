@@ -45,8 +45,11 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
 });
 
 Route::group(['middleware'=>['auth']],function(){
+ //   Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
     CRUD::resource('curriculum','CurriculumCrudController');
+    Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');
+
 
     Route::get('/api/city', 'Api\CityController@index');
     Route::get('/api/city/{id}', 'Api\CityController@show');

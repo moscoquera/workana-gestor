@@ -1,13 +1,14 @@
 <!-- array input -->
 <?php
-$max = isset($field['max']) && (int) $field['max'] > 0 ? $field['max'] : -1;
-$min = isset($field['min']) && (int) $field['min'] > 0 ? $field['min'] : -1;
+$max = isset($field['max']) && (int)$field['max'] > 0 ? $field['max'] : -1;
+$min = isset($field['min']) && (int)$field['min'] > 0 ? $field['min'] : -1;
 $item_name = strtolower(isset($field['entity_singular']) && !empty($field['entity_singular']) ? $field['entity_singular'] : $field['label']);
 
-$items = old($field['name']) ? (old($field['name'])) : (isset($field['value']) ? ($field['value']) : (isset($field['default']) ? ($field['default']) : '' ));
+$items = old($field['name']) ? (old($field['name'])) : (isset($field['value']) ? ($field['value']) : (isset($field['default']) ? ($field['default']) : ''));
 
 // make sure not matter the attribute casting
 // the $items variable contains a properly defined JSON
+
 if (is_array($items)) {
     if (count($items)) {
         $items = json_encode($items);
@@ -18,9 +19,11 @@ if (is_array($items)) {
     $items = '[]';
 }
 
+
+
 ?>
 <div
-        ng-app="backPackTableApp"
+        ng-app="backPackChildApp"
         ng-controller="tableController"
         @include('crud::inc.field_wrapper_attributes')
 >
@@ -44,14 +47,13 @@ if (is_array($items)) {
                         {{ $column['label'] }}
                     </th>
                 @endforeach
-                <th class="text-center" ng-if="max == -1 || max > 1"> {{-- <i class="fa fa-sort"></i> --}} </th>
                 <th class="text-center" ng-if="max == -1 || max > 1"> {{-- <i class="fa fa-trash"></i> --}} </th>
             </tr>
             </thead>
 
             <tbody ui-sortable="sortableOptions" ng-model="items" class="table-striped">
 
-            <tr post-render ng-repeat="item in items" class="array-row" >
+            <tr post-render ng-repeat="item in items" class="array-row">
 
 
                 @foreach ($field['columns'] as $column)
@@ -64,18 +66,19 @@ if (is_array($items)) {
                     >
                         <!-- load the view from the application if it exists, otherwise load the one in the package -->
                         @if(view()->exists('vendor.backpack.crud.fields.'.$column['type']))
-                            @include('vendor.backpack.crud.fields.'.$column['type'], array('field' => $column))
+                            @include('vendor.backpack.crud.fields.'.$column['type'], array('field' => $column,'super'=>$field))
                         @else
-                            @include('crud::fields.'.$column['type'], array('field' => $column))
+                            @include('crud::fields.'.$column['type'], array('field' => $column,'super'=>$field))
                         @endif
                     </td>
                 @endforeach
 
                 <td ng-if="max == -1 || max > 1">
-                    <span class="btn btn-sm btn-default sort-handle"><span class="sr-only">sort item</span><i class="fa fa-sort" role="presentation" aria-hidden="true"></i></span>
-                </td>
-                <td ng-if="max == -1 || max > 1">
-                    <button ng-hide="min > -1 && $index < min" class="btn btn-sm btn-default" type="button" ng-click="removeItem(item);"><span class="sr-only">delete item</span><i class="fa fa-trash" role="presentation" aria-hidden="true"></i></button>
+                    <button ng-hide="min > -1 && $index < min" class="btn btn-sm btn-default" type="button"
+                            ng-click="removeItem(item);"><span class="sr-only">delete item</span><i class="fa fa-trash"
+                                                                                                    role="presentation"
+                                                                                                    aria-hidden="true"></i>
+                    </button>
                 </td>
             </tr>
 
@@ -84,7 +87,9 @@ if (is_array($items)) {
         </table>
 
         <div class="array-controls btn-group m-t-10">
-            <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-default" type="button" ng-click="addItem()"><i class="fa fa-plus"></i> Adiciionar item ({{ $item_name }})</button>
+            <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-default" type="button"
+                    ng-click="addItem()"><i class="fa fa-plus"></i> Adiciionar item ({{ $item_name }})
+            </button>
         </div>
 
     </div>
@@ -109,28 +114,43 @@ if (is_array($items)) {
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
         {{-- YOUR JS HERE --}}
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.14.3/sortable.min.js"></script>
+
+        @if (!$crud->child_resource_included['angular'])
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.14.3/sortable.min.js"></script>
         <script>
 
-            window.angularApp = window.angularApp || angular.module('backPackTableApp', ['ui.sortable'], function($interpolateProvider){
+            window.angularChildApp = window.angularChildApp || angular.module('backPackChildApp', ['ui.sortable'], function ($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
 
 
-            window.angularApp.controller('tableController', function($scope){
+            window.angularChildApp.controller('tableController', function ($scope) {
+
+                @foreach($fields as $key=>$_field)
+                        @if($_field['type']=='child')
+                            @foreach ($_field['columns'] as $column)
+                                    @if ( $column['type'] == 'child_select' )
+                                        $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
+                                    @endif
+                            @endforeach
+                        @endif
+                @endforeach
 
                 $scope.sortableOptions = {
                     handle: '.sort-handle'
                 };
 
-                $scope.addItem = function(){
+                $scope.addItem = function () {
 
-                    if( $scope.max > -1 ){
-                        if( $scope.items.length < $scope.max ){
-                            var item = {};
+                    if ($scope.max > -1) {
+                        if ($scope.items.length < $scope.max) {
+                            var item = { {{ isset($field['child_pivot'])?$field['child_pivot'].':{}':'' }} };
                             $scope.items.push(item);
                         } else {
                             new PNotify({
@@ -141,63 +161,179 @@ if (is_array($items)) {
                         }
                     }
                     else {
-                        var item = {};
+                        var item = { {{ isset($field['child_pivot'])?$field['child_pivot'].':{}':'' }} };
                         $scope.items.push(item);
                     }
 
 
                 }
 
-                $scope.removeItem = function(item){
+                $scope.removeItem = function (item) {
                     var index = $scope.items.indexOf(item);
                     $scope.items.splice(index, 1);
                 }
 
-                $scope.$watch('items', function(a, b){
+                $scope.$watch('items', function (a, b) {
 
-                    if( $scope.min > -1 ){
-                        while($scope.items.length < $scope.min){
+                    if ($scope.min > -1) {
+                        while ($scope.items.length < $scope.min) {
                             $scope.addItem();
                         }
                     }
 
-                    if( typeof $scope.items != 'undefined' && $scope.items.length ){
+                    if (typeof $scope.items != 'undefined' && $scope.items.length) {
 
-                        if( typeof $scope.field != 'undefined'){
-                            if( typeof $scope.field == 'string' ){
+                        if (typeof $scope.field != 'undefined') {
+                            if (typeof $scope.field == 'string') {
                                 $scope.field = $($scope.field);
                             }
-                            $scope.field.val( angular.toJson($scope.items) );
+                            $scope.field.val(angular.toJson($scope.items));
                         }
                     }
 
                 }, true);
 
-                if( $scope.min > -1 ){
-                    for(var i = 0; i < $scope.min; i++){
+                if ($scope.min > -1) {
+                    for (var i = 0; i < $scope.min; i++) {
                         $scope.addItem();
                     }
                 }
             });
-            window.angularApp.directive('postRender', function($timeout) {
+            window.angularChildApp.directive('postRender', function ($timeout) {
                 return {
-                    link: function(scope, element, attr) {
-                        $timeout(function() {
+                    restrict:'A',
+                    link: function (scope, element, attrs) {
+                        $timeout(function () {
                             $('.select2').each(function (i, obj) {
-                                if (!$(obj).data("select2"))
-                                {
-                              //      $(obj).select2();
+                                if (!$(obj).data("select2")) {
+                                    //      $(obj).select2();
                                 }
                             });
+
+
+
+
+
                         });
                     }
                 }
             });
 
-            angular.element(document).ready(function(){
-                angular.forEach(angular.element('[ng-app]'), function(ctrl){
+            window.angularChildApp.directive('convertNumber', function() {
+                return {
+                    require: 'ngModel',
+                    link: function(scope, el, attr, ctrl) {
+                        ctrl.$parsers.push(function(value) {
+                            return parseInt(value, 10);
+                        });
+
+                        ctrl.$formatters.push(function(value) {
+                            if (value != undefined){
+                                return value.toString();
+                            }
+
+                            return "";
+                        });
+                    }
+                }
+            });
+
+            window.angularChildApp.directive('datetimez', function() {
+                return {
+                    restrict: 'A',
+                    replace: true,
+                    transclude: true,
+                    scope: {
+                        label: '@',
+                        ngModel: '='
+                    },
+                    link: function(scope, element, attrs, ngModelCtrl) {
+                        $('[data-bs-datepicker]',$(element).parent()).each(function (i, obj) {
+
+                            if (!$(obj).data("datepicker")) {
+
+                                var $fake = $(this),
+                                    $field = $fake.closest('input[type="hidden"]'),
+                                    $customConfig = $.extend({
+                                        format: 'dd/mm/yyyy'
+                                    }, $fake.data('bs-datepicker'));
+                                $picker = $fake.bootstrapDP($customConfig);
+
+                                var $existingVal = $field.val();
+                                if (scope.ngModel){
+                                    $existingVal=scope.ngModel;
+                                }
+
+                                if ($existingVal!=undefined && $existingVal.length) {
+                                    // Passing an ISO-8601 date string (YYYY-MM-DD) to the Date constructor results in
+                                    // varying behavior across browsers. Splitting and passing in parts of the date
+                                    // manually gives us more defined behavior.
+                                    // See https://stackoverflow.com/questions/2587345/why-does-date-parse-give-incorrect-results
+                                    var parts = $existingVal.split('-')
+                                    var year = parts[0]
+                                    var month = parts[1] - 1 // Date constructor expects a zero-indexed month
+                                    var day = parts[2]
+                                    preparedDate = new Date(year, month, day).format($customConfig.format);
+                                    $fake.val(preparedDate);
+                                    $picker.bootstrapDP('update', preparedDate);
+                                }
+
+                                $fake.on('keydown', function (e) {
+                                    e.preventDefault();
+                                    return false;
+                                });
+
+                                $picker.on('show hide change onChange', function (e) {
+                                    if (e.date) {
+                                        var sqlDate = e.format('yyyy-mm-dd');
+                                    } else {
+                                        try {
+                                            var sqlDate = $fake.val();
+
+                                            if ($customConfig.format === 'dd/mm/yyyy') {
+                                                sqlDate = new Date(sqlDate.split('/')[2], sqlDate.split('/')[1] - 1, sqlDate.split('/')[0]).format('yyyy-mm-dd');
+                                            }
+                                        } catch (e) {
+                                            if ($fake.val()) {
+                                                PNotify.removeAll();
+                                                new PNotify({
+                                                    title: 'Whoops!',
+                                                    text: 'Sorry we did not recognise that date format, please make sure it uses a yyyy mm dd combination',
+                                                    type: 'error',
+                                                    icon: false
+                                                });
+                                            }
+                                        }
+                                    }
+                                    $field.val(sqlDate);
+                                    var $e = angular.element($field);
+                                    $e.triggerHandler('input');
+                                    scope.$apply(function(scope){
+                                        $field.val(sqlDate);
+                                        $field.trigger('input'); // Use for Chrome/Firefox/Edge
+                                        $field.trigger('change'); // Use for Chrome/Firefox/Edge + IE11
+                                        element.trigger('change'); // Use for Chrome/Firefox/Edge + IE11
+                                        scope.ngModel=sqlDate;
+                                        /*console.log(sqlDate);
+                                        console.log($field.val());
+                                        console.log(scope.items);
+                                        console.log(attrs);
+                                        console.log(scope.ngModel);
+                                        console.log("*******************************");*/
+                                    });
+
+
+                                });
+                            }
+                        });
+                    }
+                };
+            });
+
+            angular.element(document).ready(function () {
+                angular.forEach(angular.element('[ng-app]'), function (ctrl) {
                     var ctrlDom = angular.element(ctrl);
-                    if( !ctrlDom.hasClass('ng-scope') ){
+                    if (!ctrlDom.hasClass('ng-scope')) {
                         angular.bootstrap(ctrl, [ctrlDom.attr('ng-app')]);
                     }
                 });
@@ -205,6 +341,7 @@ if (is_array($items)) {
 
         </script>
 
+        @endif
     @endpush
 @endif
 {{-- End of Extra CSS and JS --}}
