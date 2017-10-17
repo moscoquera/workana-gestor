@@ -478,9 +478,10 @@ class CurriculumCrudController extends CrudController
                 if (!Auth::user()->isAdmin() && $curriculum->user->id != Auth::user()->id) {
                     return redirect('/');
                 }
-                $pdf = PDF::loadView('curriculum.pdf', ['curriculum' => $curriculum]);
-                return $pdf->stream('invoice.pdf');
-                //return view('curriculum.pdf', ['curriculum' => $curriculum]);
+
+                $pdf = PDF::loadView('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);
+                return $pdf->stream('curriculum_'.$id.'.pdf');
+             //   return view('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);
             } catch (ModelNotFoundException $mnfe) {
                 return parent::show($id);
             }

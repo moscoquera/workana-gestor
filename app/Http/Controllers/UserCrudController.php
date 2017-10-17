@@ -26,15 +26,7 @@ class UserCrudController extends CrudController
             [
                 'label'=>'Apellidos',
                 'name'=>'last_name'
-            ],
-            [
-            'label' => "Rol", // Table column heading
-            'type' => "select",
-            'name' => 'rol_id', // the column that contains the ID of that connected entity;
-            'entity' => 'rol', // the method that defines the relationship in your Model
-            'attribute' => "name", // foreign key attribute that is shown to user
-            'model' => "App\Models\Rol", // foreign key model
-        ],'email']);
+            ],'email']);
 
         $this->crud->addFields(
             [
@@ -76,6 +68,7 @@ class UserCrudController extends CrudController
 
         ],'both');
 
+        $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
 
     }
 

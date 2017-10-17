@@ -23,5 +23,4 @@
 
 <body>
     @include('curriculum.layout')
-
 </body>

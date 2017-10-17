@@ -76,6 +76,6 @@ class User extends Authenticatable
     }
 
     public function curriculum(){
-       return $this->hasOne('App\Models\Curriculum');
+       return $this->hasOne('App\Models\Curriculum','user_id');
     }
 }
