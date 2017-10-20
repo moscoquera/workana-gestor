@@ -44,6 +44,13 @@
                 </ul>
             </li>
 
+              <li class="treeview">
+                  <a href="#"><i class="fa fa-file-text-o"></i>Contratación</a>
+                  <ul class="treeview-menu">
+                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/contracts/find') }}"><i class="fa fa-search"></i> <span>Buscar profesionales</span></a></li>
+                  </ul>
+              </li>
+
 
             @endif
 

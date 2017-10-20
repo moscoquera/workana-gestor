@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
-use Backpack\CRUD\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    use CrudTrait;
+    //
 }

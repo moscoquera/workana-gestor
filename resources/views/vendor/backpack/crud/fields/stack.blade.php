@@ -21,11 +21,14 @@ if (is_array($items)) {
 ?>
 <div
         ng-app="backPackTableApp"
-        ng-controller="tableController"
+        ng-controller="stackController"
         @include('crud::inc.field_wrapper_attributes')
 >
 
-    <h3>{!! $field['label'] !!}</h3>
+    <div class="pull-right">
+        <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-success" type="button" ng-click="addItem()"><i class="fa fa-plus"></i></button>
+        <button ng-if="items.length > 1" class="btn btn-sm btn-info" type="button" ng-click="expand.{{ $field['name'] }}=!expand.{{ $field['name'] }}"><i class="fa " ng-model="expand.{{ $field['name'] }}" ng-init="expand.{{ $field['name'] }}=false" ng-class="{false: 'fa-arrow-circle-down',true:'fa-arrow-circle-up'}[expand.{{ $field['name'] }}]"></i> detalle</button>
+    </div>
     @include('crud::inc.field_translatable_icon')
 
     <input class="array-json" type="hidden" id="{{ $field['name'] }}" name="{{ $field['name'] }}">
@@ -48,7 +51,7 @@ if (is_array($items)) {
 
             <tbody ui-sortable="sortableOptions" ng-model="items" class="table-striped">
 
-            <tr post-render ng-repeat="item in items" class="array-row" >
+            <tr post-render ng-repeat="item in items" class="array-row" ng-show="$first || expand.{{ $field['name'] }}" >
 
                 <td
                         class="
@@ -66,7 +69,7 @@ if (is_array($items)) {
                 </td>
 
                 <td ng-if="max == -1 || max > 1">
-                    <button ng-hide="min > -1 && $index < min" class="btn btn-sm btn-default" type="button" ng-click="removeItem(item);"><span class="sr-only">delete item</span><i class="fa fa-trash" role="presentation" aria-hidden="true"></i></button>
+                    <button ng-hide="min > -1 && items.length-$index-1 < min" class="btn btn-sm btn-default" type="button" ng-click="removeItem(item);"><span class="sr-only">delete item</span><i class="fa fa-trash" role="presentation" aria-hidden="true"></i></button>
                 </td>
             </tr>
 
@@ -74,9 +77,7 @@ if (is_array($items)) {
 
         </table>
 
-        <div class="array-controls btn-group m-t-10">
-            <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-default" type="button" ng-click="addItem()"><i class="fa fa-plus"></i> Adiciionar item ({{ $item_name }})</button>
-        </div>
+
 
     </div>
 
@@ -112,15 +113,20 @@ if (is_array($items)) {
 
 
 
-            window.angularApp.controller('tableController', function ($scope) {
+            window.angularApp.controller('stackController', function ($scope) {
 
                 @foreach($fields as $key=>$_field)
-                        @if($_field['type']=='list')
-                            @foreach ($_field['fields'] as $column)
-                                @if ( $column['type'] == 'select' )
-                                    $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
-                                @endif
-                            @endforeach
+                        @if($_field['type']=='stack')
+                            @if(isset($_field['fields']))
+                                @foreach ($_field['fields'] as $column)
+                                    @if ( $column['type'] == 'select' )
+                                        $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
+
+                                    @elseif($column['type'] == 'child_select_array')
+                                        $scope.{{$column['name']}}_fields={!! json_encode($column['options']) !!}
+                                    @endif
+                                @endforeach
+                            @endif
                         @endif
                 @endforeach
 
@@ -128,12 +134,14 @@ if (is_array($items)) {
                     handle: '.sort-handle'
                 };
 
+                    $scope.expand={};
+
                 $scope.addItem = function () {
 
                     if ($scope.max > -1) {
                         if ($scope.items.length < $scope.max) {
                             var item = { {{ isset($field['child_pivot'])?$field['child_pivot'].':{}':'' }} };
-                            $scope.items.push(item);
+                            $scope.items.unshift(item);
                         } else {
                             new PNotify({
                                 title: $scope.maxErrorTitle,
@@ -144,7 +152,7 @@ if (is_array($items)) {
                     }
                     else {
                         var item = { {{ isset($field['child_pivot'])?$field['child_pivot'].':{}':'' }} };
-                        $scope.items.push(item);
+                        $scope.items.unshift(item);
                     }
 
 

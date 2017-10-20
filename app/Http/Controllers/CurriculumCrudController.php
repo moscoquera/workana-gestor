@@ -31,7 +31,7 @@ class CurriculumCrudController extends CrudController
         $this->crud->setEntityNameStrings('curriculum','curriculums');
 
         $this->crud->setCreateView('layouts.crud.largeform');
-
+        $this->crud->setEditView('curriculum.edit');
         $this->crud->denyAccess(['list', 'create', 'delete','update']);
 
         if(Auth::check() && (Auth::user()->isAdmin())){
@@ -43,6 +43,82 @@ class CurriculumCrudController extends CrudController
             $this->crud->setShowView('curriculum.show');
         }
 
+        $this->crud->layouts=[
+            [
+                [
+                    'size'=>6,
+                    'boxes'=>[
+                        [
+                            'title'=>'General',
+                            'name'=>'general'
+                        ]
+                    ]
+                ],
+                [
+                    'size'=>'6',
+                    'boxes'=>[
+                        [
+                            'title'=>'Datos personales',
+                            'name'=>'personal'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    'size'=>4,
+                    'boxes'=>[
+                        [
+                            'title'=>'Dirección y contacto',
+                            'name'=>'address'
+                        ],
+
+                    ]
+                ],
+                [
+                    'size'=>8,
+                    'boxes'=>[
+                        [
+                            'title'=>'Otros',
+                            'name'=>'others'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    'size'=>4,
+                    'boxes'=>[
+                        [
+                            'title'=>'Formación academica',
+                            'name'=>'educations'
+                        ],
+                        [
+                            'title'=>'Idiomas',
+                            'name'=>'languages'
+                        ]
+                    ]
+                ],
+                [
+                    'size'=>8,
+                    'boxes'=>[
+                        [
+                            'title'=>'Experiencia laboral',
+                            'name'=>'experience'
+                        ],
+                        [
+                            'title'=>'Referencias familiares',
+                            'name'=>'familiarref'
+                        ],
+                        [
+                            'title'=>'Referencias personales',
+                            'name'=>'personalref'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
         if (Auth::user()->isAdmin()){
             $this->crud->addField(
                 ['name'=>'user_id',
@@ -51,28 +127,42 @@ class CurriculumCrudController extends CrudController
                     'entity'=>'user',
                     'attribute'=>'full_name',
                     'model'=>'App\Models\User',
+                    'box'=>'personal'
                 ]);
         }else{
             $this->crud->addField(
                 ['name'=>'user_id',
                     'type'=>'hidden',
-                    'value'=>Auth::user()->id
+                    'value'=>Auth::user()->id,
+                    'box'=>'personal'
             ]);
         }
 
         $this->crud->addFields([
+            [ // image
+                'label' => "Fotografía",
+                'box'=>'general',
+                'name' => "photo",
+                'type' => 'image',
+                'upload' => true,
+                'crop'=>true,
+                'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
+                'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
+            ],
             [
                 'name'=>'sex',
                 'label'=>'Genero',
                 'type'=>'select_from_array',
                 'options'=>['m'=>'Masculino','f'=>'Femenino'],
                 'allows_null' => false,
+                'box'=>'personal'
             ],
             [
                 'name'=>'document',
                 'label'=>'Nro de Documento',
                 'type'=>'text',
-                'hint'=>"Sin puntos, comas o espacios"
+                'hint'=>"Sin puntos, comas o espacios",
+                'box'=>'personal'
             ],
             [
                 'name'=>'date_of_birth',
@@ -83,6 +173,7 @@ class CurriculumCrudController extends CrudController
                     'language' => 'es',
                     'endDate'=>'0d'
                 ],
+                'box'=>'personal'
             ],
             [
                 'label' => "Departamento de nacimiento",
@@ -91,6 +182,7 @@ class CurriculumCrudController extends CrudController
                 'entity' => 'birth_department', // the method that defines the relationship in your Model
                 'attribute' => "name", // foreign key attribute that is shown to user
                 'model' => "App\Models\Department", // foreign key model
+                'box'=>'personal'
             ],
             [
                 // 1-n relationship
@@ -103,7 +195,8 @@ class CurriculumCrudController extends CrudController
                 'data_source' => url("api/city"), // url to controller search function (with /{id} should return model)
                 'placeholder' => "Seleccione la ciudad de nacimiento", // placeholder for the select
                 'minimum_input_length' => 2, // minimum characters to type before querying results
-                'linked_name'=>'birth_dep_id'
+                'linked_name'=>'birth_dep_id',
+                'box'=>'personal'
             ],
             [
                 'label' => "Nacionalidad",
@@ -112,11 +205,13 @@ class CurriculumCrudController extends CrudController
                 'entity' => 'nationality', // the method that defines the relationship in your Model
                 'attribute' => "name", // foreign key attribute that is shown to user
                 'model' => "App\Models\Country", // foreign key model
+                'box'=>'personal'
             ],
             [
                 'label'=>'Dirección de Residencia actual',
                 'type'=>'textarea',
-                'name'=>'current_address'
+                'name'=>'current_address',
+                'box'=>'address'
             ],
             [
                 'label' => "Departamento de Residencia actual",
@@ -125,6 +220,7 @@ class CurriculumCrudController extends CrudController
                 'entity' => 'current_department', // the method that defines the relationship in your Model
                 'attribute' => "name", // foreign key attribute that is shown to user
                 'model' => "App\Models\Department", // foreign key model
+                'box'=>'address'
             ],
             [
                 // 1-n relationship
@@ -137,7 +233,8 @@ class CurriculumCrudController extends CrudController
                 'data_source' => url("api/city"), // url to controller search function (with /{id} should return model)
                 'placeholder' => "Seleccione la ciudad de residencia", // placeholder for the select
                 'minimum_input_length' => 2, // minimum characters to type before querying results
-                'linked_name'=>'current_dep_id'
+                'linked_name'=>'current_dep_id',
+                'box'=>'address'
             ],
             [
                 'label' => "Pais de Residencia actual",
@@ -146,16 +243,19 @@ class CurriculumCrudController extends CrudController
                 'entity' => 'current_country', // the method that defines the relationship in your Model
                 'attribute' => "name", // foreign key attribute that is shown to user
                 'model' => "App\Models\Country", // foreign key model
+                'box'=>'address'
             ],
             [
                 'name'=>'phone',
                 'label'=>'Número de teléfono',
                 'type'=>'text',
+                'box'=>'address'
             ],
             [
                 'name'=>'mobile',
                 'label'=>'Número celular',
                 'type'=>'text',
+                'box'=>'address'
             ],
             [
                 'name'=>'profession_id',
@@ -163,7 +263,8 @@ class CurriculumCrudController extends CrudController
                 'type'=>'select2',
                 'entity'=>'profession',
                 'attribute'=>'name',
-                'model'=>'App\Models\Profession'
+                'model'=>'App\Models\Profession',
+                'box'=>'general'
             ],
             [
                 'name'=>'company_id',
@@ -171,7 +272,8 @@ class CurriculumCrudController extends CrudController
                 'type'=>'select2',
                 'entity'=>'company',
                 'attribute'=>'name',
-                'model'=>'App\Models\Company'
+                'model'=>'App\Models\Company',
+                'box'=>'general'
             ],
             [       // Select2Multiple = n-n relationship (with pivot table)
                 'label' => "Habilidades",
@@ -181,22 +283,19 @@ class CurriculumCrudController extends CrudController
                 'attribute' => 'name', // foreign key attribute that is shown to user
                 'model' => "App\Models\Skill", // foreign key model
                 'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
+                'box'=>'others'
             ],
             [
                 'label'=>'Resumen',
                 'type'=>'textarea',
                 'name'=>'resume',
                 'hint'=>'Cuentenos sobre usted',
+                'box'=>'others',
+                'attributes'=>[
+                    'rows'=>15
+                ]
             ],
-            [ // image
-                'label' => "Fotografía",
-                'name' => "photo",
-                'type' => 'image',
-                'upload' => true,
-                'crop'=>true,
-                'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
-                'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
-            ]
+
         ]);
 
 
@@ -207,16 +306,15 @@ class CurriculumCrudController extends CrudController
         $this->crud->addField([
             'name' => 'educations',
             'label' => 'Estudios',
-            'type' => 'child',
+            'type' => 'stack',
+            'view' => 'education',
+            'box'=>'educations',
             'entity_singular' => 'educación', // used on the "Add X" button
-            'columns' => [
+            'fields' => [
                 [
-                    'label' => 'Tipo',
-                    'type' => 'child_select',
+                    'type' => 'select',
                     'name' => 'type_id',
-                    'entity' => 'type',
                     'attribute' => 'name',
-                    'size' => '3',
                     'model' => "App\Models\Education"
                 ],
                 [
@@ -245,7 +343,8 @@ class CurriculumCrudController extends CrudController
         $this->crud->addField([
             'name' => 'experiences',
             'label' => 'Experiencia',
-            'type' => 'list',
+            'type' => 'stack',
+            'box'=>'experience',
             'entity_singular' => 'experencia', // used on the "Add X" button
             'view' => 'experience',
             'size'=>11,
@@ -256,13 +355,15 @@ class CurriculumCrudController extends CrudController
         $this->crud->addField([
             'name' => 'languages',
             'label' => 'Idiomas',
-            'type' => 'child',
+            'type' => 'stack',
+            'box'=>'languages',
             'child_pivot'=>'proficency',
+            'view'=>'language',
             'entity_singular' => 'idioma', // used on the "Add X" button
-            'columns' => [
+            'fields' => [
                 [
                     'label' => 'Idioma',
-                    'type' => 'child_select',
+                    'type' => 'select',
                     'name' => 'language_id',
                     'entity' => 'type',
                     'attribute' => 'name',
@@ -325,6 +426,7 @@ class CurriculumCrudController extends CrudController
             'name' => 'familiar_references',
             'label' => 'Referencias familiares',
             'type' => 'child',
+            'box'=>'familiarref',
             'entity_singular' => 'referencia', // used on the "Add X" button
             'columns' => [
                 [
@@ -353,6 +455,7 @@ class CurriculumCrudController extends CrudController
             'name' => 'personal_references',
             'label' => 'Referencias personales',
             'type' => 'child',
+            'box'=>'personalref',
             'entity_singular' => 'referencia', // used on the "Add X" button
             'columns' => [
                 [
