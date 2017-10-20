@@ -16,9 +16,10 @@ class DashboardController extends CrudController
     
     function index(){
 
-
-        dd(get_class(Auth::user()));
-        //return view('dashboard.index');
+        if (Auth::user()->isAdmin()){
+            return view('admin.dashboard');
+        }
+        return view('dashboard.index');
     }
     
     

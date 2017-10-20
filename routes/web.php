@@ -42,10 +42,14 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('educations','Curriculum\EducationCrudController');
     CRUD::resource('languages','Curriculum\LanguageCrudController');
     CRUD::resource('skills','Curriculum\SkillCrudController');
+    CRUD::resource('contracts','ContractsCrudController')->with(function(){
+        Route::get('contracts/find','ContractsCrudController@find');
+        Route::post('contracts/find','ContractsCrudController@findpost');
+    });
 });
 
 Route::group(['middleware'=>['auth']],function(){
- //   Route::get('dashboard', 'DashboardController@index');
+    Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
     CRUD::resource('curriculum','CurriculumCrudController');
     Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');

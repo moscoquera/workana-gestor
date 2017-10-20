@@ -15,13 +15,15 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <div class="box-title">{{ trans('backpack::base.login_status') }}</div>
+        <div class="col-sm-3">
+            <div  class="info-box">
+                <span class="info-box-icon bg-yellow">
+                    <i class="fa fa-users"></i>
+                </span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Usuarios:</span>
+                    <span class="info-box-number">{{ \App\Models\PublicUser::count() }}</span>
                 </div>
-
-                <div class="box-body">{{ trans('backpack::base.logged_in') }}</div>
             </div>
         </div>
     </div>
