@@ -16,7 +16,7 @@ class CreateCurriculumRequest extends CrudRequest
      */
     public function authorize()
     {
-        return !Auth::user()->isAdmin() && $this->input('user_id')==Auth::user()->id;
+        return (!Auth::user()->isAdmin() && $this->input('user_id')==Auth::user()->id) || Auth::user()->isAdmin();
     }
 
     /**
