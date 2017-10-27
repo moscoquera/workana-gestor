@@ -24,7 +24,8 @@ class PublicUser extends User
         if (!$this->curriculum){
             return '<a href="'.url('curriculum/create?user='.$this->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
         }else{
-            return '<a href="'.url('curriculum/'.$this->curriculum->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Curriculum</a>';
+            return '<a href="'.url('curriculum/'.$this->curriculum->id).'/edit" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i>Editar Curriculum</a> <br/>'.
+            '<a href="'.url('curriculum/'.$this->curriculum->id).'" class="btn btn-xs btn-info"><i class="fa fa-file-text"></i> Ver Curriculum</a><br/>';
         }
     }
 

@@ -37,8 +37,8 @@ class CurriculumCrudController extends CrudController
         $this->crud->denyAccess(['list', 'create', 'delete','update']);
 
         if(Auth::check() && (Auth::user()->isAdmin())){
-            $this->crud->allowAccess('create');
-            $this->crud->denyAccess(['list', 'delete','update']);
+            $this->crud->allowAccess(['create','update']);
+            $this->crud->denyAccess(['list', 'delete']);
         }else if (Auth::check() && !Auth::user()->curriculum){
             $this->crud->allowAccess('create');
         }else if (Auth::check() && Auth::user()->curriculum){
@@ -508,7 +508,7 @@ class CurriculumCrudController extends CrudController
     public function update(CreateCurriculumRequest $request)
     {
 
-        if ($request->input('user_id')!=Auth::user()->id){
+        if ($request->input('user_id')!=Auth::user()->id && !Auth::user()->isAdmin()){
             return redirect('/');
         }
 
@@ -544,7 +544,6 @@ class CurriculumCrudController extends CrudController
     }
 
     public function getSaveAction(){
-        if (Auth::user()->isAdmin()){return parent::getSaveAction();}
         $saveOptions = [];
         $saveCurrent = [
             'value' => 'save_and_edit',
