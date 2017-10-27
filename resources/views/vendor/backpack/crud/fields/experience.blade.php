@@ -3,11 +3,11 @@
     <div class="form-group">
         <label class="control-label">Empresa:</label>
 
-        <ui-select convert-number ng-model="item.company_id"
+        <ui-select ng-model="item.company_id"
                    style="width: 100%;"
                    title="Empresa">
             <ui-select-match placeholder="Ingrese una empresa..."><% $select.selected.name %></ui-select-match>
-            <ui-select-choices repeat="type.id as type in company_id_fields track by type.id">
+            <ui-select-choices repeat="type.id as type in company_id_fields">
                 <div ng-bind-html="type.name"></div>
             </ui-select-choices>
         </ui-select>
