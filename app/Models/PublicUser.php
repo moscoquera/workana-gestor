@@ -22,9 +22,9 @@ class PublicUser extends User
 
     public function crudHasCurriculum(){
         if (!$this->curriculum){
-            return '<a href="http://localhost/gestor/curriculum/create?user='.$this->id.'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
+            return '<a href="'.url('curriculum/create?user='.$this->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
         }else{
-            return '<a href="http://localhost/gestor/curriculum/'.$this->curriculum->id.'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Curriculum</a>';
+            return '<a href="'.url('curriculum/'.$this->curriculum->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Curriculum</a>';
         }
     }
 
