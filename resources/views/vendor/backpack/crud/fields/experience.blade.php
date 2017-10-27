@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="control-label">Empresa:</label>
 
-        <ui-select ng-model="item.company_id"
+        <ui-select convert-number ng-model="item.company_id"
                    style="width: 100%;"
                    title="Empresa">
             <ui-select-match placeholder="Ingrese una empresa..."><% $select.selected.name %></ui-select-match>
