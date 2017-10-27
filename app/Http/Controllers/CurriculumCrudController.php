@@ -32,7 +32,7 @@ class CurriculumCrudController extends CrudController
         $this->crud->setRoute('curriculum');
         $this->crud->setEntityNameStrings('curriculum','curriculums');
 
-        $this->crud->setCreateView('layouts.crud.largeform');
+        $this->crud->setCreateView('curriculum.create');
         $this->crud->setEditView('curriculum.edit');
         $this->crud->denyAccess(['list', 'create', 'delete','update']);
 
