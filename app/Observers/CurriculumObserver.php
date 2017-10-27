@@ -49,6 +49,9 @@ class CurriculumObserver
                 if(!isset($experiences[$i]->end_date) || !$experiences[$i]->end_date){
                     $experiences[$i]->end_date=null;
                 }
+                if (isset($experiences[$i]->company_id) && is_object($experiences[$i]->company_id)){
+                    $experiences[$i]->company_id=$experiences[$i]->company_id->id;
+                }
             }
         }else{
             $experiences=[];
