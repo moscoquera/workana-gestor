@@ -1,13 +1,19 @@
 <div class="">
+
     <div class="form-group">
         <label class="control-label">Empresa:</label>
-            <input
-                    type="text"
-                    ng-model="item.company"
-                    @include('crud::inc.field_attributes', ['default_class' =>  'form-control'])
 
-            >
+        <ui-select ng-model="item.company_id"
+                   style="width: 100%;"
+                   title="Empresa">
+            <ui-select-match placeholder="Ingrese una empresa..."><% $select.selected.name %></ui-select-match>
+            <ui-select-choices repeat="type.id as type in company_id_fields track by type.id">
+                <div ng-bind-html="type.name"></div>
+            </ui-select-choices>
+        </ui-select>
+
     </div>
+
 
 <div class="row">
     <div class="col-sm-6">

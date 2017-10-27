@@ -363,7 +363,18 @@ class CurriculumCrudController extends CrudController
             'view' => 'experience',
             'size'=>11,
             'max' => 12, // maximum rows allowed in the table
-            'min' => 0 // minimum rows allowed in the table
+            'min' => 0, // minimum rows allowed in the table
+            'fields' => [
+                [
+                    'label' => 'empresa',
+                    'type' => 'select',
+                    'name' => 'company_id',
+                    'entity' => 'type',
+                    'attribute' => 'name',
+                    'size' => '3',
+                    'model' => "App\Models\Company"
+                ],
+            ]
         ]);
 
         $this->crud->addField([

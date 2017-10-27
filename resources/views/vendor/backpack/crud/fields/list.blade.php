@@ -186,9 +186,12 @@ if (is_array($items)) {
                     restrict:'A',
                     link: function (scope, element, attrs) {
                         $timeout(function () {
-                            $('.select2').each(function (i, obj) {
-                                if (!$(obj).data("select2")) {
-                                    //      $(obj).select2();
+                            $('.select2_field').each(function (i, obj) {
+                                if (!$(obj).hasClass("select2-hidden-accessible"))
+                                {
+                                    $(obj).select2({
+                                        theme: "bootstrap"
+                                    });
                                 }
                             });
 

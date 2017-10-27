@@ -96,17 +96,23 @@ if (is_array($items)) {
     @push('crud_fields_styles')
         {{-- @push('crud_fields_styles')
             {{-- YOUR CSS HERE --}}
+        <link rel="stylesheet" href="{{ asset('css/select.min.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
         {{-- YOUR JS HERE --}}
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
+        <script type="text/javascript" src="{{ asset('js/select.min.js') }}"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.14.3/sortable.min.js"></script>
+
         <script>
 
-            window.angularApp = window.angularApp || angular.module('backPackTableApp', ['ui.sortable'], function($interpolateProvider){
+            window.angularApp = window.angularApp || angular.module('backPackTableApp', ['ui.sortable','ngSanitize', 'ui.select'], function($interpolateProvider){
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
@@ -194,9 +200,12 @@ if (is_array($items)) {
                     restrict:'A',
                     link: function (scope, element, attrs) {
                         $timeout(function () {
-                            $('.select2').each(function (i, obj) {
-                                if (!$(obj).data("select2")) {
-                                    //      $(obj).select2();
+                            $('.select2_field').each(function (i, obj) {
+                                if (!$(obj).hasClass("select2-hidden-accessible"))
+                                {
+                                    $(obj).select2({
+                                        theme: "bootstrap"
+                                    });
                                 }
                             });
 
