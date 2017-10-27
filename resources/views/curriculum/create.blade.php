@@ -22,7 +22,7 @@
             @endif
 
             @include('crud::inc.grouped_errors')
-            {!! Form::open(array('url' => $crud->route, 'method' => 'put', 'files'=>$crud->hasUploadFields('create'))) !!}
+            {!! Form::open(array('url' => $crud->route, 'method' => 'post', 'files'=>$crud->hasUploadFields('create'))) !!}
             @if ($crud->model->translationEnabled())
                 <input type="hidden" name="locale" value={{ $crud->request->input('locale')?$crud->request->input('locale'):App::getLocale() }}>
             @endif
