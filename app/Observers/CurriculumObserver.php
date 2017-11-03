@@ -52,6 +52,10 @@ class CurriculumObserver
                 if (isset($experiences[$i]->company_id) && is_object($experiences[$i]->company_id)){
                     $experiences[$i]->company_id=$experiences[$i]->company_id->id;
                 }
+
+                if (isset($experiences[$i]->sector_id) && is_object($experiences[$i]->sector_id)){
+                    $experiences[$i]->sector_id=$experiences[$i]->sector_id->id;
+                }
             }
         }else{
             $experiences=[];
@@ -93,7 +97,7 @@ class CurriculumObserver
         }
 
         $curriculum->setPhotoAttribute($this->request->input('photo'));
-
+        $curriculum->setDocumentAttribute($this->request->input('document'));
 
         $this->relationSyncFromJson($curriculum,'educations',$educations);
         $this->relationSyncFromJson($curriculum,'experiences',$experiences);

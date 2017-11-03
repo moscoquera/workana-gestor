@@ -127,7 +127,9 @@ return [
         'profession'=>'Profesión',
         'company'=>'Empresa',
         'resume'=>'resumen',
-        'photo'=>'foto'
+        'photo'=>'foto',
+        'first_name'=>'nombres',
+        'last_name'=>'apellidos'
     ],
 
 ];

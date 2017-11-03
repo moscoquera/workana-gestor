@@ -20,6 +20,10 @@ class UserCrudController extends CrudController
 
         $this->crud->setColumns([
             [
+                'label'=>'# documento',
+                'name'=>'username',
+            ],
+            [
                 'label'=>'Nombres',
                 'name'=>'first_name'
             ],
@@ -31,6 +35,10 @@ class UserCrudController extends CrudController
         $this->crud->addFields(
             [
                 [
+                    'name'=>'username',
+                    'label'=>'# de documento'
+                ],
+                [
                     'name'=>'first_name',
                     'label'=>'Nombres',
                 ],
@@ -38,7 +46,11 @@ class UserCrudController extends CrudController
                     'name'=>'last_name',
                     'label'=>'Apellidos',
                 ],
-                'email'
+                [
+                    'label'=>'email',
+                    'name'=>'email',
+                    'hint'=>'opcional'
+                ]
 
             ]
         ,'both');
@@ -59,14 +71,14 @@ class UserCrudController extends CrudController
             'label'=>'Contraseña',
             'type'=>'password',
 
-        ],'both');
+        ],'update');
         $this->crud->addField([
             'name'=>'password_confirmation',
             'fake'=>true,
             'label'=>'Confirmar contraseña',
             'type'=>'password',
 
-        ],'both');
+        ],'update');
 
         $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
 
@@ -75,7 +87,7 @@ class UserCrudController extends CrudController
 
     public function store(CreateUserCrudRequest $request)
     {
-        $request['password']=bcrypt($request['password']);
+        $request['password']=bcrypt($request['username']);
         $request['rol_id']=2;
         return parent::storeCrud($request);
     }

@@ -30,11 +30,15 @@ class UpdateUserCrudRequest extends CrudRequest
     {
 
         return [
+            'username'=>[
+                'max:30','required','string',
+                Rule::unique('users')->ignore($this->input('id')),
+            ],
             'first_name'=>'required|min:5|max:100',
             'last_name'=>'required|min:5|max:100',
             'email'=>[
-                'required','max:100','email',
-                Rule::unique('users')->ignore($this->input('id'))
+                'nullable','max:100','email',
+                Rule::unique('users','email')->ignore($this->input('id')),
             ],
 
             'password'=>'required_if:passwordchange,1|nullable|string|min:6|confirmed'

@@ -28,14 +28,27 @@ class CreateUserCrudRequest extends CrudRequest
     public function rules()
     {
         return [
+            'username'=>[
+                'max:30','required','string',
+                Rule::unique('users')
+            ],
             'first_name'=>'required|min:5|max:100',
             'last_name'=>'required|min:5|max:100',
             'email'=>[
-                'required','max:100','email',
+                'nullable','max:100','email',
                 Rule::unique('users')
             ],
-            'password'=>'required|string|min:6|confirmed'
-
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'username'=>'documento',
+        ];
+    }
+
+
+
+
 }

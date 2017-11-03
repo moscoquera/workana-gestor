@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\_Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
@@ -58,11 +58,11 @@ use RegistersUsers;
      * @return \App\User
      */
     protected function create(array $data) {
-        return User::create([
+        /*return User::create([
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'password' => bcrypt($data['password']),
-        ]);
+        ]);*/
     }
 
     public function showRegistrationForm() {

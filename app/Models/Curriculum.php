@@ -18,12 +18,14 @@ class Curriculum extends Model
 
     protected $table='curriculums';
 
-    protected $fillable=['user_id','sex','date_of_birth','document',
+    protected $fillable=['user_id','sex','date_of_birth',
         'birth_city_id','birth_dep_id','nationality_id','current_address',
         'current_dep_id','current_city_id','current_country_id','phone',
-        'mobile','profession_id','company_id','resume'];
+        'mobile','profession_id','resume','attachments'];
 
-    protected $appends=['photo'];
+    protected $casts = ['attachments' => 'array'];
+
+    protected $appends=['photo','document'];
 
 
     protected static function boot()
@@ -68,7 +70,7 @@ class Curriculum extends Model
     }
 
     public function experiences(){
-        return $this->hasMany('App\Models\Experience');
+        return $this->hasMany('App\Models\Experience')->orderBy('start_date','desc');
     }
 
     public function profession(){
@@ -134,6 +136,15 @@ class Curriculum extends Model
 
     public function getGenreAttribute(){
         return $this->sex=='m'?'Masculino':'Femenino';
+    }
+
+    public function getDocumentAttribute(){
+        return $this->user->username;
+    }
+
+    public function setDocumentAttribute($value){
+        $this->user->username=$value;
+        $this->user->save();
     }
 
 }
