@@ -27,7 +27,7 @@ class UpdateEmailUser extends Migration
     public function down()
     {
         Schema::table('users',function (Blueprint $table){
-            $table->string('email',255)->unique()->change();
+            $table->string('email',50)->unique()->change();
         });
     }
 }
