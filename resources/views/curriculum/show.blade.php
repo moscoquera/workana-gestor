@@ -24,7 +24,8 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-md-offset-10 col-md-2">
-                    <a class="btn btn-success" href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/'.$curriculum->id.'/export') }}"><i class="fa fa-file-pdf-o"></i>Exportar</a>
+                    <a class="btn btn-default" href="{{ Auth::user()->isAdmin()?url(config('backpack.base.route_prefix', 'admin').'/users'):url('') }}"><i class="fa fa-arrow-left"></i>Volver</a>
+                    <a class="btn btn-success" target="_blank" href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/'.$curriculum->id.'/export') }}"><i class="fa fa-file-pdf-o"></i>Exportar</a>
                 </div>
             </div>
             @include('curriculum.layout')

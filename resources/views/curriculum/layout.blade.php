@@ -1,7 +1,63 @@
+<?php
+        \Carbon\CarbonInterval::setLocale('es');
+        ?>
 <div class="row">
     <div class="col-xs-3 col-xs-offset-1">
         <img class="img-rounded img-responsive" src="{{ url(Storage::url($curriculum->user->photo)) }}">
-    </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <?php
+                    $currently_working = $curriculum->experiences()->currently()->get();
+                ?>
+                @if(count($currently_working))
+                    <h4 class="text-light-blue">Empresas actuales:</h4>
+                    <ul>
+                        @foreach($currently_working as $exp)
+                            <li>{{ $exp->company->name }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h4 class="text-light-blue">Resumen experiencia laboral</h4>
+                <?php
+                    $publicExp = $curriculum->experiences()->public()->get();
+                    $sumPublicExp = 0;
+                    foreach ($publicExp as $exp){
+                        $start=$exp->start_date;
+                        $end=$exp->end_date;
+                        if (!$end || $exp->currently){
+                            $end=now();
+                        }
+                        $start=\Carbon\Carbon::parse($start);
+                        $end=\Carbon\Carbon::parse($end);
+                        $sumPublicExp+=$start->diffInDays($end);
+                    }
+                ?>
+                <strong>Sector Público:</strong> {{ \Carbon\CarbonInterval::day($sumPublicExp)->forHumans() }}
+                <?php
+                $publicExp = $curriculum->experiences()->private()->get();
+                $sumPublicExp = 0;
+                foreach ($publicExp as $exp){
+                    $start=$exp->start_date;
+                    $end=$exp->end_date;
+                    if (!$end || $exp->currently){
+                        $end=now();
+                    }
+                    $start=\Carbon\Carbon::parse($start);
+                    $end=\Carbon\Carbon::parse($end);
+                    $sumPublicExp+=$start->diffInDays($end);
+                }
+                ?>
+                <br/>
+                <strong>Sector Privado:</strong> {{ \Carbon\CarbonInterval::day($sumPublicExp)->forHumans() }}
+            </div>
+        </div>
+
+            </div>
     <div class="col-xs-6 form-horizontal">
         <h3>{{ $curriculum->user->full_name }}</h3>
         <h5>{{ $curriculum->profession->name }}</h5>
@@ -105,15 +161,64 @@
                             <hr/>
                             <h4 class="text-light-blue">Experiencia laboral:</h4>
                             <div>
+                                <label>Sector público:</label>
                                 <ul>
-                                    @foreach( $curriculum->experiences as $experience)
+                                    @foreach( $curriculum->experiences()->public()->get() as $experience)
                                         <li>
                                             <p>
-                                                <strong>{{$experience->company}}</strong><br>
+                                                <?php
+                                                $start=$experience->start_date;
+                                                $end=$experience->end_date;
+                                                if (!$end || $experience->currently){
+                                                    $end=now();
+                                                }
+                                                $start=\Carbon\Carbon::parse($start);
+                                                $end=\Carbon\Carbon::parse($end);
+
+
+                                                ?>
+                                                <strong>{{$experience->company->name}}</strong><br>
                                                 <strong>Jefe inmediato: </strong>{{$experience->boss}}<br>
                                                 <strong>Teléfono: </strong>{{ $experience->phone }}<br>
-                                                <strong>Periodo: </strong> {{ $experience->start_date?\Carbon\Carbon::parse($experience->start_date)->format('(Y/m/d)'):'-' }}
-                                                a {{ $experience->end_date?\Carbon\Carbon::parse($experience->end_date)->format('(Y/m/d)'):'-' }}
+                                                <strong>Periodo: </strong> {{ \Carbon\CarbonInterval::days($start->diffInDays($end))->forHumans() }}
+                                                    <br/>
+                                                <strong>Fecha de ingreso:</strong>{{ $experience->start_date?\Carbon\Carbon::parse($experience->start_date)->format('(Y/m/d)'):'-' }}
+                                                    <br/>
+                                                <strong>Fecha de retiro: </strong>{{ $experience->end_date?\Carbon\Carbon::parse($experience->end_date)->format('(Y/m/d)'):'-' }}
+                                                    <br>
+                                                <strong>Motivo del retiro: </strong>{{$experience->retirement}}
+                                                <br>
+                                                <strong>Funciones a
+                                                    cargo: </strong>{{ $experience->functions_in_charge }}
+                                            </p>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <label>Sector Privado:</label>
+                                <ul>
+                                    @foreach( $curriculum->experiences()->private()->get() as $experience)
+                                        <li>
+                                            <p>
+                                                <?php
+                                                $start=$experience->start_date;
+                                                $end=$experience->end_date;
+                                                if (!$end || $experience->currently){
+                                                    $end=now();
+                                                }
+                                                $start=\Carbon\Carbon::parse($start);
+                                                $end=\Carbon\Carbon::parse($end);
+
+
+                                                ?>
+                                                <strong>{{$experience->company->name}}</strong><br>
+                                                <strong>Jefe inmediato: </strong>{{$experience->boss}}<br>
+                                                <strong>Teléfono: </strong>{{ $experience->phone }}<br>
+                                                <strong>Periodo: </strong> {{ \Carbon\CarbonInterval::days($start->diffInDays($end))->forHumans() }}
+                                                <br/>
+                                                <strong>Fecha de ingreso:</strong>{{ $experience->start_date?\Carbon\Carbon::parse($experience->start_date)->format('(Y/m/d)'):'-' }}
+                                                <br/>
+                                                <strong>Fecha de retiro: </strong>{{ $experience->end_date?\Carbon\Carbon::parse($experience->end_date)->format('(Y/m/d)'):'-' }}
                                                 <br>
                                                 <strong>Motivo del retiro: </strong>{{$experience->retirement}}
                                                 <br>
@@ -123,6 +228,7 @@
                                         </li>
                                     @endforeach
                                 </ul>
+
                             </div>
                         @endif
 
