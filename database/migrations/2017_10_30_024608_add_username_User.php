@@ -14,12 +14,12 @@ class AddUsernameUser extends Migration
     public function up()
     {
         Schema::table('users',function (Blueprint $table){
-            $table->string('username',255)->default('tmp');
+            $table->string('username',50)->default('tmp');
         });
 
         DB::update("update users set username = email where username='tmp'");
         Schema::table('users',function (Blueprint $table) {
-            $table->string('username',255)->unique()->change();
+            $table->string('username',50)->unique()->change();
         });
 
         }
