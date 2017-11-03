@@ -74,6 +74,7 @@ class AdminsCrudController extends CrudController
 
 
     public function store(CreateAdminsCrudRequest $request){
+        $request['username']=$request['email'];
         $request['password']=bcrypt($request['password']);
         $request['rol_id']=1;
         return parent::storeCrud($request);

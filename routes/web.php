@@ -31,6 +31,13 @@
 
 //Route::get('/', 'DashboardController@Home');
 
+
+Route::group(['middleware' => 'web', 'prefix' => config('backpack.base.route_prefix')], function () {
+    Route::auth();
+    Route::get('logout', 'Auth\LoginController@logout');
+});
+
+
 Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('users','UserCrudController');
     CRUD::resource('admins','AdminsCrudController');
@@ -46,11 +53,15 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
         Route::get('contracts/find','ContractsCrudController@find');
         Route::post('contracts/find','ContractsCrudController@findpost');
     });
+
+
+
 });
 
 Route::group(['middleware'=>['auth']],function(){
     Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
+    Route::post('curriculum/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
     CRUD::resource('curriculum','CurriculumCrudController');
     Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');
 
