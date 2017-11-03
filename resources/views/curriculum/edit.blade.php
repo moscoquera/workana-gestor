@@ -5,11 +5,7 @@
         <h1>
             {{ trans('backpack::crud.edit') }} <span>{{ $crud->entity_name }}</span>
         </h1>
-        <ol class="breadcrumb">
-            <li><a href="{{ url(config('backpack.base.route_prefix'),'dashboard') }}">{{ trans('backpack::crud.admin') }}</a></li>
-            <li><a href="{{ url($crud->route) }}" class="text-capitalize">{{ $crud->entity_name_plural }}</a></li>
-            <li class="active">{{ trans('backpack::crud.edit') }}</li>
-        </ol>
+
     </section>
 @endsection
 
@@ -34,7 +30,7 @@
                             <!-- <h3 class="box-title">Otros</h3> -->
                         </div>
                         <div class="box-body">
-                            @include('crud::inc.form_save_buttons')
+                            @include('crud::inc.curriculums_buttons')
                         </div>
                     </div>
                 </div>
@@ -88,7 +84,7 @@
 
                             <div class="row">
                                 <div class="col-sm-4 col-sm-offset-4">
-                                    @include('crud::inc.form_save_buttons')
+                                    @include('crud::inc.curriculums_buttons')
                                 </div>
                             </div>
 

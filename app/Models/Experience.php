@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Experience extends Model
 {
@@ -13,5 +14,30 @@ class Experience extends Model
         'currently'=>'boolean',
         'company_id'=>'integer'
     ];
+
+    public function scopeCurrently($query)
+    {
+        return $query->where('currently',1);
+    }
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
+    }
+
+    public function scopePublic($query){
+        return $query->whereExists(function($inner){
+            return $inner->select(DB::raw(1))->from('types')
+                ->where('type','company_sector')->where('name','Público')
+                ->whereRaw('types.id = experiences.sector_id');
+        });
+    }
+
+    public function scopePrivate($query){
+        return $query->whereExists(function($inner){
+            return $inner->select(DB::raw(1))->from('types')
+                ->where('type','company_sector')->where('name','Privado')
+                ->whereRaw('types.id = experiences.sector_id');
+        });
+    }
 
 }

@@ -17,7 +17,7 @@
     <div class="form-group">
         <label class="control-label">Sector:</label>
 
-        <ui-select ng-model="item.sector_id"
+        <ui-select ng-model="item.sector_id required"
                    title="Sector">
             <ui-select-match placeholder="sector de la empresa..."><% $select.selected.name %></ui-select-match>
             <ui-select-choices repeat="type.id as type in sector_id_fields">
