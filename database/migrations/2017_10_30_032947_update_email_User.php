@@ -15,7 +15,7 @@ class UpdateEmailUser extends Migration
     {
         Schema::table('users',function (Blueprint $table){
             $table->dropIndex('users_email_unique');
-            $table->string('email',255)->unique()->nullable()->change();
+            $table->string('email',50)->unique()->nullable()->change();
         });
     }
 
