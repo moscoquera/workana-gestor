@@ -17,7 +17,7 @@
     <div class="form-group">
         <label class="control-label">Sector:</label>
 
-        <ui-select ng-model="item.sector_id required"
+        <ui-select ng-model="item.sector_id" required
                    title="Sector">
             <ui-select-match placeholder="sector de la empresa..."><% $select.selected.name %></ui-select-match>
             <ui-select-choices repeat="type.id as type in sector_id_fields">
@@ -59,7 +59,7 @@
             <div class="form-group">
                 <label class="control-label">Fecha de ingreso:</label>
 
-                <input type="hidden" datetimez ng-model="item.start_date">
+                <input type="hidden" datetimez ng-model="item.start_date" required>
                 <div class="input-group date">
                     <input
                             data-bs-datepicker="{{ isset($field['date_picker_options']) ? json_encode($field['date_picker_options']) : '{}'}}"
@@ -77,7 +77,7 @@
         <div class="form-group">
             <div class="form-group">
                 <label class="control-label">salida:</label>
-                <input type="hidden" datetimez ng-model="item.end_date">
+                <input type="hidden" datetimez ng-model="item.end_date" required>
                 <div class="input-group date">
                     <input
                             data-bs-datepicker="{{ isset($field['date_picker_options']) ? json_encode($field['date_picker_options']) : '{}'}}"
@@ -94,7 +94,7 @@
     </div>
 
     <div class="row">
-        <div class=" col-sm-3">
+        <div class=" col-sm-5">
             <div class="form-group">
                 <label class="switch-light" onclick="">
                     <input type="checkbox" ng-model="item.currently"/>
