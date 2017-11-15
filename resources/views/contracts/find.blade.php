@@ -33,7 +33,7 @@
                     <form class="form-horizontal" method="post">
                         {{ csrf_field() }}
                         <div class="row">
-                            <div class="control-group">
+                            <div class="form-group">
                                 <label class="control-label col-sm-2">Profesión</label>
                                 <div class="col-sm-8">
                                     <select
@@ -52,8 +52,131 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Habilidades</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="skills[]"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            multiple>
+                                        @foreach (\App\Models\Skill::all() as $skill)
+                                            <option value="{{ $skill->getKey() }}"
+                                                    @if ( (request('skills') && in_array($skill->getKey(), request('skills'))) || ( old('skills') && in_array($skill->getKey(), old('skills')) ) )
+                                                    selected
+                                                    @endif
+                                            >{{ $skill->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Entidades donde ha trabajado:</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="companies[]"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            multiple>
+                                        @foreach (\App\Models\Company::all() as $company)
+                                            <option value="{{ $company->getKey() }}"
+                                                    @if ( (request('companies') && in_array($company->getKey(), request('companies'))) || ( old('companies') && in_array($company->getKey(), old('companies')) ) )
+                                                    selected
+                                                    @endif
+                                            >{{ $company->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Educación:</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="educations[]"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            multiple>
+                                        @foreach (\App\Models\Education::all() as $education)
+                                            <option value="{{ $education->getKey() }}"
+                                                    @if ( (request('educations') && in_array($education->getKey(), request('educations'))) || ( old('educations') && in_array($education->getKey(), old('educations')) ) )
+                                                    selected
+                                                    @endif
+                                            >{{ $education->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Sexo:</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="sex"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            >
+                                            <option value="">Calquiera</option>
+                                            <option value="f"
+                                                    @if ( (request('sex') && request('sex')=='f') || ( old('sex') && old('sex')=='f' ) )
+                                                    selected
+                                                    @endif
+                                            >Femenino</option>
+
+                                        <option value="m"
+                                                @if ( (request('sex') && request('sex')=='m') || ( old('sex') && old('sex')=='m' ) )
+                                                selected
+                                                @endif
+                                        >Masculino</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Rango de edad:</label>
+                                <div class="col-sm-8">
+                                    <b style="margin-right: 30px">18</b>  <input id="ageid" type="text" class="span2" value="<?= old('ages',request('ages','')) ?>" name="ages" data-slider-min="18" data-slider-max="100" data-slider-step="1" data-slider-value="[<?= old('ages',request('ages','18,100')) ?>]"/> <b style="margin-left: 30px">100</b>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Idiomas:</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="languages[]"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            multiple>
+                                        @foreach (\App\Models\Language::all() as $language)
+                                            <option value="{{ $language->getKey() }}"
+                                                    @if ( (request('languages') && in_array($language->getKey(), request('languages'))) || ( old('languages') && in_array($language->getKey(), old('languages')) ) )
+                                                    selected
+                                                    @endif
+                                            >{{ $language->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Municipio de residencia:</label>
+                                <div class="col-sm-8">
+                                    <select
+                                            name="cities[]"
+                                            style="width: 100%"
+                                            @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
+                                            multiple>
+                                        @foreach (\App\Models\City::with('department')->get() as $city)
+                                            <option value="{{ $city->getKey() }}"
+                                                    @if ( (request('cities') && in_array($city->getKey(), request('cities'))) || ( old('cities') && in_array($city->getKey(), old('cities')) ) )
+                                                    selected
+                                                    @endif
+                                            >( {{ $city->department->name }} ) - {{ $city->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                            </div>
                             <div class="control-group">
                                 <label class="control-label col-sm-2">Con contrato:</label>
                                 <div class="col-sm-1">
@@ -68,7 +191,12 @@
                                     </label>
                                 </div>
                             </div>
+
                         </div>
+                        <div class="row">
+
+                        </div>
+
                         <div class="control-group">
                             <div class="col-sm-offset-6">
                                 <input type="submit" class="btn btn-success btn-lg" value="Buscar" />
@@ -94,6 +222,7 @@
                             <th>ID</th>
                             <th>Nombre completo</th>
                             <th>Profession</th>
+                            <th>Habilidades</th>
                             <th>Acciones</th>
                         </thead>
                         <tbody>
@@ -101,9 +230,17 @@
                                 <tr>
                                     <td>{{ $user->user_id }}</td>
                                     <td>{{ $user->full_name }}</td>
-                                    <td>{{ $professions[$user->profession_id]->name }}</td>
+                                    <td>{{ $professions[$user->curriculum->profession_id]->name }}</td>
                                     <td>
-                                        <a class="btn btn-primary" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/curriculum/'.$user->id }}">Ver curriculum</a>
+                                        <ul>
+                                            @foreach($user->curriculum->skills as $skill)
+                                                <li>{{ $skill->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/curriculum/'.$user->curriculum->id }}">Ver curriculum</a>
+                                        <a class="btn btn-success" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/contracts/create?user='.$user->id }}">Contratar</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -142,6 +279,8 @@
                     });
                 }
             });
+
+            $("#ageid").slider({});
         });
     </script>
 @endsection

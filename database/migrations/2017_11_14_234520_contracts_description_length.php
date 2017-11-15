@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RemoveCompanyCurriculum extends Migration
+class ContractsDescriptionLength extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class RemoveCompanyCurriculum extends Migration
      */
     public function up()
     {
-        Schema::table('curriculums',function (Blueprint $table){
-            $table->dropForeign('curriculums_company_id_foreign');
-           $table->dropColumn('company_id');
+        Schema::table('contracts',function (Blueprint $table){
+            $table->text('description',2000)->change();
         });
     }
 
@@ -26,8 +25,6 @@ class RemoveCompanyCurriculum extends Migration
      */
     public function down()
     {
-        Schema::table('curriculums',function (Blueprint $table){
-            $table->unsignedInteger('company_id');
-        });
+        //
     }
 }

@@ -54,6 +54,7 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
         Route::post('contracts/find','ContractsCrudController@findpost');
     });
 
+    CRUD::resource('events','EventsCrudController');
 
 
 });

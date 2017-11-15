@@ -25,21 +25,16 @@
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/users') }}"><i class="fa fa-user"></i> <span>Usuarios</span></a></li>
 
             <li class="treeview">
-                <a href="#"><i class="fa fa-globe"></i><span>Geo</span></a>
-                <ul class="treeview-menu">
-                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/countries')  }}"><i class="fa fa-map-marker"></i><span>Paises</span></a></li>
-                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/departments')  }}"><i class="fa fa-map-marker"></i><span>Departamentos</span></a></li>
-                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/cities')  }}"><i class="fa fa-map-marker"></i><span>Ciudades</span></a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-file-text"></i><span>Curriculum</span></a>
+                <a href="#"><i class="fa fa-file-text"></i><span>Parametrizacion</span></a>
                 <ul class="treeview-menu">
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/professions') }}"><i class="fa fa-suitcase"></i> <span>Profesiones</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/companies') }}"><i class="fa fa-building-o"></i> <span>Empresas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/educations') }}"><i class="fa fa-university"></i> <span>Educación</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/languages') }}"><i class="fa fa-language"></i> <span>Idiomas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/skills') }}"><i class="fa fa-circle-o"></i> <span>Skills</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/countries')  }}"><i class="fa fa-map-marker"></i><span>Paises</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/departments')  }}"><i class="fa fa-map-marker"></i><span>Departamentos</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/cities')  }}"><i class="fa fa-map-marker"></i><span>Ciudades</span></a></li>
 
                 </ul>
             </li>
@@ -48,8 +43,11 @@
                   <a href="#"><i class="fa fa-file-text-o"></i>Contratación</a>
                   <ul class="treeview-menu">
                       <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/contracts/find') }}"><i class="fa fa-search"></i> <span>Buscar profesionales</span></a></li>
+                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/contracts') }}"><i class="fa"></i> <span>Administrar contratos</span></a></li>
                   </ul>
               </li>
+              <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/events') }}"><i class="fa fa-calendar"></i> <span>Administrar eventos</span></a></li>
+
 
 
             @endif
