@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Events\CreateEventCrudRequest;
+use App\Http\Requests\Events\UpdateEventCrudRequest;
+use App\Models\EventStatus;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 
@@ -139,6 +141,14 @@ class EventsCrudController extends CrudController
     }
 
     public function store(CreateEventCrudRequest $request){
-        $this->storeCrud($request);
+        $activo=EventStatus::where('name','Activo')->first()->id;
+        $request->merge([
+            'status_id'=>$activo,
+        ]);
+        return $this->storeCrud($request);
+    }
+
+    public function update(UpdateEventCrudRequest $request){
+        return $this->updateCrud($request);
     }
 }

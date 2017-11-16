@@ -3,19 +3,10 @@
 namespace App\Http\Requests\Events;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateEventCrudRequest extends FormRequest
+class UpdateEventCrudRequest extends CreateEventCrudRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,8 +14,15 @@ class UpdateEventCrudRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
+        $rules = parent::rules();
+        $rules['status_id'] = ['required',
+            'integer',
+            Rule::exists('types', 'id')->where(function ($query) {
+                return $query->where('type', 'event_status');
+
+            })
         ];
+
+        return $rules;
     }
 }
