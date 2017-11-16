@@ -55,6 +55,7 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     });
 
     CRUD::resource('events','EventsCrudController');
+    CRUD::resource('eventtypes','EventTypeCrudController');
 
 
 });

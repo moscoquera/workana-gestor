@@ -35,6 +35,8 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/countries')  }}"><i class="fa fa-map-marker"></i><span>Paises</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/departments')  }}"><i class="fa fa-map-marker"></i><span>Departamentos</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/cities')  }}"><i class="fa fa-map-marker"></i><span>Ciudades</span></a></li>
+                    <li></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/eventtypes')  }}"><i class="fa"></i><span>Tipos de eventos</span></a></li>
 
                 </ul>
             </li>

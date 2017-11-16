@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Curriculum;
+namespace App\Http\Requests\Events;
 
-use Backpack\CRUD\app\Http\Requests\CrudRequest;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class EducationCrudRequest extends CrudRequest
+class UpdateEventCrudRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +13,7 @@ class EducationCrudRequest extends CrudRequest
      */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return false;
     }
 
     /**
@@ -26,8 +24,7 @@ class EducationCrudRequest extends CrudRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|min:1|max:100',
-            'order'=>'integer'
+            //
         ];
     }
 }

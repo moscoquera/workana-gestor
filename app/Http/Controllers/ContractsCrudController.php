@@ -240,11 +240,11 @@ class ContractsCrudController extends CrudController
             $ages[0] = intval($ages[0]);
             $ages[1] = intval($ages[1]);
             $users = $users->whereExists(function ($query) use ($ages) {
-                $query->select(DB::raw('curriculums.date_of_birth'))
+                $query->select(DB::raw(1))
                     ->from('curriculums')
                     ->whereRaw('users.id = curriculums.user_id')
-                    ->havingRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) >= ' . $ages[0])
-                    ->havingRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) <= ' . $ages[1]);
+                    ->whereRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) >= ' . $ages[0])
+                    ->whereRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) <= ' . $ages[1]);
             });
         }
 
