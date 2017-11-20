@@ -9,8 +9,8 @@
             <img src="{{ (Auth::user()->photo)?url(Storage::url(Auth::user()->photo)):'https://placehold.it/160x160/00a65a/ffffff/&text='.mb_substr(Auth::user()->name, 0, 1) }}" class="img-circle" alt="User Image">
           </div>
           <div class="pull-left info">
-            <p>{{ Auth::user()->name }}</p>
-            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            <p>{{ Auth::user()->fullname }}</p>
+            <!--<a href="#"><i class="fa fa-circle text-success"></i> Online</a> -->
           </div>
         </div>
         <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -23,6 +23,7 @@
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/admins') }}"><i class="fa fa-user-secret"></i> <span>Administradores</span></a></li>
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/users') }}"><i class="fa fa-user"></i> <span>Usuarios</span></a></li>
+            <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/tempusers') }}"><i class="fa fa-user"></i> <span>Usuarios Externos</span></a></li>
 
             <li class="treeview">
                 <a href="#"><i class="fa fa-file-text"></i><span>Parametrizacion</span></a>
@@ -48,8 +49,13 @@
                       <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/contracts') }}"><i class="fa"></i> <span>Administrar contratos</span></a></li>
                   </ul>
               </li>
-              <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/events') }}"><i class="fa fa-calendar"></i> <span>Administrar eventos</span></a></li>
-
+            <li class="treeview">
+                <a href="#"><i class="fa fa-file-text-o"></i>Eventos</a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/events') }}"><i class="fa fa-calendar"></i> <span>Administrar eventos</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/birthdays') }}"><i class="fa fa-birthday-cake"></i> <span>Cumpleaños</span></a></li>
+                </ul>
+            </li>
 
 
             @endif

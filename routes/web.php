@@ -54,9 +54,24 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
         Route::post('contracts/find','ContractsCrudController@findpost');
     });
 
-    CRUD::resource('events','EventsCrudController');
+    CRUD::resource('events','EventsCrudController')->with(function(){
+        Route::get('events/{event}/email','EventsCrudController@email');
+        Route::post('events/{event}/email','EventsCrudController@sendemail');
+    });
     CRUD::resource('eventtypes','EventTypeCrudController');
 
+    CRUD::resource('events/{event}/attendance','AttendanceCrudController')->with(function(){
+        Route::post('events/{event}/attendance/import','AttendanceCrudController@import');
+        Route::put('events/{event}/attendance/attended','AttendanceCrudController@attended');
+
+    });
+
+
+    CRUD::resource('tempusers','tempUsersCrudController');
+    CRUD::resource('birthdays','Users\birthdaysCrudController')->with(function(){
+        Route::get('birthdays/{birthday}/email','Users\birthdaysCrudController@email');
+        Route::post('birthdays/{birthday}/email','Users\birthdaysCrudController@sendemail');
+    });
 
 });
 

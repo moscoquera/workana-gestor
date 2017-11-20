@@ -9,7 +9,9 @@ class Event extends Model
 {
     use CrudTrait;
     protected $fillable=[
-        'name','dateandtime','address','user_id','observations','type_id','status_id','city_id'
+        'name','dateandtime','address','user_id',
+        'observations','type_id','status_id','city_id','controlled','place_name',
+        'attendes'
     ];
 
     public function type(){
@@ -28,4 +30,11 @@ class Event extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function attendance(){
+        return $this->morphMany(Attendance::class,'attendable');
+    }
+
+    public function levels(){
+        return $this->belongsToMany(Level::class);
+    }
 }

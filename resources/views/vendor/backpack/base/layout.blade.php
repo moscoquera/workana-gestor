@@ -9,7 +9,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>
-      {{ isset($title) ? $title.' :: '.config('backpack.base.project_name').' Admin' : config('backpack.base.project_name').' Admin' }}
+        @if(isset($custom_page_title))
+            {{ $custom_page_title }}
+        @else
+            {{ isset($title) ? $title.' :: '.config('backpack.base.project_name').' Admin' : config('backpack.base.project_name').' Admin' }}
+        @endif
     </title>
 
     @yield('before_styles')

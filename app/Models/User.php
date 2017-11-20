@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Backpack\CRUD\CrudTrait;
@@ -78,4 +79,16 @@ class User extends Authenticatable
     public function curriculum(){
        return $this->hasOne('App\Models\Curriculum','user_id');
     }
+
+    public function accessMediasAll()
+    {
+        return $this->isAdmin();
+    }
+
+    public function getBirthdayAttribute(){
+        $birthday=Carbon::parse($this->date_of_birth);
+        $birthday->year=Carbon::now()->year;
+        return $birthday->format('Y-m-d');
+    }
+
 }

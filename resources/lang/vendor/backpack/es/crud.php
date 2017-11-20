@@ -115,5 +115,14 @@ return [
     'internal_link' => 'Enlace interno',
     'internal_link_placeholder' => 'Slug interno. Ejplo: \'admin/page\' (sin comillas) para \':url\'',
     'external_link' => 'Enlace externo',
-    'choose_file'=>'Selecione un archivo'
+    'choose_file'=>'Selecione un archivo',
+    'export' => [
+        'copy'              => 'Copiar al portapapeles',
+        'excel'             => 'Excel',
+        'csv'               => 'CSV',
+        'pdf'               => 'PDF',
+        'print'             => 'Imprimir',
+        'column_visibility' => 'Mostrar columnas',
+    ]
+
 ];

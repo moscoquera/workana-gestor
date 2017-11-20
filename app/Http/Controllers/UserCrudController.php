@@ -30,7 +30,16 @@ class UserCrudController extends CrudController
             [
                 'label'=>'Apellidos',
                 'name'=>'last_name'
-            ],'email']);
+            ],
+            'email',
+            [
+                'label'=>'perfíl',
+                'name'=>'level',
+                'type'=>'select',
+                'entity' => 'level', // the method that defines the relationship in your Model
+                'attribute' => 'name', // foreign key attribute that is shown to user
+                'model' => "App\Models\Level" // foreign key model
+            ]]);
 
         $this->crud->addFields(
             [
@@ -50,6 +59,14 @@ class UserCrudController extends CrudController
                     'label'=>'email',
                     'name'=>'email',
                     'hint'=>'opcional'
+                ],
+                [  // Select2
+                    'label' => "Perfíl",
+                    'type' => 'select2',
+                    'name' => 'level_id', // the db column for the foreign key
+                    'entity' => 'level', // the method that defines the relationship in your Model
+                    'attribute' => 'name', // foreign key attribute that is shown to user
+                    'model' => "App\Models\Level" // foreign key model
                 ]
 
             ]

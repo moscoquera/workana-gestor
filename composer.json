@@ -4,19 +4,27 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+	{
+            "type": "vcs",
+            "url": "https://github.com/moscoquera/laravel-filemanager.git"
+        }
+    ],
     "require": {
         "php": ">=7.0.0",
         "backpack/base": "^0.7.25",
         "backpack/crud": "^3.2",
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.4",
         "intervention/imagecache": "^2.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laraveles/spanish": "^1.0",
         "mpdf/mpdf": "^6.1",
-        "niklasravnsborg/laravel-pdf": "^1.5"
+        "niklasravnsborg/laravel-pdf": "^1.5",
+        "unisharp/laravel-filemanager": "@dev"
     },
     "require-dev": {
         "backpack/generators": "^1.1",

@@ -14,6 +14,7 @@ class UpdateEventCrudRequest extends CreateEventCrudRequest
      */
     public function rules()
     {
+
         $rules = parent::rules();
         $rules['status_id'] = ['required',
             'integer',
