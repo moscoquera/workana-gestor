@@ -109,6 +109,8 @@ if (is_array($items)) {
     @push('crud_fields_styles')
         {{-- @push('crud_fields_styles')
             {{-- YOUR CSS HERE --}}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.css" />
+
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
@@ -118,13 +120,23 @@ if (is_array($items)) {
         @if (!$crud->child_resource_included['angular'])
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.8/angular-sanitize.js"></script>
+
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.14.3/sortable.min.js"></script>
+
+        <script type="application/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.19.8/select.js" ></script>
+
         <script>
 
-            window.angularChildApp = window.angularChildApp || angular.module('backPackChildApp', ['ui.sortable'], function ($interpolateProvider) {
+
+            window.angularChildApp = window.angularChildApp || angular.module('backPackChildApp', ['ui.select', 'ngSanitize','ui.sortable'], function ($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
             });
@@ -136,6 +148,8 @@ if (is_array($items)) {
                         @if($_field['type']=='child')
                             @foreach ($_field['columns'] as $column)
                                     @if ( $column['type'] == 'child_select' )
+                                        $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
+                                    @elseif ( $column['type'] == 'child_select2' )
                                         $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
                                     @endif
                             @endforeach
@@ -327,6 +341,36 @@ if (is_array($items)) {
                             }
                         });
                     }
+                };
+            });
+
+            window.angularChildApp.filter('propsFilter', function() {
+                return function(items, props) {
+                    var out = [];
+                    if (angular.isArray(items)) {
+                        items.forEach(function(item) {
+                            var itemMatches = false;
+
+                            var keys = Object.keys(props);
+                            for (var i = 0; i < keys.length; i++) {
+                                var prop = keys[i];
+                                var text = props[prop].toLowerCase();
+                                if (item[prop] != undefined && item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                                    itemMatches = true;
+                                    break;
+                                }
+                            }
+
+                            if (itemMatches) {
+                                out.push(item);
+                            }
+                        });
+                    } else {
+                        // Let the output be the input untouched
+                        out = items;
+                    }
+
+                    return out;
                 };
             });
 

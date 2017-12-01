@@ -69,7 +69,7 @@ class visitsCrudController extends CrudController
                 'columns' => [
                     [
                         'label' => "Nombre",
-                        'type' => "child_select",
+                        'type' => "child_select2",
                         'name' => 'attende_id', // the column that contains the ID of that connected entity
                         'entity' => 'attende', // the method that defines the relationship in your Model
                         'attribute' => "fullname", // foreign key attribute that is shown to user

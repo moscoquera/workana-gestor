@@ -38,7 +38,7 @@ class VisitsObserver
             $attendance=[];
         }
         $this->relationSyncFromJson($visit,'attendance',$attendance,false);
-        
+
     }
 
 
