@@ -68,13 +68,6 @@ class User extends Authenticatable
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function profession(){
-        return $this->hasOne('App\Models\Profession');
-    }
-
-    public function company(){
-        return $this->hasOne('App\Models\Company');
-    }
 
     public function curriculum(){
        return $this->hasOne('App\Models\Curriculum','user_id');
@@ -89,6 +82,31 @@ class User extends Authenticatable
         $birthday=Carbon::parse($this->date_of_birth);
         $birthday->year=Carbon::now()->year;
         return $birthday->format('Y-m-d');
+    }
+
+
+    public function profession(){
+        return $this->belongsTo('App\Models\Profession');
+    }
+
+    public function nationality(){
+        return $this->belongsTo('App\Models\Country','nationality_id');
+    }
+
+    public function currentDepartment(){
+        return $this->belongsTo('App\Models\Department','current_dep_id');
+    }
+
+    public function currentCity(){
+        return $this->belongsTo('App\Models\City','current_city_id');
+    }
+
+    public function currentCountry(){
+        return $this->belongsTo('App\Models\Country','current_country_id');
+    }
+
+    public function getGenreAttribute(){
+        return $this->sex=='m'?'Masculino':'Femenino';
     }
 
 }

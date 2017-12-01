@@ -75,7 +75,7 @@ if (is_array($items)) {
         </table>
 
         <div class="array-controls btn-group m-t-10">
-            <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-default" type="button" ng-click="addItem()"><i class="fa fa-plus"></i> Adiciionar item ({{ $item_name }})</button>
+            <button ng-if="max == -1 || items.length < max" class="btn btn-sm btn-default" type="button" ng-click="addItem()"><i class="fa fa-plus"></i> Adicionar item ({{ $item_name }})</button>
         </div>
 
     </div>

@@ -32,12 +32,23 @@ class CreateUserCrudRequest extends CrudRequest
                 'max:30','required','string',
                 Rule::unique('users')
             ],
-            'first_name'=>'required|min:5|max:100',
-            'last_name'=>'required|min:5|max:100',
+            'first_name'=>'required|min:3|max:100',
+            'last_name'=>'required|min:3|max:100',
             'email'=>[
                 'nullable','max:100','email',
                 Rule::unique('users')
             ],
+            'date_of_birth'=>'required|date_format:Y-m-d',
+            'sex'=>'required|string|size:1',
+            'nationality_id'=>'required|integer|exists:countries,id',
+            'current_address'=>'required|string|min:10|max:512',
+            'current_dep_id' => 'required|integer|exists:departments,id',
+            'current_city_id' =>'required|integer|exists:cities,id',
+            'current_country_id'=>'required|integer|exists:countries,id',
+            'phone'=>'required|string|min:3|max:255',
+            'mobile'=>'required|string|min:10|max:255',
+            'profession_id'=>'required|integer|exists:professions,id',
+
         ];
     }
 

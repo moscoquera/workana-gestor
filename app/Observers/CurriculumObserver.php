@@ -99,6 +99,18 @@ class CurriculumObserver
         $curriculum->setPhotoAttribute($this->request->input('photo'));
         $curriculum->setDocumentAttribute($this->request->input('document'));
 
+        $curriculum->user->profession_id=$this->request->input('profession_id');
+        $curriculum->user->sex=$this->request->input('sex');
+        $curriculum->user->date_of_birth=$this->request->input('date_of_birth');
+        $curriculum->user->nationality_id=$this->request->input('nationality_id');
+        $curriculum->user->current_address=$this->request->input('current_address');
+        $curriculum->user->current_dep_id=$this->request->input('current_dep_id');
+        $curriculum->user->current_city_id=$this->request->input('current_city_id');
+        $curriculum->user->current_country_id=$this->request->input('current_country_id');
+        $curriculum->user->phone=$this->request->input('phone');
+        $curriculum->user->mobile=$this->request->input('mobile');
+        $curriculum->user->save();
+
         $this->relationSyncFromJson($curriculum,'educations',$educations);
         $this->relationSyncFromJson($curriculum,'experiences',$experiences);
         $this->relationSyncFromJson($curriculum,'languages',$languages,'language_id');

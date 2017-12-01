@@ -12,8 +12,15 @@ class PublicUser extends User
     protected $table='users';
 
     protected $fillable = [
-        'first_name','last_name', 'email', 'password','rol_id','username','level_id'
+        'first_name','last_name', 'email', 'password','rol_id','username','level_id','sex','date_of_birth',
+        'nationality_id','current_address','current_dep_id','current_city_id','current_country_id','phone',
+        'mobile','profession_id',
     ];
+
+    protected $appends=[
+        'fullname'
+    ];
+
 
     protected static function boot()
     {
@@ -44,6 +51,8 @@ class PublicUser extends User
     public function getDocumentAttribute(){
         return $this->username;
     }
+
+
 
 
 

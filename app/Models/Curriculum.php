@@ -18,14 +18,15 @@ class Curriculum extends Model
 
     protected $table='curriculums';
 
-    protected $fillable=['user_id','sex','date_of_birth',
-        'birth_city_id','birth_dep_id','nationality_id','current_address',
-        'current_dep_id','current_city_id','current_country_id','phone',
-        'mobile','profession_id','resume','attachments'];
+    protected $fillable=['user_id',
+        'birth_city_id','birth_dep_id',
+        'resume','attachments'];
 
     protected $casts = ['attachments' => 'array'];
 
-    protected $appends=['photo','document'];
+    protected $appends=['photo','document','sex','date_of_birth',
+        'nationality_id','current_address','current_dep_id','current_city_id','current_country_id','phone',
+        'mobile','profession_id',];
 
 
     protected static function boot()
@@ -45,21 +46,7 @@ class Curriculum extends Model
         return $this->belongsTo('App\Models\City','birth_city_id');
     }
 
-    public function nationality(){
-        return $this->belongsTo('App\Models\Country','nationality_id');
-    }
 
-    public function currentDepartment(){
-        return $this->belongsTo('App\Models\Department','current_dep_id');
-    }
-
-    public function currentCity(){
-        return $this->belongsTo('App\Models\City','current_city_id');
-    }
-
-    public function currentCountry(){
-        return $this->belongsTo('App\Models\Country','current_country_id');
-    }
 
     public function skills(){
         return $this->belongsToMany('App\Models\Skill')->using('App\Models\CurriculumSkill');
@@ -71,14 +58,6 @@ class Curriculum extends Model
 
     public function experiences(){
         return $this->hasMany('App\Models\Experience')->orderBy('start_date','desc');
-    }
-
-    public function profession(){
-        return $this->belongsTo('App\Models\Profession');
-    }
-
-    public function company(){
-        return $this->belongsTo('App\Models\Company');
     }
 
     public function languages(){
@@ -134,9 +113,6 @@ class Curriculum extends Model
         return $this->user->photo;
     }
 
-    public function getGenreAttribute(){
-        return $this->sex=='m'?'Masculino':'Femenino';
-    }
 
     public function getDocumentAttribute(){
         return $this->user->username;
@@ -146,5 +122,110 @@ class Curriculum extends Model
         $this->user->username=$value;
         $this->user->save();
     }
+
+    public function getProfessionIdAttribute(){
+        return $this->user->profession_id;
+    }
+
+    public function getSexAttribute(){
+        return $this->user->sex;
+    }
+
+    public function getDateOfBirthAttribute(){
+        return $this->user->date_of_birth;
+    }
+
+    public function getNationalityIdAttribute(){
+        return $this->user->nationality_id;
+    }
+
+    public function getCurrentAddressAttribute(){
+        return $this->user->current_address;
+    }
+
+    public function getCurrentDepIdAttribute(){
+        return $this->user->current_dep_id;
+    }
+
+    public function getCurrentCityIdAttribute(){
+        return $this->user->current_city_id;
+    }
+
+    public function getCurrentCountryIdAttribute(){
+        return $this->user->current_country_id;
+    }
+
+    public function getPhoneAttribute(){
+        return $this->user->phone;
+    }
+
+    public function getMobileAttribute(){
+        return $this->user->mobile;
+    }
+
+    public function setProfessionIdAttribute($value){
+        $this->user->profession_id=$value;
+        $this->user->save();
+    }
+
+    public function setSexAttribute($value){
+        $this->user->sex=$value;
+        $this->user->save();
+    }
+
+    public function setDateOfBirthAttribute($value){
+        $this->user->date_of_birth=$value;
+        $this->user->save();
+    }
+
+    public function setNationalityIdAttribute($value){
+        $this->user->nationality_id=$value;
+        $this->user->save();
+    }
+
+    public function setCurrentAddressAttribute($value){
+        $this->user->current_address=$value;
+        $this->user->save();
+    }
+
+    public function setCurrentDepIdAttribute($value){
+        $this->user->current_dep_id=$value;
+        $this->user->save();
+    }
+
+    public function setCurrentCityIdAttribute($value){
+        $this->user->current_city_id=$value;
+        $this->user->save();
+    }
+
+    public function setCurrentCountryIdAttribute($value){
+        $this->user->current_country_id=$value;
+        $this->user->save();
+    }
+
+    public function setPhoneAttribute($value){
+        $this->user->phone=$value;
+        $this->user->save();
+    }
+
+    public function setMobileAttribute($value){
+        $this->user->mobile=$value;
+        $this->user->save();
+    }
+
+
+    public function profession(){
+        return $this->belongsTo('App\Models\Profession');
+    }
+
+    public function getCurrentCityAttribute(){
+        return $this->user->currentCity;
+    }
+
+    public function currentcompanies(){
+        return $this->experiences()->currently()->get();
+    }
+
+
 
 }

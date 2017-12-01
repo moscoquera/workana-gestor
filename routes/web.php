@@ -73,6 +73,7 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
         Route::post('birthdays/{birthday}/email','Users\birthdaysCrudController@sendemail');
     });
 
+    CRUD::resource('visits','visitsCrudController');
 });
 
 Route::group(['middleware'=>['auth']],function(){

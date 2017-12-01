@@ -20,9 +20,8 @@ class birthdaysCrudController extends CrudController
         $this->crud->setRoute('birthdays');
         $this->crud->setEntityNameStrings('cumpleaño', 'cumpleaños');
         $this->crud->denyAccess(['create','update','delete']);
-        $this->crud->addClause('selectRaw','users.*,curriculums.date_of_birth');
-        $this->crud->addClause('join','curriculums','users.id','curriculums.user_id');
-        $this->crud->addClause('whereRaw','month(curriculums.date_of_birth) = month(CURDATE())');
+        $this->crud->addClause('selectRaw','users.*');
+        $this->crud->addClause('whereRaw','month(users.date_of_birth) = month(CURDATE())');
 
         $this->crud->addColumns([
             [

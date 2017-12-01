@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Curriculum;
+use App\Models\Visit;
 use App\Observers\CurriculumObserver;
+use App\Observers\VisitsObserver;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Curriculum::observe(CurriculumObserver::class);
+        Visit::observe(VisitsObserver::class);
 
         Blade::directive('pushonce', function ($expression) {
             $domain = explode(':', trim(substr($expression, 1, -1)));

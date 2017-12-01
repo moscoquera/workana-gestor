@@ -191,12 +191,7 @@ class ContractsCrudController extends CrudController
 
 
         if ($professions) {
-            $users = $users->whereExists(function ($query) use ($professions) {
-                $query->select(DB::raw(1))
-                    ->from('curriculums')
-                    ->whereRaw('users.id = curriculums.user_id')
-                    ->whereIn('curriculums.profession_id', $professions);
-            });
+            $users = $users->whereIn('users.profession_id', $professions);
         }
         if ($skills) {
             $users = $users->whereExists(function ($query) use ($skills) {
@@ -228,24 +223,14 @@ class ContractsCrudController extends CrudController
 
 
         if ($sex) {
-            $users = $users->whereExists(function ($query) use ($sex) {
-                $query->select(DB::raw(1))
-                    ->from('curriculums')
-                    ->whereRaw('users.id = curriculums.user_id')
-                    ->where('curriculums.sex', $sex);
-            });
+            $users = $users->where('users.sex', $sex);
         }
         if ($ages) {
             $ages = explode(',', $ages);
             $ages[0] = intval($ages[0]);
             $ages[1] = intval($ages[1]);
-            $users = $users->whereExists(function ($query) use ($ages) {
-                $query->select(DB::raw(1))
-                    ->from('curriculums')
-                    ->whereRaw('users.id = curriculums.user_id')
-                    ->whereRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) >= ' . $ages[0])
-                    ->whereRaw('TIMESTAMPDIFF(YEAR,curriculums.date_of_birth,CURDATE()) <= ' . $ages[1]);
-            });
+            $users = $users->whereRaw('TIMESTAMPDIFF(YEAR,users.date_of_birth,CURDATE()) >= ' . $ages[0])
+                ->whereRaw('TIMESTAMPDIFF(YEAR,users.date_of_birth,CURDATE()) <= ' . $ages[1]);
         }
 
         if ($languages) {
@@ -258,12 +243,7 @@ class ContractsCrudController extends CrudController
         }
 
         if ($cities) {
-            $users = $users->whereExists(function ($query) use ($cities) {
-                $query->select(DB::raw(1))
-                    ->from('curriculums')
-                    ->whereRaw('users.id = curriculums.user_id')
-                    ->whereIn('curriculums.current_city_id', $cities);
-            });
+            $users = $users->whereIn('users.current_city_id', $cities);
         }
 
         $professions = Profession::all();

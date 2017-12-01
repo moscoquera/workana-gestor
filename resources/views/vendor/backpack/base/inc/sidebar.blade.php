@@ -56,6 +56,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/birthdays') }}"><i class="fa fa-birthday-cake"></i> <span>Cumpleaños</span></a></li>
                 </ul>
             </li>
+                <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/visits') }}">Visitas</a></li>
 
 
             @endif

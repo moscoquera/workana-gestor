@@ -71,8 +71,8 @@
         <strong>Dirección: </strong>
         <div style="display: inline-block; vertical-align: top">
             {{ $curriculum->current_address  }}<br>
-            {{ trim($curriculum->currentcity->name.', '.$curriculum->currentdepartment->name) }}<br>
-            {{ $curriculum->currentcountry->name }}<br>
+            {{ trim($curriculum->user->currentcity->name.', '.$curriculum->user->currentdepartment->name) }}<br>
+            {{ $curriculum->user->currentcountry->name }}<br>
         </div>
         <hr/>
         <h4 class="text-light-blue">Información personal</h4>
@@ -129,11 +129,20 @@
                             <address>
                                 {{ trim($curriculum->birthcity->name.', '.$curriculum->birthdepartment->name) }}
                                 <br>
-                                {{ $curriculum->nationality->name }}<br>
+                                {{ $curriculum->user->nationality->name }}<br>
                             </address>
                         </div>
                         <br/>
-                        <strong>Empresa:  </strong><span>{{ $curriculum->company->name }}</span>
+                        <strong>Empresas actuales:  </strong>
+                        <div>
+                            <ul>
+                                @foreach( $curriculum->currentcompanies() as $company)
+                                    <li>
+                                        <p>{{$company->name}}</p>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
 
 
 

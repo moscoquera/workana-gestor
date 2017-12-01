@@ -7,7 +7,11 @@
 
 <div @include('crud::inc.field_wrapper_attributes') >
     <label>{!! $field['label'] !!}</label>
-    <?php $entity_model = $crud->model; ?>
+    <?php
+    $entity_model = $crud->model;
+    $parent_model = isset($field['parent_model'])?$field['parent_model']:null;
+
+    ?>
 
     <select
             name="{{ $field['name'] }}"
@@ -23,7 +27,7 @@
             @if ($item)
 
                 {{-- allow clear --}}
-                @if ($entity_model::isColumnNullable($field['name']))
+                @if ($parent_model?($parent_model::isColumnNullable($field['name'])):($entity_model::isColumnNullable($field['name'])))
                     <option value="" selected>
                         {{ $field['placeholder'] }}
                     </option>
@@ -53,7 +57,7 @@
         <link href="{{ asset('vendor/adminlte/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
         {{-- allow clear --}}
-        @if ($entity_model::isColumnNullable($field['name']))
+        @if ($parent_model?($parent_model::isColumnNullable($field['name'])):($entity_model::isColumnNullable($field['name'])))
             <style type="text/css">
                 .select2-selection__clear::after {
                     content: ' {{ trans('backpack::crud.clear') }}';
@@ -89,7 +93,7 @@
                         minimumInputLength: "{{ $field['minimum_input_length'] }}",
 
                         {{-- allow clear --}}
-                                @if ($entity_model::isColumnNullable($field['name']))
+                                @if ($parent_model?($parent_model::isColumnNullable($field['name'])):($entity_model::isColumnNullable($field['name'])))
                         allowClear: true,
                         @endif
                         ajax: {
@@ -123,7 +127,7 @@
                         },
                     })
                     {{-- allow clear --}}
-                    @if ($entity_model::isColumnNullable($field['name']))
+                    @if ($parent_model?($parent_model::isColumnNullable($field['name'])):($entity_model::isColumnNullable($field['name'])))
                         .on('select2:unselecting', function(e) {
                             $(this).val('').trigger('change');
                             // console.log('cleared! '+$(this).val());
