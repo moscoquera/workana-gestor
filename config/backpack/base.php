@@ -33,8 +33,8 @@ return [
 
     // Date & Datetime Format Syntax: https://github.com/jenssegers/date#usage
     // (same as Carbon)
-    'default_date_format'     => 'j F Y',
-    'default_datetime_format' => 'j F Y H:i',
+    'default_date_format'     => 'Y-m-d',
+    'default_datetime_format' => 'Y-m-d H:i',
 
     /*
     |--------------------------------------------------------------------------

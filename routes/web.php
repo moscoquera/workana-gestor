@@ -74,6 +74,12 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     });
 
     CRUD::resource('visits','visitsCrudController');
+    CRUD::resource('electiontypes','ElectionTypeCrudController');
+    CRUD::resource('elections','ElectionCrudController');
+    CRUD::resource('candidates','CandidatesCrudController');
+    CRUD::resource('candidacies','CandidaciesCrudController');
+    CRUD::resource('election-support-types','ElectionSupportTypeCrudController');
+    CRUD::resource('election-supports','ElectionSupportCrudController');
 });
 
 Route::group(['middleware'=>['auth']],function(){

@@ -129,7 +129,12 @@ return [
         'resume'=>'resumen',
         'photo'=>'foto',
         'first_name'=>'nombres',
-        'last_name'=>'apellidos'
+        'last_name'=>'apellidos',
+        'name'=>'nombre',
+        'type_id'=>'tipo',
+        'type'=>'tipo',
+        'proyected_votes'=>'votos proyectados',
+        'gotten_votes'=>'votos obtenidos'
     ],
 
 ];

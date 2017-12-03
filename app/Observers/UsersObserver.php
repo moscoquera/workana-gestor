@@ -22,7 +22,7 @@ class UsersObserver
     }
 
     public function updated(Request $request){
-        $this
+     //   $this
     }
 
 

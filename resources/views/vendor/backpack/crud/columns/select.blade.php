@@ -7,7 +7,15 @@
 		    foreach ($attributes as $attribute){
 		        $val=$val->{$attribute};
             }
-	    	echo $val;
+	    	if(gettype($val)=='object'){
+				if (get_class($val)=='Illuminate\Support\Carbon'){
+				    if (isset($column['format'])){
+				     $val=$val->format($column['format']);
+					}
+				}
+
+			}
+			echo $val;
 	    }
 	?>
 </td>
