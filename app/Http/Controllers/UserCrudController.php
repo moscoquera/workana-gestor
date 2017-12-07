@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\UpdateUserCrudRequest;
+use App\Models\PublicUser;
 use Backpack\CRUD\app\Http\Requests\CrudRequest as StoreRequest;
+use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Http\Request;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 use App\Http\Requests\Users\CreateUserCrudRequest;
+use Yajra\DataTables\Html\Builder;
 
 class UserCrudController extends CrudController
 {
+
+    protected $htmlBuilder;
+
+    public function __construct(Builder $htmlBuilder)
+    {
+        parent::__construct();
+        $this->htmlBuilder = $htmlBuilder;
+    }
+
 
     public function setup()
     {
         $this->crud->setModel('App\Models\PublicUser');
         $this->crud->setRoute('users');
         $this->crud->setEntityNameStrings('usuario','usuarios');
+        $this->crud->allowAccess('list');
 
         $this->crud->setColumns([
             [
@@ -47,6 +60,14 @@ class UserCrudController extends CrudController
                 'entity'=>'profession',
                 'attribute'=>'name',
                 'model'=>'App.Models.Profession'
+            ],
+            [
+                'label'=>'Líder',
+                'name'=>'leader',
+                'type'=>'select',
+                'entity'=>'leader',
+                'attribute'=>'fullname',
+                'model'=>PublicUser::class,
             ]
         ]);
 
@@ -159,8 +180,42 @@ class UserCrudController extends CrudController
                     'model'=>'App\Models\Profession',
                     'box'=>'general'
                 ],
+                [
+                    'name'=>'leader_id',
+                    'label'=>'Líder',
+                    'type'=>'select2',
+                    'entity'=>'leader',
+                    'attribute'=>'fullname',
+                    'model'=>PublicUser::class,
+                ],
+                [
+                    'label'=>'Lugar de votación',
+                    'type'=>'textarea',
+                    'name'=>'election_address',
 
+                ],
+                [
+                    'label' => "Departamento de votación",
+                    'type' => "select2",
+                    'name' => 'election_dep_id', // the column that contains the ID of that connected entity
+                    'entity' => 'election_department', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => "App\Models\Department", // foreign key model
 
+                ],
+                [
+                    // 1-n relationship
+                    'label' => "Ciudad de votación", // Table column heading
+                    'type' => "select2_from_ajax_linked",
+                    'name' => 'election_city_id', // the column that contains the ID of that connected entity
+                    'entity' => 'election_city', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => "App\Models\City", // foreign key model
+                    'data_source' => url("api/city"), // url to controller search function (with /{id} should return model)
+                    'placeholder' => "Seleccione la ciudad de votación", // placeholder for the select
+                    'minimum_input_length' => 2, // minimum characters to type before querying results
+                    'linked_name'=>'election_dep_id',
+                ],
 
 
             ]
@@ -192,6 +247,7 @@ class UserCrudController extends CrudController
         ],'update');
 
         $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
+        $this->crud->addButtonFromModelFunction('line','dashboard','crudDashboard','beginning');
 
     }
 
@@ -214,5 +270,88 @@ class UserCrudController extends CrudController
         return parent::updateCrud($request);
     }
 
+
+    public function show($id)
+    {
+
+        $user = PublicUser::findOrFail($id);
+        $visitsBuilder = app()->make(Builder::class);
+        $eventsBuilder = app()->make(Builder::class);
+        $visitsBuilder->addColumn([
+                    'data'=>'dateandtime',
+                    'name'=>'visit.dateandtime',
+                    'title'=>'Fecha'
+                ])
+            ->addColumn([
+                'data'=>'attended',
+                'name'=>'attended',
+                'title'=>'Asistió?'
+            ])
+            ->addColumn([
+                'data'=>'address',
+                'name'=>'visit.address',
+                'title'=>'Lugar'
+            ])
+            ->addColumn([
+                'data'=>'description',
+                'name'=>'visit.description',
+                'title'=>'Descripción'
+            ])
+            ->addColumn([
+                'data'=>'comments',
+                'name'=>'visit.comments',
+                'title'=>'Comentarios'
+            ])->parameters([
+                'language' => [
+                    'url' => url(url('vendor/datatables/Spanish.json')),//<--here
+                ],
+                'order'=>[0,'desc']
+                // other configs
+            ])->setTableAttribute('id','dtVisits')
+            ->ajax(route('api.user.visits',['user'=>$id]));
+
+        $eventsBuilder->addColumn([
+            'data'=>'dateandtime',
+            'name'=>'event.dateandtime',
+            'title'=>'Fecha'
+        ])->addColumn([
+            'data'=>'name',
+            'name'=>'event.name',
+            'title'=>'Nombre del evento'
+        ])->addColumn([
+                'data'=>'attended',
+                'name'=>'attended',
+                'title'=>'Asistió?'
+            ])
+            ->addColumn([
+                'data'=>'address',
+                'name'=>'event.address',
+                'title'=>'Lugar'
+            ])->parameters([
+                'language' => [
+                    'url' => url(url('vendor/datatables/Spanish.json')),//<--here
+                ],
+                'order'=>[0,'desc']
+                // other configs
+            ])->setTableAttribute('id','dtEvents')
+            ->ajax(route('api.user.events.asistance',['user'=>$id]));
+
+        $totalEventsInvitations=$user->attendanceToEvents()->count();
+        $totalEventsAttended=$user->attendanceToEvents()->where('attended',1)->count();
+        $eventAttendanceChart = Charts::create('bar','highcharts')->title('Asistencia a eventos')
+            ->labels(['asistidos','sin asistir'])
+            ->values([$totalEventsAttended,$totalEventsInvitations-$totalEventsAttended])->dimensions(0,300);
+
+        return view('users.dashboard',[
+            'charts'=>[
+                'event_attendance'=>$eventAttendanceChart
+            ],
+            'user'=>$user,
+            'tables'=>[
+                'visits'=>$visitsBuilder,
+                'events'=>$eventsBuilder,
+            ]
+        ]);
+    }
 
 }

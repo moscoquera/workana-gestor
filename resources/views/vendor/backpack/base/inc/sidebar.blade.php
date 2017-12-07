@@ -66,7 +66,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/candidates') }}"><i class="fa fa-users"></i> <span>Candidatos</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/candidacies') }}"><i class="fa fa-list-ol"></i> <span>Candidaturas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/election-supports') }}"><i class="fa fa-random"></i> <span>Apoyo electoral</span></a></li>
-
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/election-city-results') }}"><i class="fa fa-map-marker"></i> <span>Resultados por municipio</span></a></li>
                 </ul>
             </li>
 

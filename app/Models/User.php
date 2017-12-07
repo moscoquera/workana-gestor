@@ -15,6 +15,9 @@ class User extends Authenticatable
     use CrudTrait;
 
     protected $table='users';
+    protected $casts=[
+        'date_of_birth'=>'date'
+    ];
 
     protected static function boot()
     {
@@ -109,4 +112,7 @@ class User extends Authenticatable
         return $this->sex=='m'?'Masculino':'Femenino';
     }
 
+    public function getAgeAttribute(){
+        return $this->date_of_birth->diffInYears(Carbon::now());
+    }
 }

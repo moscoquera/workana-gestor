@@ -14,6 +14,10 @@ class Event extends Model
         'attendes'
     ];
 
+    protected $casts=[
+        'dateandtime'=>'datetime'
+    ];
+
     public function type(){
         return $this->belongsTo(EventType::class);
     }

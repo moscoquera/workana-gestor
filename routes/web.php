@@ -80,6 +80,7 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('candidacies','CandidaciesCrudController');
     CRUD::resource('election-support-types','ElectionSupportTypeCrudController');
     CRUD::resource('election-supports','ElectionSupportCrudController');
+    CRUD::resource('election-city-results','ElectionCityCrudController');
 });
 
 Route::group(['middleware'=>['auth']],function(){
@@ -89,9 +90,25 @@ Route::group(['middleware'=>['auth']],function(){
     CRUD::resource('curriculum','CurriculumCrudController');
     Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');
 
-
     Route::get('/api/city', 'Api\CityController@index');
     Route::get('/api/city/{id}', 'Api\CityController@show');
+
+});
+
+Route::group(['middleware'=>['auth'],'prefix'=>'ajax','namespace'=>'Api'],function (){
+    Route::get('user/{user}/visits','UserDashboardController@visit_attendance')->name('api.user.visits');
+    Route::get('user/{user}/events/attendance','UserDashboardController@event_attendance')->name('api.user.events.asistance');
+
+    Route::get('election/candidate', 'ElectionController@index');
+    Route::get('elections', 'ElectionController@elections');
+
+    Route::get('election/results/city', 'ElectionController@resultsCity')->name('api.election.results.city');
+    Route::get('election/results/leader', 'ElectionController@resultsLeader')->name('api.election.results.leader');
+    Route::get('election/results/candidate', 'ElectionController@resultsCandidate')->name('api.election.results.candidate');
+
+
+
+    Route::get('users','UsersController@users');
 
 });
 

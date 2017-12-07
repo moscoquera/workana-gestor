@@ -15,4 +15,8 @@ class City extends Model
         return $this->belongsTo('App\Models\Department');
     }
 
+    public function getFullnameAttribute(){
+        return $this->department->name.' - '.$this->name;
+    }
+
 }

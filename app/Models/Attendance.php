@@ -24,5 +24,14 @@ class Attendance extends Model
         return $this->morphTo();
     }
 
+    public function visit(){
+        return $this->belongsTo(Visit::class,'attendable_id');
+    }
+
+    public function event(){
+        return $this->belongsTo(Event::class,'attendable_id');
+    }
+
+
 
 }
