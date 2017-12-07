@@ -138,7 +138,7 @@ class ElectionController extends Controller
         coalesce(sum(election_users.controlled_votes),0) as controlled_votes,
         coalesce(sum(election_users.identified_votes),0) as identified_votes
         ");
-        $query->groupBy('users.leader_id');
+        $query->groupBy(['users.leader_id','leader.first_name','leader.last_name']);
 
 
         if ($election){
