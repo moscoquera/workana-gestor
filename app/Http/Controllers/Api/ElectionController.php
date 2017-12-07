@@ -82,7 +82,7 @@ class ElectionController extends Controller
         $query=$query->join('elections','elections.id','=','election_candidates.election_id');
         $query=$query->join('cities','cities.id','=','city_election_candidates.city_id');
         $query->whereRaw("year(elections.date) = $year ");
-        $query->selectRaw('cities.name as name,sum(city_election_candidates.votes) as votes');
+        $query->selectRaw('any_value(cities.name) as name,sum(city_election_candidates.votes) as votes');
         $query->groupBy('cities.id');
 
 
@@ -132,7 +132,7 @@ class ElectionController extends Controller
             ->join('elections','elections.id','=','election_users.election_id');
         $query->leftJoin('users as leader','users.leader_id','=','leader.id');
         $query->whereRaw("year(elections.date) = $year ");
-        $query->selectRaw("coalesce(concat(leader.first_name,' ',leader.last_name),'Sin líder') as fullname,
+        $query->selectRaw("any_value(coalesce(concat(leader.first_name,' ',leader.last_name),'Sin líder')) as fullname,
         coalesce(sum(election_users.proyected_votes),0) as proyected_votes,
         coalesce(sum(election_users.registered_votes),0) as registered_votes,
         coalesce(sum(election_users.controlled_votes),0) as controlled_votes,
@@ -196,7 +196,7 @@ class ElectionController extends Controller
         $query=$query->join('elections','elections.id','=','election_candidates.election_id');
         $query=$query->join('candidates','candidates.id','=','election_candidates.candidate_id');
         $query->whereRaw("year(elections.date) = $year ");
-        $query->selectRaw("candidates.name as name,
+        $query->selectRaw("any_value(candidates.name) as name,
         case coalesce(sum(election_candidates.elected),0) when 0 then 'No' else 'Sí' end as elected,
         coalesce(sum(election_candidates.proyected_votes),0) as proyected_votes,
         coalesce(sum(election_candidates.gotten_votes),0) as gotten_votes       
