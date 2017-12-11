@@ -16,7 +16,10 @@ class City extends Model
     }
 
     public function getFullnameAttribute(){
-        return $this->department->name.' - '.$this->name;
+        if ($this->department) {
+            return $this->department->name . ' - ' . $this->name;
+        }
+        return $this->department_name . ' - ' . $this->name;
     }
 
 }

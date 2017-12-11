@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\UpdateUserCrudRequest;
+use App\Models\Neighborhood;
 use App\Models\PublicUser;
+use App\Models\Town;
 use Backpack\CRUD\app\Http\Requests\CrudRequest as StoreRequest;
 use ConsoleTVs\Charts\Facades\Charts;
 use Illuminate\Http\Request;
@@ -153,6 +155,34 @@ class UserCrudController extends CrudController
 
                 ],
                 [
+                    // 1-n relationship
+                    'label' => "Barrio", // Table column heading
+                    'type' => "select2_from_ajax_linked",
+                    'name' => 'neighborhood_id', // the column that contains the ID of that connected entity
+                    'entity' => 'neighborhood', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => Neighborhood::class,
+                    'data_source' => url("api/neighborhoods"), // url to controller search function (with /{id} should return model)
+                    'placeholder' => "Seleccione un barrio", // placeholder for the select
+                    'minimum_input_length' => 2, // minimum characters to type before querying results
+                    'linked_name'=>'current_city_id',
+
+                ],
+                [
+                    // 1-n relationship
+                    'label' => "Localidad", // Table column heading
+                    'type' => "select2_from_ajax_linked",
+                    'name' => 'town_id', // the column that contains the ID of that connected entity
+                    'entity' => 'town', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => Town::class,
+                    'data_source' => url("api/towns"), // url to controller search function (with /{id} should return model)
+                    'placeholder' => "Seleccione una localidad", // placeholder for the select
+                    'minimum_input_length' => 0, // minimum characters to type before querying results
+                    'linked_name'=>'current_city_id',
+
+                ],
+                [
                     'label' => "Pais de Residencia actual",
                     'type' => "select2",
                     'name' => 'current_country_id', // the column that contains the ID of that connected entity
@@ -246,7 +276,6 @@ class UserCrudController extends CrudController
 
         ],'update');
 
-        $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
         $this->crud->addButtonFromModelFunction('line','dashboard','crudDashboard','beginning');
 
     }

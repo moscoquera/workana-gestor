@@ -44,6 +44,8 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('countries','CountriesCrudController');
     CRUD::resource('departments','DepartmentsCrudController');
     CRUD::resource('cities','CitiesCrudController');
+    CRUD::resource('towns','TownsCrudController');
+    CRUD::resource('neighborhoods','NeighborhoodsCrudController');
     CRUD::resource('professions','ProfessionsCrudController');
     CRUD::resource('companies','CompaniesCrudController');
     CRUD::resource('educations','Curriculum\EducationCrudController');
@@ -92,6 +94,10 @@ Route::group(['middleware'=>['auth']],function(){
 
     Route::get('/api/city', 'Api\CityController@index');
     Route::get('/api/city/{id}', 'Api\CityController@show');
+
+    Route::get('/api/towns', 'Api\CityController@towns');
+    Route::get('/api/neighborhoods', 'Api\CityController@neighborhoods');
+
 
 });
 
