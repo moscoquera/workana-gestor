@@ -8,8 +8,10 @@ use App\Models\Profession;
 use App\Models\PublicUser;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use function foo\func;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ContractsCrudController extends CrudController
 {
@@ -166,6 +168,37 @@ class ContractsCrudController extends CrudController
 
     public function findpost(ProfessionalSearch $request)
     {
+
+        $users=$this->find_process($request);
+        $professions = Profession::all();
+        $queryArgs=$request->input();
+        return view('contracts.find', ['crud' => $this->crud, 'users' => $users, 'professions' => $professions,'queryArgs'=>$queryArgs]);
+    }
+
+    public function export(ProfessionalSearch $request){
+        $users=$this->find_process($request);
+        $professions = Profession::all();
+
+
+        Excel::create('Busqueda profesionales',function ($excel) use($users){
+            $excel->sheet('profesionales',function ($sheet) use ($users){
+                $sheet->appendRow(array(
+                    '# de documento','Nombre completo','Profesión','Habilidades'
+                ));
+                foreach ($users as $user){
+                    $sheet->appendRow(array(
+                        $user->document,
+                        $user->fullname,
+                        $user->profession->name,
+                        join('\n',$user->curriculum->skills->pluck('name')->toArray())
+                    ));
+                }
+            });
+        })->export('xls');
+    }
+
+
+    public function find_process(ProfessionalSearch $request){
         $professions = $request->input('professions');
         $skills = $request->input('skills');
         $companies = $request->input('companies');
@@ -213,12 +246,7 @@ class ContractsCrudController extends CrudController
 
 
         if ($educations) {
-            $users = $users->whereExists(function ($query) use ($educations) {
-                $query->select(DB::raw(1))
-                    ->from('educations')->join('curriculums', 'educations.curriculum_id', '=', 'curriculums.id')
-                    ->whereRaw('users.id = curriculums.user_id')
-                    ->whereIn('educations.type_id', $educations);
-            });
+            $users = $users->join('professions','users.profession_id','=','professions.id')->where('professions.type_id',$educations);
         }
 
 
@@ -246,9 +274,7 @@ class ContractsCrudController extends CrudController
             $users = $users->whereIn('users.current_city_id', $cities);
         }
 
-        $professions = Profession::all();
-        $users = $users->with('curriculum')->with('curriculum.skills')->get();
-        return view('contracts.find', ['crud' => $this->crud, 'users' => $users, 'professions' => $professions]);
+        return $users->with('curriculum')->with('curriculum.skills')->get();
     }
 
 }

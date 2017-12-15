@@ -28,7 +28,7 @@ class ElectionTypeCrudController extends CrudController
             ],
             [
                 'name' => 'order',
-                'label' => 'orden',
+                'label' => 'Orden',
             ]
         ]);
 
@@ -40,7 +40,7 @@ class ElectionTypeCrudController extends CrudController
             ],
             [
                 'name' => 'order',
-                'label' => 'orden',
+                'label' => 'Orden',
                 'type' => 'number',
             ]
         ]);

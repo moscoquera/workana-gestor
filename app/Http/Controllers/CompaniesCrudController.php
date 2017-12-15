@@ -41,6 +41,22 @@ class CompaniesCrudController extends CrudController
               'name'=>'phone',
               'label'=>'Telefonos',
               'type'=>'text'
+          ],
+          [
+              'label'=>'Departamento',
+              'name'=>'department_id',
+              'type'=>'select',
+              'attribute'=>'name',
+              'entity'=>'department',
+              'model'=>Department::class,
+          ],
+          [
+              'label'=>'Ciudad',
+              'name'=>'city_id',
+              'type'=>'select',
+              'attribute'=>'name',
+              'model'=>City::class,
+              'entity'=>'city'
           ]
       ]);
 
@@ -65,7 +81,30 @@ class CompaniesCrudController extends CrudController
                 'name'=>'phone',
                 'label'=>'Telefonos',
                 'type'=>'text'
-            ]
+            ],
+            [
+                'label' => "Departamento",
+                'type' => "select2",
+                'name' => 'department_id',
+                'entity' => 'department',
+                'attribute' => "name",
+                'model' => "App\Models\Department",
+
+            ],
+            [
+                // 1-n relationship
+                'label' => "Ciudad",
+                'type' => "select2_from_ajax_linked",
+                'name' => 'city_id', // the column that contains the ID of that connected entity
+                'entity' => 'city', // the method that defines the relationship in your Model
+                'attribute' => "name", // foreign key attribute that is shown to user
+                'model' => "App\Models\City", // foreign key model
+                'data_source' => url("api/city"),
+                'placeholder' => "Seleccione la ciudad",
+                'minimum_input_length' => 2,
+                'linked_name'=>'department_id',
+
+            ],
         ]);
 
     }

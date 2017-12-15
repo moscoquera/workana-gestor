@@ -27,15 +27,15 @@ class tempUsersCrudController extends CrudController
                 'name'=>'document'
             ],
             [
-                'label'=>'nombres',
+                'label'=>'Nombres',
                 'name'=>'first_name'
             ],
             [
-                'label'=>'apellidos',
+                'label'=>'Apellidos',
                 'name'=>'last_name'
             ],
             [
-                'label'=>'email',
+                'label'=>'Email',
                 'name'=>'email'
             ],
             [
@@ -54,15 +54,15 @@ class tempUsersCrudController extends CrudController
                 'name'=>'document'
             ],
             [
-                'label'=>'nombres',
+                'label'=>'Nombres',
                 'name'=>'first_name'
             ],
             [
-                'label'=>'apellidos',
+                'label'=>'Apellidos',
                 'name'=>'last_name'
             ],
             [
-                'label'=>'email',
+                'label'=>'Email',
                 'name'=>'email',
                 'type'=>'email'
             ],

@@ -40,6 +40,7 @@ Route::group(['middleware' => 'web', 'prefix' => config('backpack.base.route_pre
 
 Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('users','UserCrudController');
+    CRUD::resource('curriculums','UserCurriculumsCrudController');
     CRUD::resource('admins','AdminsCrudController');
     CRUD::resource('countries','CountriesCrudController');
     CRUD::resource('departments','DepartmentsCrudController');
@@ -54,6 +55,7 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('contracts','ContractsCrudController')->with(function(){
         Route::get('contracts/find','ContractsCrudController@find');
         Route::post('contracts/find','ContractsCrudController@findpost');
+        Route::get('contracts/search/export','ContractsCrudController@export');
     });
 
     CRUD::resource('events','EventsCrudController')->with(function(){
@@ -76,6 +78,8 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     });
 
     CRUD::resource('visits','visitsCrudController');
+    CRUD::resource('visit-subjects','Visits\SubjectCrudController');
+    Route::post('visit/media-dropzone', ['uses' => 'visitsCrudController@handleDropzoneUpload']);
     CRUD::resource('electiontypes','ElectionTypeCrudController');
     CRUD::resource('elections','ElectionCrudController');
     CRUD::resource('candidates','CandidatesCrudController');
@@ -83,12 +87,14 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('election-support-types','ElectionSupportTypeCrudController');
     CRUD::resource('election-supports','ElectionSupportCrudController');
     CRUD::resource('election-city-results','ElectionCityCrudController');
+    CRUD::resource('educational-institutions','EducationalInstitutionCrudController');
 });
 
 Route::group(['middleware'=>['auth']],function(){
     Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
     Route::post('curriculum/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
+    Route::get('curriculum/{curriculum}/attachments','CurriculumCrudController@attachments');
     CRUD::resource('curriculum','CurriculumCrudController');
     Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');
 

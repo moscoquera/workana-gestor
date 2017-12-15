@@ -24,7 +24,7 @@ class CitiesCrudController extends CrudController
             ],
             [
                 'name'=>'department_id',
-                'label'=>'departamento',
+                'label'=>'Departamento',
                 'type'=>'select',
                 'entity'=>'department',
                 'attribute'=>'name',
@@ -40,7 +40,7 @@ class CitiesCrudController extends CrudController
                 ],
                 [
                     'name'=>'department_id',
-                    'label'=>'departamento',
+                    'label'=>'Departamento',
                     'type'=>'select2',
                     'entity'=>'department',
                     'attribute'=>'name',

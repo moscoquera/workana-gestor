@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use Backpack\CRUD\app\Http\Requests\CrudRequest;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class CompanyCrudRequest extends CrudRequest
+class EducationalInstitutionCrudRequest extends CrudRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +14,7 @@ class CompanyCrudRequest extends CrudRequest
      */
     public function authorize()
     {
-        return Auth::user()->isAdmin();
+        return Auth::check() && Auth::user()->isAdmin();
     }
 
     /**
@@ -26,13 +25,9 @@ class CompanyCrudRequest extends CrudRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|min:2|max:200',
-            'nit'=>'required|string|min:2|max:200',
-            'address'=>'required|string|min:2|max:200',
-            'phone'=>'required|string|min:2|max:200',
+            'name'=>'required|string|max:100',
             'department_id'=>'required|integer|exists:departments,id',
             'city_id'=>'required|integer|exists:cities,id',
-
         ];
     }
 }

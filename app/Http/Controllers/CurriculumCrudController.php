@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Curriculum\CreateCurriculumRequest;
 use App\Models\Curriculum;
 use App\Models\CurriculumEducation;
+use App\Models\EducationalInstitution;
 use App\Models\PublicUser;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -151,7 +152,12 @@ class CurriculumCrudController extends CrudController
                             'box'=>'personal'
                         ]);
                 }elseif($this->request->route('curriculum')){
-                    $pcurr = Curriculum::find($this->request->route('curriculum'));
+                    if(is_object($this->request->route('curriculum'))){
+                        $pcurr = $this->request->route('curriculum');
+                    }else{
+                        $pcurr = Curriculum::find($this->request->route('curriculum'));
+                    }
+
                     $this->crud->addField(
                         ['name'=>'user_id',
                             'type'=>'hidden',
@@ -293,6 +299,12 @@ class CurriculumCrudController extends CrudController
                 'box'=>'address'
             ],
             [
+                'name'=>'mobile2',
+                'label'=>'Número celular alternativo',
+                'type'=>'text',
+                'box'=>'address'
+            ],
+            [
                 'name'=>'profession_id',
                 'label'=>'Profesión',
                 'type'=>'select2_linked',
@@ -359,9 +371,13 @@ class CurriculumCrudController extends CrudController
                     'name' => 'course_name',
                 ],
                 [
-                    'label' => 'Institución',
-                    'type' => 'child_text',
-                    'name' => 'institution',
+                    'label' => "Institución",
+                    'type' => "child_select2",
+                    'name' => 'educational_institution_id', // the column that contains the ID of that connected entity
+                    'entity' => 'institution', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => EducationalInstitution::class,
+
                 ],
                 [
                     'label' => 'Fecha de finalización',
@@ -687,6 +703,11 @@ class CurriculumCrudController extends CrudController
             } catch (ModelNotFoundException $mnfe) {
                 return parent::show($id);
             }
+        }
+
+        public function attachments(Curriculum $curriculum){
+
+        return view('curriculum.attachments',compact('curriculum'));
         }
 
 

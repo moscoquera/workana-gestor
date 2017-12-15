@@ -6,12 +6,21 @@
 
     <div class="form-group">
         <label class="control-label">Institución</label>
-        <input type="text" ng-model="item.institution" @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2']) />
+        <ui-select ng-model="item.educational_institution_id"
+                   style="width: 100%;"
+                   title="Institución">
+            <ui-select-match placeholder="Seleccione una institución..."><% $select.selected.name %></ui-select-match>
+            <ui-select-choices repeat="type.id as type in educational_institution_id_fields">
+                <div ng-bind-html="type.name"></div>
+            </ui-select-choices>
+        </ui-select>
+
+
     </div>
 
     <div class="form-group">
         <label class="control-label">Tipo:</label>
-            <select select2
+            <select ui-select2
                     ng-model="item.type_id"
                     convert-number
                     @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2'])

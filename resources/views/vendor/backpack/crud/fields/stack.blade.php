@@ -127,7 +127,8 @@ if (is_array($items)) {
                                 @foreach ($_field['fields'] as $column)
                                     @if ( $column['type'] == 'select' )
                                         $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
-
+                                    @elseif ( $column['type'] == 'child_select2' )
+                                        $scope.{{$column['name']}}_fields={!! $column['model']::all() !!}
                                     @elseif($column['type'] == 'child_select_array')
                                         $scope.{{$column['name']}}_fields={!! json_encode($column['options']) !!}
                                     @endif

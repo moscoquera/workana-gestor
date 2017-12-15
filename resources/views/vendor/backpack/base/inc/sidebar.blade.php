@@ -23,6 +23,7 @@
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/admins') }}"><i class="fa fa-user-secret"></i> <span>Administradores</span></a></li>
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/users') }}"><i class="fa fa-user"></i> <span>Usuarios</span></a></li>
+                <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculums') }}"><i class="fa fa-list-ol"></i> <span>Curriculums</span></a></li>
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/tempusers') }}"><i class="fa fa-user"></i> <span>Usuarios Externos</span></a></li>
 
             <li class="treeview">
@@ -31,6 +32,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/professions') }}"><i class="fa fa-suitcase"></i> <span>Profesiones</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/companies') }}"><i class="fa fa-building-o"></i> <span>Empresas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/educations') }}"><i class="fa fa-university"></i> <span>Educación</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/educational-institutions') }}"><i class="fa fa-university"></i> <span>Instituciones educativas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/languages') }}"><i class="fa fa-language"></i> <span>Idiomas</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/skills') }}"><i class="fa fa-circle-o"></i> <span>Skills</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/countries')  }}"><i class="fa fa-map-marker"></i><span>Paises</span></a></li>
@@ -40,6 +42,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/neighborhoods')  }}"><i class="fa fa-map-marker"></i><span>Barrios</span></a></li>
                     <li></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/eventtypes')  }}"><i class="fa"></i><span>Tipos de eventos</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/visit-subjects')  }}"><i class="fa fa-wrench"></i><span>Asuntos de visitas</span></a></li>
 
                 </ul>
             </li>
@@ -58,7 +61,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/birthdays') }}"><i class="fa fa-birthday-cake"></i> <span>Cumpleaños</span></a></li>
                 </ul>
             </li>
-            <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/visits') }}"><i class="fa fa-circle-o"></i>Visitas</a></li>
+            <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/visits') }}"><i class="fa fa-circle-o"></i>Citas programadas</a></li>
             <li class="treeview">
                 <a href="#"><i class="fa fa-check-square"></i>Control político</a>
                 <ul class="treeview-menu">

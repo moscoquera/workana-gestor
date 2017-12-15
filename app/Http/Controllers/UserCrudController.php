@@ -35,7 +35,7 @@ class UserCrudController extends CrudController
 
         $this->crud->setColumns([
             [
-                'label'=>'# documento',
+                'label'=>'# Documento',
                 'name'=>'username',
             ],
             [
@@ -46,9 +46,12 @@ class UserCrudController extends CrudController
                 'label'=>'Apellidos',
                 'name'=>'last_name'
             ],
-            'email',
             [
-                'label'=>'perfíl',
+                'name'=>'email',
+                'label'=>'Email'
+            ],
+            [
+                'label'=>'Perfíl',
                 'name'=>'level',
                 'type'=>'select',
                 'entity' => 'level', // the method that defines the relationship in your Model
@@ -88,8 +91,13 @@ class UserCrudController extends CrudController
                     'label'=>'Apellidos',
                 ],
                 [
-                    'label'=>'email',
+                    'label'=>'Email',
                     'name'=>'email',
+                    'hint'=>'opcional'
+                ],
+                [
+                    'label'=>'Email alternativo',
+                    'name'=>'email2',
                     'hint'=>'opcional'
                 ],
                 [  // Select2
@@ -199,6 +207,11 @@ class UserCrudController extends CrudController
                 [
                     'name'=>'mobile',
                     'label'=>'Número celular',
+                    'type'=>'text',
+                ],
+                [
+                    'name'=>'mobile2',
+                    'label'=>'Número celular alternativo',
                     'type'=>'text',
                 ],
                 [

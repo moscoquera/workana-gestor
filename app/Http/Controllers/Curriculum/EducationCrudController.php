@@ -31,7 +31,7 @@ class EducationCrudController extends CrudController
             ],
             [
                 'name'=>'order',
-                'label'=>'orden',
+                'label'=>'Orden',
             ]
         ]);
 
@@ -43,7 +43,7 @@ class EducationCrudController extends CrudController
             ],
             [
                 'name'=>'order',
-                'label'=>'orden',
+                'label'=>'Orden',
                 'type'=>'number',
             ]
         ]);

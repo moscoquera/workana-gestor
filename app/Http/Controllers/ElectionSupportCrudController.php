@@ -225,7 +225,7 @@ class ElectionSupportCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'credits',
-            'label' => 'aportes entregados',
+            'label' => 'Aportes entregados',
             'type' => 'child',
             'entity_singular' => 'aporte',
             'columns' => [
@@ -250,7 +250,7 @@ class ElectionSupportCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'debits',
-            'label' => 'aportes recibidos',
+            'label' => 'Aportes recibidos',
             'type' => 'child',
             'entity_singular' => 'aporte',
             'columns' => [

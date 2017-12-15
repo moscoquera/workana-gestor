@@ -5,11 +5,13 @@ namespace App\Models;
 use Backpack\CRUD\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Company extends Model
+class EducationalInstitution extends Model
 {
 
+
     use CrudTrait;
-    protected $fillable=['name','nit','address','phone','city_id','department_id'];
+
+    protected $fillable=['name','city_id','department_id'];
 
 
     public function city(){

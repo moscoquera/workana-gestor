@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Visits;
 
-use App\Http\Requests\TypeCrudRequest;
+use App\Models\VisitSubject;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Illuminate\Http\Request;
+use App\Http\Requests\TypeCrudRequest;
 
-class EventTypeCrudController extends CrudController
+class SubjectCrudController extends CrudController
 {
+
     public function setup()
     {
-
-        $this->crud->setModel('App\Models\EventType');
-        $this->crud->setRoute('eventtypes');
-        $this->crud->setEntityNameStrings('tipo de evento', 'tipos de evento');
+        $this->crud->setEntityNameStrings('asunto','asuntos');
+        $this->crud->setRoute('visit-subjects');
+        $this->crud->setModel('App\Models\VisitSubject');
 
         $this->crud->addColumns([
             [
@@ -24,10 +24,6 @@ class EventTypeCrudController extends CrudController
                 'name' => 'name',
                 'label' => 'Nombre',
 
-            ],
-            [
-                'name' => 'order',
-                'label' => 'Orden',
             ]
         ]);
 
@@ -37,11 +33,7 @@ class EventTypeCrudController extends CrudController
                 'label' => 'Nombre',
 
             ],
-            [
-                'name' => 'order',
-                'label' => 'Orden',
-                'type' => 'number',
-            ]
+
         ]);
 
     }

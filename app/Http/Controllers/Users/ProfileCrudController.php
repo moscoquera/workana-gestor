@@ -52,7 +52,7 @@ class ProfileCrudController extends CrudController
                     'label' => 'Apellidos',
                 ],
                 [
-                    'name' => 'email',
+                    'name' => 'Email',
                     'label' => 'Email',
 
                 ]

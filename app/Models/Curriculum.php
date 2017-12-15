@@ -163,6 +163,10 @@ class Curriculum extends Model
         return $this->user->mobile;
     }
 
+    public function getMobile2Attribute(){
+        return $this->user->mobile2;
+    }
+
     public function setProfessionIdAttribute($value){
         $this->user->profession_id=$value;
         $this->user->save();
@@ -213,6 +217,10 @@ class Curriculum extends Model
         $this->user->save();
     }
 
+    public function setMobile2Attribute($value){
+        $this->user->mobile2=$value;
+        $this->user->save();
+    }
 
     public function profession(){
         return $this->belongsTo('App\Models\Profession');

@@ -14,7 +14,8 @@ class PublicUser extends User
     protected $fillable = [
         'first_name','last_name', 'email', 'password','rol_id','username','level_id','sex','date_of_birth',
         'nationality_id','current_address','current_dep_id','current_city_id','current_country_id','phone',
-        'mobile','profession_id','leader_id','election_address','election_dep_id','election_city_id','town_id','neighborhood_id'
+        'mobile','profession_id','leader_id','election_address','election_dep_id','election_city_id','town_id',
+        'neighborhood_id','email2','mobile2'
     ];
 
     protected $appends=[
@@ -31,6 +32,15 @@ class PublicUser extends User
         });
     }
 
+    public function crudHasCurriculum(){
+        if (!$this->curriculum){
+            return '<a href="'.url('curriculum/create?user='.$this->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
+        }else{
+            return '<a href="'.url('curriculum/'.$this->curriculum->id).'/edit" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i>Editar Curriculum</a> <br/>'.
+                '<a href="'.url('curriculum/'.$this->curriculum->id).'" class="btn btn-xs btn-info"><i class="fa fa-file-text"></i> Ver Curriculum</a><br/>'.
+                '<a href="'.url('curriculum/'.$this->curriculum->id).'/attachments" class="btn btn-xs btn-warning"><i class="fa fa-file"></i> Ver Adjuntos</a><br/>';
+        }
+    }
 
     public function crudDashboard(){
         return '<a href="'.url('users/'.$this->id).'" class="btn btn-xs btn-success"><i class="fa fa-area-chart"></i> Dashboard</a><br/>';
@@ -58,6 +68,40 @@ class PublicUser extends User
     }
 
 
+    public function setFirstNameAttribute($value){
+        $this->attributes['first_name']=strtoupper($value);
+    }
 
+    public function getFirstNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function setLastNameAttribute($value){
+        $this->attributes['last_name']=strtoupper($value);
+    }
+
+    public function getLastNameAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function setEmailAttribute($value){
+        $this->attributes['email']=strtoupper($value);
+    }
+
+    public function getEmailAttribute($value)
+    {
+        return strtoupper($value);
+    }
+
+    public function setCurrentAddressAttribute($value){
+        $this->attributes['current_address']=strtoupper($value);
+    }
+
+    public function getCurrentAddressAttribute($value)
+    {
+        return strtoupper($value);
+    }
 
 }

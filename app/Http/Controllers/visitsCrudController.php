@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\visitCrudRequest;
+use App\Models\VisitStatus;
+use App\Models\VisitSubject;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
+use App\Http\Requests\DropzoneRequest;
 
 class visitsCrudController extends CrudController
 {
@@ -14,7 +17,7 @@ class visitsCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\Visit');
         $this->crud->setRoute('visits');
-        $this->crud->setEntityNameStrings('visita', 'visitas');
+        $this->crud->setEntityNameStrings('cita', 'citas');
 
         $this->crud->child_resource_included = ['angular'=>false,'select' => true, 'number' => false];
         $this->crud->child_resource_initialized = ['select' => false, 'number' => false];
@@ -29,6 +32,14 @@ class visitsCrudController extends CrudController
                 'label'=>'Fecha y hora',
                 'name'=>'dateandtime',
             ],
+            [  // Select2
+                'label' => "Asunto",
+                'type' => 'select',
+                'name' => 'subject_id',
+                'entity' => 'subject',
+                'attribute' => 'name',
+                'model' => VisitSubject::class,
+            ],
             [
                 'label'=>'Lugar',
                 'name'=>'address',
@@ -36,6 +47,24 @@ class visitsCrudController extends CrudController
             [
                 'label'=>'Descripción',
                 'name'=>'description'
+            ],
+            [  // Select2
+                'label' => "Resultado",
+                'type' => 'select',
+                'name' => 'result_id',
+                'entity' => 'result',
+                'attribute' => 'name',
+                'model' => VisitStatus::class,
+            ],
+            [   // date_picker
+                'name' => 'next_visit',
+                'type' => 'date_picker',
+                'label' => 'Proxima visita',
+            ],
+            [
+                'name'=>'attachments',
+                'type'=>'attachments',
+                'label'=>'Adjuntos'
             ]
 
         ]);
@@ -45,6 +74,14 @@ class visitsCrudController extends CrudController
                 'label'=>'Fecha y hora',
                 'name'=>'dateandtime',
                 'type'=>'datetime_picker'
+            ],
+            [  // Select2
+                'label' => "Asunto",
+                'type' => 'select2',
+                'name' => 'subject_id',
+                'entity' => 'subject',
+                'attribute' => 'name',
+                'model' => VisitSubject::class,
             ],
             [
                 'label'=>'Lugar',
@@ -60,6 +97,25 @@ class visitsCrudController extends CrudController
                 'label'=>'Comentarios',
                 'name'=>'comments',
                 'type'=>'textarea'
+            ],
+            [  // Select2
+                'label' => "Resultado",
+                'type' => 'select2',
+                'name' => 'result_id',
+                'entity' => 'result',
+                'attribute' => 'name',
+                'model' => VisitStatus::class,
+            ],
+            [   // date_picker
+                'name' => 'next_visit',
+                'type' => 'date_picker',
+                'label' => 'Proxima visita',
+                // optional:
+                'date_picker_options' => [
+                    'todayBtn' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'language' => 'es'
+                ],
             ],
             [
                 'name' => 'attendance',
@@ -80,7 +136,16 @@ class visitsCrudController extends CrudController
                 ],
                 'max' => 100, // maximum rows allowed in the table
                 'min' => 1 // minimum rows allowed in the table
-            ]
+            ],
+            [
+                'label'=>'Adjuntos',
+                'name'=>'attachments',
+                'upload' => true,
+                'type' => 'dropzone', // voodoo magic
+                'prefix' => '/uploads/', // upload folder (should match the driver specified in the upload handler defined below)
+                'upload-url' => url('/visit/media-dropzone'), // POST route to handle the individual file uploads
+            ],
+
 
         ]);
 
@@ -93,7 +158,37 @@ class visitsCrudController extends CrudController
 
 
     public function update(visitCrudRequest  $request){
+
+
+        if (empty ($request->get('attachments'))) {
+            $this->crud->update(\Request::get($this->crud->model->getKeyName()), ['attachments' => '[]']);
+        }
+
         return $this->updateCrud($request);
+    }
+
+
+    public function handleDropzoneUpload(DropzoneRequest $request)
+    {
+        $disk = "uploads"; //
+        $destination_path = "media";
+        $file = $request->file('file');
+
+        try
+        {
+            $orig_filename=$file->getClientOriginalName();
+            $filename=$file->store($destination_path,$disk);
+
+            return response()->json(['success' => true, 'filename' => $orig_filename.'|'.$filename]);
+        }
+        catch (\Exception $e)
+        {
+            if (empty ($image)) {
+                return response('Not a valid image type', 412);
+            } else {
+                return response('Unknown error', 412);
+            }
+        }
     }
 
 }

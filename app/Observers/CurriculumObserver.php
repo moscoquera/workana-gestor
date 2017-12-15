@@ -109,6 +109,7 @@ class CurriculumObserver
         $curriculum->user->current_country_id=$this->request->input('current_country_id');
         $curriculum->user->phone=$this->request->input('phone');
         $curriculum->user->mobile=$this->request->input('mobile');
+        $curriculum->user->mobile2=$this->request->input('mobile2');
         $curriculum->user->save();
 
         $this->relationSyncFromJson($curriculum,'educations',$educations);

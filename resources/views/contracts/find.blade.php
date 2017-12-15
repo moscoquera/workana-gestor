@@ -91,16 +91,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-2">Educación:</label>
+                                <label class="control-label col-sm-2">Nivel educativo:</label>
                                 <div class="col-sm-8">
                                     <select
-                                            name="educations[]"
+                                            name="educations"
                                             style="width: 100%"
                                             @include('crud::inc.field_attributes', ['default_class' =>  'form-control select2_multiple'])
-                                            multiple>
+                                            >
                                         @foreach (\App\Models\Education::all() as $education)
                                             <option value="{{ $education->getKey() }}"
-                                                    @if ( (request('educations') && in_array($education->getKey(), request('educations'))) || ( old('educations') && in_array($education->getKey(), old('educations')) ) )
+                                                    @if ( (request('educations') && $education->getKey() ==request('educations')) || ( old('educations') && $education->getKey() ==  old('educations') ))
                                                     selected
                                                     @endif
                                             >{{ $education->name }}</option>
@@ -215,6 +215,7 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Resultados</h3>
+                    <a class="pull-right btn btn-success btn-sm" href="{{ url('contracts/search/export?'.http_build_query($queryArgs)) }}">Exportar</a>
                 </div>
                 <div class="box-body">
                     <table class="table table-bordered table-striped">
