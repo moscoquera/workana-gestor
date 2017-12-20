@@ -104,12 +104,15 @@ if (is_array($items)) {
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
         {{-- YOUR JS HERE --}}
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+        @if (!$crud->child_resource_included['angular'])
+            <?php $crud->child_resource_included['angular'] =true;?>
+
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
         <script type="text/javascript" src="{{ asset('js/select.min.js') }}"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-sortable/0.14.3/sortable.min.js"></script>
-
+        @endif
         <script>
 
             window.angularApp = window.angularApp || angular.module('backPackTableApp', ['ui.sortable','ngSanitize', 'ui.select'], function($interpolateProvider){
@@ -169,6 +172,26 @@ if (is_array($items)) {
                     var index = $scope.items.indexOf(item);
                     $scope.items.splice(index, 1);
                 }
+
+                $scope.educationUpdate=function(item1,model,item2,scope){
+                    item2.type_id=item1.type_id;
+                }
+
+                $scope.institutionUpdate=function(item1,model,item2,scope){
+                    /*console.log(item1);
+                    console.log(model);
+                    console.log(item2);*/
+                    item2.department_name=item1.department.name;
+                    item2.city_name=item1.city.name;
+
+                }
+
+                $scope.companyUpdate=function(item1,model,item2,scope){
+                    item2.department_name=item1.department_name;
+                    item2.city_name=item1.city_name;
+
+                }
+
 
                 $scope.$watch('items', function (a, b) {
 

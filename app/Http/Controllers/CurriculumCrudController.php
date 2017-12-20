@@ -6,6 +6,7 @@ use App\Http\Requests\Curriculum\CreateCurriculumRequest;
 use App\Models\Curriculum;
 use App\Models\CurriculumEducation;
 use App\Models\EducationalInstitution;
+use App\Models\Profession;
 use App\Models\PublicUser;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -15,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Backpack\CRUD\app\Http\Controllers\CrudFeatures\SaveActions;
 use Illuminate\Routing\Route;
-use niklasravnsborg\LaravelPdf\Facades\Pdf as PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\URL;
 use App\Http\Requests\DropzoneRequest;
 
@@ -366,9 +367,12 @@ class CurriculumCrudController extends CrudController
                     'model' => "App\Models\Education"
                 ],
                 [
-                    'label' => 'Título',
-                    'type' => 'child_text',
-                    'name' => 'course_name',
+                    'label' => "Título",
+                    'type' => "child_select2",
+                    'name' => 'profession_id', // the column that contains the ID of that connected entity
+                    'entity' => 'title', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => Profession::class,
                 ],
                 [
                     'label' => "Institución",

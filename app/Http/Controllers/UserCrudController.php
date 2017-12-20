@@ -33,6 +33,54 @@ class UserCrudController extends CrudController
         $this->crud->setEntityNameStrings('usuario','usuarios');
         $this->crud->allowAccess('list');
 
+        $this->crud->setCreateView('curriculum.create');
+        $this->crud->setEditView('curriculum.edit');
+
+        $this->crud->layouts=[
+            [
+                [
+                    'size'=>6,
+                    'boxes'=>[
+                        [
+                            'title'=>'Información basica',
+                            'name'=>'basic'
+                        ]
+                    ]
+                ],
+                [
+                    'size'=>'6',
+                    'boxes'=>[
+                        [
+                            'title'=>'Datos personales',
+                            'name'=>'personal'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    'size'=>6,
+                    'boxes'=>[
+                        [
+                            'title'=>'Dirección y contacto',
+                            'name'=>'address'
+                        ],
+
+                    ]
+                ],
+                [
+                    'size'=>6,
+                    'boxes'=>[
+                        [
+                            'title'=>'Otros',
+                            'name'=>'others'
+                        ]
+                    ]
+                ]
+            ],
+
+        ];
+
         $this->crud->setColumns([
             [
                 'label'=>'# Documento',
@@ -80,25 +128,40 @@ class UserCrudController extends CrudController
             [
                 [
                     'name'=>'username',
-                    'label'=>'# de documento'
+                    'label'=>'# de documento',
+                    'box'=>'basic'
                 ],
                 [
                     'name'=>'first_name',
                     'label'=>'Nombres',
+                    'box'=>'basic'
                 ],
                 [
                     'name'=>'last_name',
                     'label'=>'Apellidos',
+                    'box'=>'basic'
                 ],
                 [
                     'label'=>'Email',
                     'name'=>'email',
-                    'hint'=>'opcional'
+                    'hint'=>'opcional',
+                    'box'=>'basic'
                 ],
                 [
                     'label'=>'Email alternativo',
                     'name'=>'email2',
-                    'hint'=>'opcional'
+                    'hint'=>'opcional',
+                    'box'=>'basic',
+                ],
+                [ // image
+                'label' => "Fotografía",
+                'box'=>'personal',
+                'name' => "photo",
+                'type' => 'image',
+                'upload' => true,
+                'crop'=>true,
+                'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
+                'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
                 ],
                 [  // Select2
                     'label' => "Perfíl",
@@ -106,7 +169,8 @@ class UserCrudController extends CrudController
                     'name' => 'level_id', // the db column for the foreign key
                     'entity' => 'level', // the method that defines the relationship in your Model
                     'attribute' => 'name', // foreign key attribute that is shown to user
-                    'model' => "App\Models\Level" // foreign key model
+                    'model' => "App\Models\Level", // foreign key model
+                    'box'=>'basic'
                 ],
                 [
                     'name'=>'sex',
@@ -114,6 +178,7 @@ class UserCrudController extends CrudController
                     'type'=>'select_from_array',
                     'options'=>['m'=>'Masculino','f'=>'Femenino'],
                     'allows_null' => false,
+                    'box'=>'personal'
                 ],
                 [
                     'name'=>'date_of_birth',
@@ -124,6 +189,7 @@ class UserCrudController extends CrudController
                         'language' => 'es',
                         'endDate'=>'0d'
                     ],
+                    'box'=>'personal'
                 ],
                 [
                     'label' => "Nacionalidad",
@@ -132,12 +198,13 @@ class UserCrudController extends CrudController
                     'entity' => 'nationality', // the method that defines the relationship in your Model
                     'attribute' => "name", // foreign key attribute that is shown to user
                     'model' => "App\Models\Country", // foreign key model
+                    'box'=>'personal'
                 ],
                 [
                     'label'=>'Dirección de Residencia actual',
                     'type'=>'textarea',
                     'name'=>'current_address',
-
+                    'box'=>'address'
                 ],
                 [
                     'label' => "Departamento de Residencia actual",
@@ -146,7 +213,7 @@ class UserCrudController extends CrudController
                     'entity' => 'current_department', // the method that defines the relationship in your Model
                     'attribute' => "name", // foreign key attribute that is shown to user
                     'model' => "App\Models\Department", // foreign key model
-
+                    'box'=>'address'
                 ],
                 [
                     // 1-n relationship
@@ -160,21 +227,7 @@ class UserCrudController extends CrudController
                     'placeholder' => "Seleccione la ciudad de residencia", // placeholder for the select
                     'minimum_input_length' => 2, // minimum characters to type before querying results
                     'linked_name'=>'current_dep_id',
-
-                ],
-                [
-                    // 1-n relationship
-                    'label' => "Barrio", // Table column heading
-                    'type' => "select2_from_ajax_linked",
-                    'name' => 'neighborhood_id', // the column that contains the ID of that connected entity
-                    'entity' => 'neighborhood', // the method that defines the relationship in your Model
-                    'attribute' => "name", // foreign key attribute that is shown to user
-                    'model' => Neighborhood::class,
-                    'data_source' => url("api/neighborhoods"), // url to controller search function (with /{id} should return model)
-                    'placeholder' => "Seleccione un barrio", // placeholder for the select
-                    'minimum_input_length' => 2, // minimum characters to type before querying results
-                    'linked_name'=>'current_city_id',
-
+                    'box'=>'address'
                 ],
                 [
                     // 1-n relationship
@@ -188,31 +241,47 @@ class UserCrudController extends CrudController
                     'placeholder' => "Seleccione una localidad", // placeholder for the select
                     'minimum_input_length' => 0, // minimum characters to type before querying results
                     'linked_name'=>'current_city_id',
-
+                    'box'=>'address'
                 ],
                 [
+                    // 1-n relationship
+                    'label' => "Barrio", // Table column heading
+                    'type' => "select2_from_ajax_linked",
+                    'name' => 'neighborhood_id', // the column that contains the ID of that connected entity
+                    'entity' => 'neighborhood', // the method that defines the relationship in your Model
+                    'attribute' => "name", // foreign key attribute that is shown to user
+                    'model' => Neighborhood::class,
+                    'data_source' => url("api/neighborhoods"), // url to controller search function (with /{id} should return model)
+                    'placeholder' => "Seleccione un barrio", // placeholder for the select
+                    'minimum_input_length' => 0, // minimum characters to type before querying results
+                    'linked_name'=>'current_city_id',
+                    'box'=>'address'
+                ],[
                     'label' => "Pais de Residencia actual",
                     'type' => "select2",
                     'name' => 'current_country_id', // the column that contains the ID of that connected entity
                     'entity' => 'current_country', // the method that defines the relationship in your Model
                     'attribute' => "name", // foreign key attribute that is shown to user
                     'model' => "App\Models\Country", // foreign key model
-
+                    'box'=>'address'
                 ],
                 [
                     'name'=>'phone',
                     'label'=>'Número de teléfono',
                     'type'=>'text',
+                    'box'=>'address'
                 ],
                 [
                     'name'=>'mobile',
                     'label'=>'Número celular',
                     'type'=>'text',
+                    'box'=>'address'
                 ],
                 [
                     'name'=>'mobile2',
                     'label'=>'Número celular alternativo',
                     'type'=>'text',
+                    'box'=>'address'
                 ],
                 [
                     'name'=>'profession_id',
@@ -230,11 +299,13 @@ class UserCrudController extends CrudController
                     'entity'=>'leader',
                     'attribute'=>'fullname',
                     'model'=>PublicUser::class,
+                    'box'=>'others'
                 ],
                 [
                     'label'=>'Lugar de votación',
                     'type'=>'textarea',
                     'name'=>'election_address',
+                    'box'=>'others'
 
                 ],
                 [
@@ -244,7 +315,7 @@ class UserCrudController extends CrudController
                     'entity' => 'election_department', // the method that defines the relationship in your Model
                     'attribute' => "name", // foreign key attribute that is shown to user
                     'model' => "App\Models\Department", // foreign key model
-
+                    'box'=>'others'
                 ],
                 [
                     // 1-n relationship
@@ -258,6 +329,7 @@ class UserCrudController extends CrudController
                     'placeholder' => "Seleccione la ciudad de votación", // placeholder for the select
                     'minimum_input_length' => 2, // minimum characters to type before querying results
                     'linked_name'=>'election_dep_id',
+                    'box'=>'others'
                 ],
 
 
@@ -272,6 +344,7 @@ class UserCrudController extends CrudController
             'name'=>'passwordchange',
             'label'=>'Cambiar contraseña',
             'type'=>'checkbox',
+            'box'=>'basic'
 
         ],'update');
 
@@ -279,6 +352,7 @@ class UserCrudController extends CrudController
             'name'=>'password',
             'label'=>'Contraseña',
             'type'=>'password',
+            'box'=>'basic'
 
         ],'update');
         $this->crud->addField([
@@ -286,6 +360,7 @@ class UserCrudController extends CrudController
             'fake'=>true,
             'label'=>'Confirmar contraseña',
             'type'=>'password',
+            'box'=>'basic'
 
         ],'update');
 

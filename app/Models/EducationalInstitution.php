@@ -12,6 +12,7 @@ class EducationalInstitution extends Model
     use CrudTrait;
 
     protected $fillable=['name','city_id','department_id'];
+    protected $appends=['city_name','department_name'];
 
 
     public function city(){
@@ -20,6 +21,14 @@ class EducationalInstitution extends Model
 
     public function department(){
         return $this->belongsTo(Department::class);
+    }
+
+    public function getCityNameAttribute(){
+        return $this->city->name;
+    }
+
+    public function getDepartmentNameAttribute(){
+        return $this->department->name;
     }
 
 }

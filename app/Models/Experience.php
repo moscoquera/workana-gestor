@@ -8,36 +8,49 @@ use Illuminate\Support\Facades\DB;
 class Experience extends Model
 {
 
-    protected $fillable=['curriculum_id','currently','company','boss','phone','start_date','end_date','retirement','functions_in_charge','company_id','sector_id'];
+    protected $fillable = ['curriculum_id', 'currently', 'boss', 'phone', 'start_date', 'end_date', 'retirement', 'functions_in_charge', 'company_id', 'sector_id'];
 
-    protected $casts=[
-        'currently'=>'boolean',
-        'company_id'=>'integer'
+    protected $appends=['city_name','department_name'];
+
+    protected $casts = [
+        'currently' => 'boolean',
+        'company_id' => 'integer'
     ];
 
     public function scopeCurrently($query)
     {
-        return $query->where('currently',1);
+        return $query->where('currently', 1);
     }
 
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo('App\Models\Company');
     }
 
-    public function scopePublic($query){
-        return $query->whereExists(function($inner){
+    public function scopePublic($query)
+    {
+        return $query->whereExists(function ($inner) {
             return $inner->select(DB::raw(1))->from('types')
-                ->where('type','company_sector')->where('name','Público')
+                ->where('type', 'company_sector')->where('name', 'Público')
                 ->whereRaw('types.id = experiences.sector_id');
         });
     }
 
-    public function scopePrivate($query){
-        return $query->whereExists(function($inner){
+    public function scopePrivate($query)
+    {
+        return $query->whereExists(function ($inner) {
             return $inner->select(DB::raw(1))->from('types')
-                ->where('type','company_sector')->where('name','Privado')
+                ->where('type', 'company_sector')->where('name', 'Privado')
                 ->whereRaw('types.id = experiences.sector_id');
         });
     }
 
+
+    public function getCityNameAttribute(){
+        return ($this->company)?$this->company->city_name:'';
+    }
+
+    public function getDepartmentNameAttribute(){
+        return ($this->company)?$this->company->department_name:'';
+    }
 }

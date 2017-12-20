@@ -65,7 +65,7 @@
 <div id="{{ $field['name'] }}-existing" class="dropzone dropzone-previews">
     @if (isset($field['value']) && count($field['value']))
     @foreach($field['value'] as $key => $file_path)
-    <div class="dz-preview dz-image-preview dz-complete">
+    <div class="dz-preview dz-image-preview dz-complete" onclick="dropzonePreview(this)">
         <label>{{ explode('|',$file_path)[0] }}</label>
         <input type="hidden" name="{{ $field['name'] }}[]" value="{{ $file_path }}" />
             @if(ends_with($file_path,".pdf"))
@@ -132,6 +132,10 @@
 
                 preview.insertBefore(imageName, preview.firstChild);
 
+                file.previewElement.addEventListener("click", function() {
+                    console.log(file);
+                });
+
             });
         }
     });
@@ -152,5 +156,11 @@
         e.stopPropagation();
         $(this).closest('.dz-preview').remove();
     });
+
+    function dropzonePreview(file){
+        file = $('input',file).val();
+        file = file.split('|')[1];
+        window.open("{{ url('/') }}/uploads/"+file,'_blank');
+    }
 </script>
 @endpush

@@ -5,13 +5,23 @@
 
         <ui-select ng-model="item.company_id"
                    style="width: 100%;"
-                   title="Empresa">
+                   title="Empresa" on-select="companyUpdate($item, $model,item)">
             <ui-select-match placeholder="Ingrese una empresa..."><% $select.selected.name %></ui-select-match>
             <ui-select-choices repeat="type.id as type in company_id_fields">
                 <div ng-bind-html="type.name"></div>
             </ui-select-choices>
         </ui-select>
 
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Departamento</label>
+        <input ng-model="item.department_name" disabled="disabled" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Ciudad</label>
+        <input ng-model="item.city_name" disabled="disabled" class="form-control" />
     </div>
 
     <div class="form-group">

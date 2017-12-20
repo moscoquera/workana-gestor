@@ -118,6 +118,7 @@ if (is_array($items)) {
         {{-- YOUR JS HERE --}}
 
         @if (!$crud->child_resource_included['angular'])
+            <?php $crud->child_resource_included['angular'] =true;?>
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
 
@@ -132,7 +133,7 @@ if (is_array($items)) {
 
         <script type="application/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.19.8/select.js" ></script>
-
+        @endif
         <script>
 
 
@@ -180,6 +181,12 @@ if (is_array($items)) {
                     }
 
 
+                }
+
+                $scope.educationUpdate=function(item,model){
+                    console.log(item);
+                    console.log(model);
+                    alert("*");
                 }
 
                 $scope.removeItem = function (item) {
@@ -384,8 +391,6 @@ if (is_array($items)) {
             });
 
         </script>
-
-        @endif
     @endpush
 @endif
 {{-- End of Extra CSS and JS --}}

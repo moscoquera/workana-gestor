@@ -56,6 +56,10 @@ class CurriculumObserver
                 if (isset($experiences[$i]->sector_id) && is_object($experiences[$i]->sector_id)){
                     $experiences[$i]->sector_id=$experiences[$i]->sector_id->id;
                 }
+
+                if (isset($experiences[$i]->company)){
+                    unset($experiences[$i]->company);
+                }
             }
         }else{
             $experiences=[];
