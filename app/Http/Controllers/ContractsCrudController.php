@@ -246,7 +246,13 @@ class ContractsCrudController extends CrudController
 
 
         if ($educations) {
-            $users = $users->join('professions','users.profession_id','=','professions.id')->where('professions.type_id',$educations);
+
+            $users = $users->whereExists(function ($query) use ($educations) {
+                $query->select(DB::raw(1))
+                    ->from('professions')
+                    ->whereRaw('users.profession_id = professions.id')
+                    ->where('professions.type_id',$educations);
+            });
         }
 
 
