@@ -62,9 +62,15 @@
                 .select2-selection__clear::after {
                     content: ' {{ trans('backpack::crud.clear') }}';
                 }
+
+
             </style>
+
+
+
         @endif
     @endpush
+
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
@@ -73,6 +79,16 @@
     @endpush
 
 @endif
+
+@push('crud_fields_styles')
+    <style type="text/css">
+        @if(isset($field['placeholder_color']))
+                    #select2_ajax_{{ $field['name'] }} + .select2 .select2-selection__placeholder {
+            color: {{$field['placeholder_color']}} !important;
+        }
+        @endif
+    </style>
+@endpush
 
 <!-- include field specific select2 js-->
 @push('crud_fields_scripts')

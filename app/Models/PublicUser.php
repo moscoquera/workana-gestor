@@ -15,7 +15,7 @@ class PublicUser extends User
         'first_name','last_name', 'email', 'password','rol_id','username','level_id','sex','date_of_birth',
         'nationality_id','current_address','current_dep_id','current_city_id','current_country_id','phone',
         'mobile','profession_id','leader_id','election_address','election_dep_id','election_city_id','town_id',
-        'neighborhood_id','email2','mobile2'
+        'neighborhood_id','email2','mobile2','photo'
     ];
 
     protected $appends=[
@@ -32,15 +32,6 @@ class PublicUser extends User
         });
     }
 
-    public function crudHasCurriculum(){
-        if (!$this->curriculum){
-            return '<a href="'.url('curriculum/create?user='.$this->id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
-        }else{
-            return '<a href="'.url('curriculum/'.$this->curriculum->id).'/edit" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i>Editar Curriculum</a> <br/>'.
-                '<a href="'.url('curriculum/'.$this->curriculum->id).'" class="btn btn-xs btn-info"><i class="fa fa-file-text"></i> Ver Curriculum</a><br/>'.
-                '<a href="'.url('curriculum/'.$this->curriculum->id).'/attachments" class="btn btn-xs btn-warning"><i class="fa fa-file"></i> Ver Adjuntos</a><br/>';
-        }
-    }
 
     public function crudDashboard(){
         return '<a href="'.url('users/'.$this->id).'" class="btn btn-xs btn-success"><i class="fa fa-area-chart"></i> Dashboard</a><br/>';
@@ -55,7 +46,7 @@ class PublicUser extends User
     }
 
     public function getDocumentAttribute(){
-        return $this->username;
+        return $thisname;
     }
 
     public function visits(){
@@ -87,12 +78,18 @@ class PublicUser extends User
     }
 
     public function setEmailAttribute($value){
-        $this->attributes['email']=strtoupper($value);
+
+        if(empty($value)){
+            $this->attributes['email']=NULL;
+        }else{
+            $this->attributes['email']=strtolower($value);
+        }
+
     }
 
     public function getEmailAttribute($value)
     {
-        return strtoupper($value);
+        return strtolower($value);
     }
 
     public function setCurrentAddressAttribute($value){
@@ -102,6 +99,40 @@ class PublicUser extends User
     public function getCurrentAddressAttribute($value)
     {
         return strtoupper($value);
+    }
+
+    public function setPhotoAttribute($value)
+    {
+        $attribute_name = "photo";
+        $disk = "public";
+        $destination_path = "uploads/curriculum_photos";
+
+        // if the image was erased
+        if ($value==null) {
+            // delete the image from disk
+            \Storage::disk($disk)->delete($this->photo);
+
+            // set null in the database column
+            $this->photo = null;
+            $this->save();
+        }
+
+        // if a base64 was sent, store it in the db
+        if (starts_with($value, 'data:image'))
+        {
+            // 0. Make the image
+            $image = \Image::make($value);
+            // 1. Generate a filename.
+            $filename = md5($value.time()).'.jpg';
+            // 2. Store the image on disk.
+            \Storage::disk($disk)->put($destination_path.'/'.$filename, $image->stream());
+            // 3. Save the path to the database
+            if ($this->photo){
+                \Storage::disk($disk)->delete($this->photo);
+            }
+            $this->attributes['photo'] = $destination_path.'/'.$filename;
+            //$this->save();
+        }
     }
 
 }

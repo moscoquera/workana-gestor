@@ -20,13 +20,13 @@ class Curriculum extends Model
 
     protected $fillable=['user_id',
         'birth_city_id','birth_dep_id',
-        'resume','attachments'];
+        'resume','attachments','archive'];
 
     protected $casts = ['attachments' => 'array'];
 
     protected $appends=['photo','document','sex','date_of_birth',
         'nationality_id','current_address','current_dep_id','current_city_id','current_country_id','phone',
-        'mobile','profession_id',];
+        'mobile','profession_id','level'];
 
 
     protected static function boot()
@@ -45,7 +45,6 @@ class Curriculum extends Model
     public function birthCity(){
         return $this->belongsTo('App\Models\City','birth_city_id');
     }
-
 
 
     public function skills(){
@@ -77,36 +76,8 @@ class Curriculum extends Model
 
     public function setPhotoAttribute($value)
     {
-        $attribute_name = "photo";
-        $disk = "public";
-        $destination_path = "uploads/curriculum_photos";
-
-        // if the image was erased
-        if ($value==null) {
-            // delete the image from disk
-            \Storage::disk($disk)->delete($this->user->photo);
-
-            // set null in the database column
-            $this->user->photo = null;
+            $this->user->photo = $value;
             $this->user->save();
-        }
-
-        // if a base64 was sent, store it in the db
-        if (starts_with($value, 'data:image'))
-        {
-            // 0. Make the image
-            $image = \Image::make($value);
-            // 1. Generate a filename.
-            $filename = md5($value.time()).'.jpg';
-            // 2. Store the image on disk.
-            \Storage::disk($disk)->put($destination_path.'/'.$filename, $image->stream());
-            // 3. Save the path to the database
-            if ($this->user->photo){
-                \Storage::disk($disk)->delete($this->user->photo);
-            }
-            $this->user->photo = $destination_path.'/'.$filename;
-            $this->user->save();
-        }
     }
 
     public function getPhotoAttribute(){
@@ -234,6 +205,20 @@ class Curriculum extends Model
         return $this->experiences()->currently()->get();
     }
 
+    public function getLevelAttribute(){
+        return $this->user->level;
+    }
+
+
+    public function crudHasCurriculum(){
+        if (!$this->id){
+            return '<a href="'.url('curriculums/create?user='.$this->user_id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
+        }else{
+            return '<a href="'.url('curriculums/'.$this->id).'/edit" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i>Editar Curriculum</a> <br/>'.
+                '<a href="'.url('curriculums/'.$this->id).'" class="btn btn-xs btn-info"><i class="fa fa-file-text"></i> Ver Curriculum</a><br/>'.
+                '<a href="'.url('curriculums/'.$this->id).'/attachments" class="btn btn-xs btn-warning"><i class="fa fa-file"></i> Ver Adjuntos</a><br/>';
+        }
+    }
 
 
 }

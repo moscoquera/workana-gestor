@@ -30,10 +30,11 @@ class NeighborhoodsCrudController extends CrudController
             ],
             [
                 'label'=>'Localidad',
-                'type'=>'select',
+                'type'=>'select2',
                 'name'=>'town_id',
                 'attribute'=>'name',
-                'entity'=>'town'
+                'entity'=>'town',
+
             ],
             [
                 'label'=>'Ciudad',
@@ -68,10 +69,11 @@ class NeighborhoodsCrudController extends CrudController
                 'attribute' => "name",
                 'model' => Town::class,
                 'data_source' => url("api/towns"),
-                'placeholder' => "Seleccione una localidad",
+                'placeholder' => "NO APLICA",
                 'minimum_input_length' => 2,
                 'linked_name'=>'city_id',
-                'hint'=>'(Opcional)'
+                'hint'=>'(Opcional)',
+                'placeholder_color'=>'#000',
 
             ],
         ]);

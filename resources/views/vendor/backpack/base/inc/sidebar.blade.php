@@ -40,6 +40,7 @@
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/cities')  }}"><i class="fa fa-map-marker"></i><span>Ciudades</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/towns')  }}"><i class="fa fa-map-marker"></i><span>Localidades</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/neighborhoods')  }}"><i class="fa fa-map-marker"></i><span>Barrios</span></a></li>
+                    <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/levels')  }}"><i class="fa fa-users"></i><span>Perfiles de usuario</span></a></li>
                     <li></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/eventtypes')  }}"><i class="fa"></i><span>Tipos de eventos</span></a></li>
                     <li><a href="{{ url(config('backpack.base.route_prefix','admin').'/visit-subjects')  }}"><i class="fa fa-wrench"></i><span>Asuntos de visitas</span></a></li>

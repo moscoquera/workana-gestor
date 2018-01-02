@@ -19,7 +19,6 @@
             $professions=$professions->keyBy('id');
         }
 
-
 ?>
 
 @section('content')
@@ -231,7 +230,7 @@
                                 <tr>
                                     <td>{{ $user->user_id }}</td>
                                     <td>{{ $user->full_name }}</td>
-                                    <td>{{ $professions[$user->curriculum->profession_id]->name }}</td>
+                                    <td>{{ (isset($professions[$user->curriculum->profession_id]) && $professions[$user->curriculum->profession_id])?$professions[$user->curriculum->profession_id]->name:'' }}</td>
                                     <td>
                                         <ul>
                                             @foreach($user->curriculum->skills as $skill)

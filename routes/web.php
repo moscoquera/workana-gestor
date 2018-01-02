@@ -40,7 +40,7 @@ Route::group(['middleware' => 'web', 'prefix' => config('backpack.base.route_pre
 
 Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('users','UserCrudController');
-    CRUD::resource('curriculums','UserCurriculumsCrudController');
+    CRUD::resource('curriculums','CurriculumCrudController');
     CRUD::resource('admins','AdminsCrudController');
     CRUD::resource('countries','CountriesCrudController');
     CRUD::resource('departments','DepartmentsCrudController');
@@ -88,15 +88,16 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('election-supports','ElectionSupportCrudController');
     CRUD::resource('election-city-results','ElectionCityCrudController');
     CRUD::resource('educational-institutions','EducationalInstitutionCrudController');
+    CRUD::resource('levels','LevelCrudController');
 });
 
 Route::group(['middleware'=>['auth']],function(){
     Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
-    Route::post('curriculum/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
-    Route::get('curriculum/{curriculum}/attachments','CurriculumCrudController@attachments');
-    CRUD::resource('curriculum','CurriculumCrudController');
-    Route::get(config('backpack.base.route_prefix', 'admin').'/curriculum/{id}/export','CurriculumCrudController@export');
+    Route::post('curriculums/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
+    Route::get('curriculums/{curriculum}/attachments','CurriculumCrudController@attachments');
+    CRUD::resource('curriculum','UserCurriculumCrudController');
+    Route::get(config('backpack.base.route_prefix', 'admin').'/curriculums/{id}/export','CurriculumCrudController@export');
 
     Route::get('/api/city', 'Api\CityController@index');
     Route::get('/api/city/{id}', 'Api\CityController@show');
@@ -117,8 +118,6 @@ Route::group(['middleware'=>['auth'],'prefix'=>'ajax','namespace'=>'Api'],functi
     Route::get('election/results/city', 'ElectionController@resultsCity')->name('api.election.results.city');
     Route::get('election/results/leader', 'ElectionController@resultsLeader')->name('api.election.results.leader');
     Route::get('election/results/candidate', 'ElectionController@resultsCandidate')->name('api.election.results.candidate');
-
-
 
     Route::get('users','UsersController@users');
 

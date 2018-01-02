@@ -161,7 +161,8 @@ class UserCrudController extends CrudController
                 'upload' => true,
                 'crop'=>true,
                 'aspect_ratio' => 1, // ommit or set to 0 to allow any aspect ratio
-                'prefix' => '/storage/' // in case you only store the filename in the database, this text will be prepended to the database value
+                'prefix' => '/storage/', // in case you only store the filename in the database, this text will be prepended to the database value
+                'default' => 'images/no-photo.png'
                 ],
                 [  // Select2
                     'label' => "Perfíl",
@@ -238,10 +239,11 @@ class UserCrudController extends CrudController
                     'attribute' => "name", // foreign key attribute that is shown to user
                     'model' => Town::class,
                     'data_source' => url("api/towns"), // url to controller search function (with /{id} should return model)
-                    'placeholder' => "Seleccione una localidad", // placeholder for the select
+                    'placeholder' => "NO APLICA", // placeholder for the select
                     'minimum_input_length' => 0, // minimum characters to type before querying results
                     'linked_name'=>'current_city_id',
-                    'box'=>'address'
+                    'box'=>'address',
+                    'placeholder_color'=>'#000',
                 ],
                 [
                     // 1-n relationship

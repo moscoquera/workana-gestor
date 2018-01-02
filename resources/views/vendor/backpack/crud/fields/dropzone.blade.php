@@ -74,7 +74,15 @@
             </div>
             @else
             <div class="dz-image-no-hover login-icon" >
-                <img src="{{ url('/thumbs/dropzone/'.basename (explode('|',$file_path)[1])) }}" />
+                @php
+                    $img = explode('|',$file_path);
+                    if(count($img)>1){
+                        $img=$img[1];
+                    }else{
+                        $img=$img[0];
+                    }
+                @endphp
+                <img src="{{ url('/thumbs/dropzone/'.basename ($img)) }}" />
             </div>
             @endif
 

@@ -29,29 +29,30 @@ class CreateCurriculumRequest extends CrudRequest
 
         return [
             'user_id'=>'required|exists:users,id',
-            'sex'=>'required|string|size:1',
+            'sex'=>'nullable|string|size:1',
             'document'=>[
                 'max:30','required','string',
                 Rule::unique('users','username')->ignore($this->input('user_id')),
             ],
-            'date_of_birth'=>'required|date_format:Y-m-d',
-            'birth_dep_id' => 'required|integer|exists:departments,id',
-            'birth_city_id' =>'required|integer|exists:cities,id',
-            'nationality_id'=>'required|integer|exists:countries,id',
-            'current_address'=>'required|string|min:10|max:512',
-            'current_dep_id' => 'required|integer|exists:departments,id',
-            'current_city_id' =>'required|integer|exists:cities,id',
-            'current_country_id'=>'required|integer|exists:countries,id',
-            'phone'=>'required|string|min:3|max:255',
-            'mobile'=>'required|string|min:10|max:255',
-            'profession_id'=>'required|integer|exists:professions,id',
-            'resume'=>'required|string|max:1024',
+            'date_of_birth'=>'nullable|date_format:Y-m-d',
+            'birth_dep_id' => 'nullable|integer|exists:departments,id',
+            'birth_city_id' =>'nullable|integer|exists:cities,id',
+            'nationality_id'=>'nullable|integer|exists:countries,id',
+            'current_address'=>'nullable|string|min:10|max:512',
+            'current_dep_id' => 'nullable|integer|exists:departments,id',
+            'current_city_id' =>'nullable|integer|exists:cities,id',
+            'current_country_id'=>'nullable|integer|exists:countries,id',
+            'phone'=>'nullable|string|min:3|max:255',
+            'mobile'=>'nullable|string|min:10|max:255',
+            'profession_id'=>'nullable|integer|exists:professions,id',
+            'resume'=>'nullable|string|max:1024',
             'educations'=>'nullable|json',
             'experiences'=>'nullable|json',
             'languages'=>'nullable|json',
             'references_fam'=>'json',
             'references_personal'=>'json',
-            'photo'=>'required'
+            'photo'=>'nullable',
+            'archive'=>'nullable|string|max:250'
         ];
     }
 }

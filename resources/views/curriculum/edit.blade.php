@@ -83,7 +83,7 @@
                             @endforeach
 
                             <div class="row">
-                                <div class="col-sm-4 col-sm-offset-4">
+                                <div class="col-sm-12 text-center">
                                     @include('crud::inc.curriculums_buttons')
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
         jQuery('document').ready(function($){
 
             // Save button has multiple actions: save and exit, save and edit, save and new
-            var saveActions = $('#saveActions'),
+            var saveActions = $('.saveActions'),
                 crudForm        = saveActions.parents('form'),
                 saveActionField = $('[name="save_action"]');
 

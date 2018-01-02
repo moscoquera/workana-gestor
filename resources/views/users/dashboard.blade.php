@@ -50,17 +50,17 @@
                     <div class="row">
                         <div class="col-md-4">
                             <a href="#" class="thumbnail">
-                                <img src="{{ url('storage/'.$user->photo) }}">
+                                <img src="{{ ($user->photo)?url('storage/'.$user->photo):url('storage/images/no-photo.png') }}">
                             </a>
                         </div>
                         <div class="col-md-8">
                             <h3>{{ $user->fullname }}</h3>
                             <p>
-                                <strong>Profesión:</strong> {{ $user->profession->name }}
+                                <strong>Profesión:</strong> {{  ($user->profession)?$user->profession->name:'' }}
                                 <br/>
                                 <strong>Edad: </strong> {{ $user->age }}
                                 <br/>
-                                <strong>Perfíl: </strong> {{ $user->level->name }}
+                                <strong>Perfíl: </strong> {{ ($user->level)?$user->level->name:'' }}
                                 <hr/>
                                 <strong>Total visitas:</strong> {{ $user->visits()->count() }}
                                 <br/>

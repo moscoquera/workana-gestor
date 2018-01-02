@@ -17,5 +17,7 @@
 </head>
 
 <body>
-    @include('curriculum.layout')
+    <div class="container">
+        @include('curriculum.layout')
+    </div>
 </body>

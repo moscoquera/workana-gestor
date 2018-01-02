@@ -10,7 +10,7 @@
         >
 
         @if ($entity_model::isColumnNullable($field['name']))
-            <option value="">-</option>
+            <option value=""> {{ isset($field['placeholder'])?$field['placeholder']:'-' }}</option>
         @endif
 
         @if (isset($field['model']))

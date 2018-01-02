@@ -3,7 +3,11 @@
         ?>
 <div class="row">
     <div class="col-xs-3 col-xs-offset-1">
-        <img class="img-rounded img-responsive" src="{{ url(Storage::url($curriculum->user->photo)) }}">
+        <div class="row">
+            <div class="col-xs-12">
+                <img class="img-rounded img-responsive" src="{{ url(Storage::url($curriculum->user->photo?$curriculum->user->photo:'images/no-photo.png')) }}"/>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <?php
@@ -13,29 +17,25 @@
                     <h4 class="text-light-blue">Empresas actuales:</h4>
                     <ul>
                         @foreach($currently_working as $exp)
-                            <li>{{ $exp->company->name }}</li>
+                            <li>{{ ($exp->company)?$exp->company->name:'' }}</li>
                         @endforeach
                     </ul>
                 @endif
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
+                <br/>
                 <h4 class="text-light-blue">Resumen experiencia laboral</h4>
                 <?php
-                    $publicExp = $curriculum->experiences()->public()->get();
-                    $sumPublicExp = 0;
-                    foreach ($publicExp as $exp){
-                        $start=$exp->start_date;
-                        $end=$exp->end_date;
-                        if (!$end || $exp->currently){
-                            $end=now();
-                        }
-                        $start=\Carbon\Carbon::parse($start);
-                        $end=\Carbon\Carbon::parse($end);
-                        $sumPublicExp+=$start->diffInDays($end);
+                $publicExp = $curriculum->experiences()->public()->get();
+                $sumPublicExp = 0;
+                foreach ($publicExp as $exp){
+                    $start=$exp->start_date;
+                    $end=$exp->end_date;
+                    if (!$end || $exp->currently){
+                        $end=now();
                     }
+                    $start=\Carbon\Carbon::parse($start);
+                    $end=\Carbon\Carbon::parse($end);
+                    $sumPublicExp+=$start->diffInDays($end);
+                }
                 ?>
                 <strong>Sector Público:</strong> {{ \Carbon\CarbonInterval::day($sumPublicExp)->forHumans() }}
                 <?php
@@ -57,10 +57,10 @@
             </div>
         </div>
 
-            </div>
+    </div>
     <div class="col-xs-6 form-horizontal">
         <h3>{{ $curriculum->user->full_name }}</h3>
-        <h5>{{ $curriculum->profession->name }}</h5>
+        <h5>{{ $curriculum->profession?$curriculum->profession->name:'' }}</h5>
         <hr/>
         <h4 class="text-light-blue">Contacto</h4>
         <p>
@@ -71,14 +71,14 @@
         <strong>Dirección: </strong>
         <div style="display: inline-block; vertical-align: top">
             {{ $curriculum->current_address  }}<br>
-            {{ trim($curriculum->user->currentcity->name.', '.$curriculum->user->currentdepartment->name) }}<br>
-            {{ $curriculum->user->currentcountry->name }}<br>
+            {{ trim(($curriculum->user->currentcity?$curriculum->user->currentcity->name.', ':'').($curriculum->user->currentdepartment?$curriculum->user->currentdepartment->name:'')) }}<br>
+            {{ $curriculum->user->currentcountry?$curriculum->user->currentcountry->name:'' }}<br>
         </div>
         <hr/>
         <h4 class="text-light-blue">Información personal</h4>
         <strong>Genero: </strong>{{ $curriculum->genre }}<br>
         <strong>Fecha de
-            nacimiento: </strong><?php setlocale(LC_TIME, 'es_CO'); echo \Carbon\Carbon::parse($curriculum->date_of_birth)->formatLocalized('%d - %B - %Y'); ?>
+            nacimiento: </strong><?php setlocale(LC_TIME, 'es_CO'); echo $curriculum->date_of_birth?\Carbon\Carbon::parse($curriculum->date_of_birth)->formatLocalized('%d - %B - %Y'):''; ?>
         <br>
         <strong>Número de documento: </strong> {{ $curriculum->document }}<br>
 
@@ -102,9 +102,9 @@
                 <ul>
                     @foreach( $curriculum->languages as $language)
                         <li>
-                            <strong>{{$language->name}}: </strong><br>
-                            Escrito: {{$language->proficency->writing_label}}
-                            Hablado: {{$language->proficency->speaking_label}}
+                            <strong>{{ $language->name }}: </strong><br>
+                            Escrito: {{ $language->proficency?$language->proficency->writing_label:'' }}
+                            Hablado: {{ $language->proficency?$language->proficency->speaking_label:'' }}
                         </li>
                     @endforeach
                 </ul>
@@ -124,12 +124,12 @@
                         data-parent="#detailsGroup" href="#details">Detalles:</h3>
                 </div>
                 <div id="details" class="{{ isset($show)?'':'panel-collapse collapse'}}">
-                    <strong>Lugar de nacimmiento: </strong>
+                    <strong>Lugar de nacimiento: </strong>
                         <div style="display: inline-block; vertical-align: top">
                             <address>
-                                {{ trim($curriculum->birthcity->name.', '.$curriculum->birthdepartment->name) }}
+                                {{ trim(($curriculum->birthcity?$curriculum->birthcity->name.', ':'').($curriculum->birthdepartment?$curriculum->birthdepartment->name:'')) }}
                                 <br>
-                                {{ $curriculum->user->nationality->name }}<br>
+                                {{ $curriculum->user->nationality?$curriculum->user->nationality->name:'' }}<br>
                             </address>
                         </div>
                         <br/>
@@ -186,7 +186,7 @@
 
 
                                                 ?>
-                                                <strong>{{$experience->company->name}}</strong><br>
+                                                <strong>{{$experience->company?$experience->company->name:''}}</strong><br>
                                                 <strong>Jefe inmediato: </strong>{{$experience->boss}}<br>
                                                 <strong>Teléfono: </strong>{{ $experience->phone }}<br>
                                                 <strong>Periodo: </strong> {{ \Carbon\CarbonInterval::days($start->diffInDays($end))->forHumans() }}
@@ -220,7 +220,7 @@
 
 
                                                 ?>
-                                                <strong>{{$experience->company->name}}</strong><br>
+                                                <strong>{{$experience->company?$experience->company->name:''}}</strong><br>
                                                 <strong>Jefe inmediato: </strong>{{$experience->boss}}<br>
                                                 <strong>Teléfono: </strong>{{ $experience->phone }}<br>
                                                 <strong>Periodo: </strong> {{ \Carbon\CarbonInterval::days($start->diffInDays($end))->forHumans() }}

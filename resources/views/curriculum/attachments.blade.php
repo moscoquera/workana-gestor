@@ -20,7 +20,7 @@
                 </div>
                 <div class="box-body">
                     <div class="dropzone dropzone-existing" id="archivos-existing">
-                    @foreach($curriculum->attachments as $file_path)
+                    @foreach(($curriculum->attachments)?$curriculum->attachments:[] as $file_path)
                         <div class="dz-preview dz-image-preview dz-complete" onclick="dropzonePreview(this)">
                             <label>{{ explode('|',$file_path)[0] }}</label>
                             <input type="hidden" name="archivos[]" value="{{ $file_path }}" />
@@ -30,7 +30,15 @@
                                 </div>
                             @else
                                 <div class="dz-image-no-hover login-icon" >
-                                    <img src="{{ url('/thumbs/dropzone/'.basename (explode('|',$file_path)[1])) }}" />
+                                    @php
+                                        $img = explode('|',$file_path);
+                                        if(count($img)>1){
+                                            $img=$img[1];
+                                        }else{
+                                            $img=$img[0];
+                                        }
+                                    @endphp
+                                    <img src="{{ url('/thumbs/dropzone/'.basename ($img)) }}" />
                                 </div>
                             @endif
 
