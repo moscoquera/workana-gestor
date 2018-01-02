@@ -230,12 +230,14 @@
                                 <tr>
                                     <td>{{ $user->user_id }}</td>
                                     <td>{{ $user->full_name }}</td>
-                                    <td>{{ (isset($professions[$user->curriculum->profession_id]) && $professions[$user->curriculum->profession_id])?$professions[$user->curriculum->profession_id]->name:'' }}</td>
+                                    <td>{{ (isset($professions[$user->profession_id]) && $professions[$user->profession_id])?$professions[$user->profession_id]->name:'' }}</td>
                                     <td>
                                         <ul>
-                                            @foreach($user->curriculum->skills as $skill)
-                                                <li>{{ $skill->name }}</li>
-                                            @endforeach
+                                            @if($user->curriculum)
+                                                @foreach($user->curriculum->skills as $skill)
+                                                    <li>{{ $skill->name }}</li>
+                                                @endforeach
+                                            @endif
                                         </ul>
                                     </td>
                                     <td>
