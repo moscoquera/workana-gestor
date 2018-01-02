@@ -242,7 +242,7 @@
                                     </td>
                                     <td>
                                         @if($user->curriculum)
-                                            <a class="btn btn-primary" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/curriculum/'.$user->curriculum->id }}">Ver curriculum</a>
+                                            <a class="btn btn-primary" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/curriculums/'.$user->curriculum->id }}">Ver curriculum</a>
                                         @endif
                                             <a class="btn btn-success" target="_blank" href="{{ url(config('backpack.base.route_prefix')).'/contracts/create?user='.$user->id }}">Contratar</a>
                                     </td>
