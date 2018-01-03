@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\URL;
 use App\Http\Requests\DropzoneRequest;
 
 
-class CurriculumCrudController extends UserCurriculumCrudController
+class CurriculumCrudController extends CrudController
 {
 
 
@@ -39,7 +39,7 @@ class CurriculumCrudController extends UserCurriculumCrudController
 
         $this->crud->setCreateView('curriculum.create');
         $this->crud->setEditView('curriculum.edit');
-        $this->crud->denyAccess([ 'create', 'delete']);
+
 
 
         $this->crud->addClause('rightJoin','users as cu','curriculums.user_id','cu.id');
@@ -82,15 +82,16 @@ class CurriculumCrudController extends UserCurriculumCrudController
 
         $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
 
-        if(Auth::check() && (Auth::user()->isAdmin())){
-            $this->crud->allowAccess(['list','create','update']);
-            $this->crud->denyAccess(['delete']);
-        }else if (Auth::check() && !Auth::user()->curriculum){
+
+        $this->crud->allowAccess(['list','create']);
+        $this->crud->denyAccess(['delete','update']);
+
+        /*else if (Auth::check() && !Auth::user()->curriculum){
             $this->crud->allowAccess('create');
         }else if (Auth::check() && Auth::user()->curriculum){
             $this->crud->allowAccess(['update','show']);
             $this->crud->setShowView('curriculum.show');
-        }
+        }*/
 
         $this->crud->layouts=[
             [
@@ -180,41 +181,43 @@ class CurriculumCrudController extends UserCurriculumCrudController
             ]
         ];
 
-        if (Auth::user()->isAdmin()){
 
 
-
-                $puser = User::find($this->request->input('user'));
-                if($puser){
-
-                    $this->crud->addField(
-                        ['name'=>'user_id',
-                            'type'=>'hidden',
-                            'value'=> $puser->id,
-                            'box'=>'personal'
-                        ]);
-                }elseif($this->request->route('curriculum')){
-                    if(is_object($this->request->route('curriculum'))){
-                        $pcurr = $this->request->route('curriculum');
-                    }else{
-                        $pcurr = Curriculum::find($this->request->route('curriculum'));
-                    }
-
-                    $this->crud->addField(
-                        ['name'=>'user_id',
-                            'type'=>'hidden',
-                            'value'=> $pcurr->user->id,
-                            'box'=>'personal'
-                        ]);
-                }
-        }elseif (!Auth::user()->isAdmin()){
+        $puser = User::find($this->request->input('user_id'));
+        if($puser){
             $this->crud->addField(
+                ['name'=>'user_id',
+                    'type'=>'hidden',
+                    'value'=> $puser->id,
+                    'box'=>'personal'
+                ]);
+        }elseif($this->request->curriculum && !is_object($this->request->curriculum)){
+            $curriculum = Curriculum::find(intval($this->request->curriculum));
+            $this->crud->addField(
+                ['name'=>'user_id',
+                    'type'=>'hidden',
+                    'value'=> $curriculum->user->id,
+                    'box'=>'personal'
+                ]);
+            $this->crud->allowAccess(['update']);
+        }
+
+            /*
+            $this->crud->addField(
+                ['name'=>'user_id',
+                    'type'=>'hidden',
+                    'value'=> $pcurr->user->id,
+                    'box'=>'personal'
+                ]);
+        */
+
+            /*$this->crud->addField(
                 ['name'=>'user_id',
                     'type'=>'hidden',
                     'value'=>Auth::user()->id,
                     'box'=>'personal'
-            ]);
-        }
+            ]);*/
+
 
         $this->crud->addFields([
             [ // image
@@ -389,21 +392,20 @@ class CurriculumCrudController extends UserCurriculumCrudController
 
         ]);
 
-        if (Auth::user()->isAdmin()){
-            $this->crud->addField([
-                'name'=>'archive',
-                'label'=>'Archivo',
-                'type'=>'textarea',
-                'box'=>'general'
-            ]);
+        $this->crud->addField([
+            'name'=>'archive',
+            'label'=>'Archivo',
+            'type'=>'textarea',
+            'box'=>'general'
+        ]);
 
-        }else{
-            $this->crud->addField(
+
+            /*$this->crud->addField(
                 ['name'=>'archive',
                     'type'=>'hidden',
                     'box'=>'general'
-                ]);
-        }
+                ]);*/
+
 
 
         $this->crud->child_resource_included = ['angular'=>false,'select' => true, 'number' => false];
@@ -617,17 +619,17 @@ class CurriculumCrudController extends UserCurriculumCrudController
 
     public function store(CreateCurriculumRequest $request){
 
-        if($request->user()->curriculum){
+        /*if($request->user()->curriculum){
             return redirect('/');
-        }
+        }*/
         return $this->storeCrud($request);
 
     }
 
     public function update(CreateCurriculumRequest $request)
     {
-
-        if ($request->input('user_id')!=Auth::user()->id && !Auth::user()->isAdmin()){
+        //$request->input('user_id')!=Auth::user()->id &&
+        if (!Auth::user()->isAdmin()){
             return redirect('/');
         }
 
@@ -636,7 +638,7 @@ class CurriculumCrudController extends UserCurriculumCrudController
             $request->merge( ['attachments' => '[]']);
         }
 
-        return $this->updateCrud($request); // TODO: Change the autogenerated stub
+        return $this->updateCrud($request);
 
     }
 
@@ -691,30 +693,29 @@ class CurriculumCrudController extends UserCurriculumCrudController
     }
 
     public function getSaveAction(){
-        if (Auth::user()->isAdmin()){
-            $saveAction = session('save_action', config('backpack.crud.default_save_action', 'save_and_back'));
-            $saveOptions = [];
-            $saveCurrent = [
-                'value' => $saveAction,
-                'label' => $this->getSaveActionButtonName($saveAction),
-            ];
+        $saveAction = session('save_action', config('backpack.crud.default_save_action', 'save_and_back'));
+        $saveOptions = [];
+        $saveCurrent = [
+            'value' => $saveAction,
+            'label' => $this->getSaveActionButtonName($saveAction),
+        ];
 
-            switch ($saveAction) {
-                case 'save_and_edit':
-                    $saveOptions['save_and_back'] = $this->getSaveActionButtonName('save_and_back');
-                    break;
-                case 'save_and_back':
-                default:
-                    $saveOptions['save_and_edit'] = $this->getSaveActionButtonName('save_and_edit');
-                    break;
-            }
-        }else{
-            $saveOptions = [];
+        switch ($saveAction) {
+            case 'save_and_edit':
+                $saveOptions['save_and_back'] = $this->getSaveActionButtonName('save_and_back');
+                break;
+            case 'save_and_back':
+            default:
+                $saveOptions['save_and_edit'] = $this->getSaveActionButtonName('save_and_edit');
+                break;
+        }
+
+         /*   $saveOptions = [];
             $saveCurrent = [
                 'value' => 'save_and_edit',
                 'label' => $this->getSaveActionButtonNameTrait('save_and_edit'),
             ];
-        }
+        */
 
         return [
             'active' => $saveCurrent,
@@ -725,7 +726,7 @@ class CurriculumCrudController extends UserCurriculumCrudController
     public function create()
     {
         try{
-            $puser = User::find($this->request->input('user'));
+            $puser = User::find($this->request->input('user_id'));
             if($puser) {
                 $this->crud->create_fields['photo']['value']=$puser->photo;
                 $this->crud->create_fields['sex']['value']=$puser->sex;
@@ -761,10 +762,10 @@ class CurriculumCrudController extends UserCurriculumCrudController
     {
         try {
             $curriculum = Curriculum::findOrFail($id);
-            if (!Auth::user()->isAdmin() && $curriculum->user->id != Auth::user()->id) {
+            if (!Auth::user()->isAdmin()) {
                 return redirect('/');
             }
-            return view('curriculum.show', ['curriculum' => $curriculum]);
+            return view('curriculum.show', ['curriculum' => $curriculum,'crud'=>$this->crud]);
         } catch (ModelNotFoundException $mnfe) {
             return parent::show($id);
         }
@@ -774,10 +775,6 @@ class CurriculumCrudController extends UserCurriculumCrudController
         {
             try {
                 $curriculum = Curriculum::findOrFail($id);
-                if (!Auth::user()->isAdmin() && $curriculum->user->id != Auth::user()->id) {
-                    return redirect('/');
-                }
-
                 $pdf = PDF::loadView('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);
                 return $pdf->stream('curriculum_'.$id.'.pdf');
              //   return view('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);

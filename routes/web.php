@@ -40,7 +40,12 @@ Route::group(['middleware' => 'web', 'prefix' => config('backpack.base.route_pre
 
 Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('users','UserCrudController');
+
     CRUD::resource('curriculums','CurriculumCrudController');
+    Route::get('curriculums/{id}/export','CurriculumCrudController@export');
+    Route::post('curriculums/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
+    Route::get('curriculums/{curriculum}/attachments','CurriculumCrudController@attachments');
+
     CRUD::resource('admins','AdminsCrudController');
     CRUD::resource('countries','CountriesCrudController');
     CRUD::resource('departments','DepartmentsCrudController');
@@ -94,10 +99,11 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
 Route::group(['middleware'=>['auth']],function(){
     Route::get('dashboard', 'DashboardController@index');
     CRUD::resource('profile','Users\ProfileCrudController');
-    Route::post('curriculums/media-dropzone', ['uses' => 'CurriculumCrudController@handleDropzoneUpload']);
-    Route::get('curriculums/{curriculum}/attachments','CurriculumCrudController@attachments');
     CRUD::resource('curriculum','UserCurriculumCrudController');
-    Route::get(config('backpack.base.route_prefix', 'admin').'/curriculums/{id}/export','CurriculumCrudController@export');
+    Route::get('curriculum/{id}/export','UserCurriculumCrudController@export');
+    Route::post('curriculum/media-dropzone', ['uses' => 'UserCurriculumCrudController@handleDropzoneUpload']);
+    Route::get('curriculum/{curriculum}/attachments','UserCurriculumCrudController@attachments');
+
 
     Route::get('/api/city', 'Api\CityController@index');
     Route::get('/api/city/{id}', 'Api\CityController@show');

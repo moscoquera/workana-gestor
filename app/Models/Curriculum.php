@@ -212,7 +212,7 @@ class Curriculum extends Model
 
     public function crudHasCurriculum(){
         if (!$this->id){
-            return '<a href="'.url('curriculums/create?user='.$this->user_id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
+            return '<a href="'.url('curriculums/create?user_id='.$this->user_id).'" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i> Crear Curriculum</a>';
         }else{
             return '<a href="'.url('curriculums/'.$this->id).'/edit" class="btn btn-xs btn-default"><i class="fa fa-file-text"></i>Editar Curriculum</a> <br/>'.
                 '<a href="'.url('curriculums/'.$this->id).'" class="btn btn-xs btn-info"><i class="fa fa-file-text"></i> Ver Curriculum</a><br/>'.

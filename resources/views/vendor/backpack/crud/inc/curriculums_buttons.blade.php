@@ -22,5 +22,5 @@
         @endif
     </div>
 
-    <a href="{{ Auth::user()->isAdmin()?url('users'):url('') }}" class="btn btn-default"><span class="fa fa-ban"></span> &nbsp;{{ trans('backpack::crud.cancel') }}</a>
+    <a href="{{ Auth::user()->isAdmin()?url('curriculums'):url('') }}" class="btn btn-default"><span class="fa fa-ban"></span> &nbsp;{{ trans('backpack::crud.cancel') }}</a>
 </div>

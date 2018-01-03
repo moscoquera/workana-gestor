@@ -18,6 +18,7 @@ class AdminsOnly
      */
     public function handle($request, Closure $next)
     {
+        $user=Auth::user();
         //dd($request->user());
         if (!Auth::check() || Auth::user()->rol->id!=1){
             return redirect('');

@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-md-offset-9 col-md-3">
                     <a class="btn btn-default" href="{{ Auth::user()->isAdmin()?url(config('backpack.base.route_prefix', 'admin').'/curriculums'):url('') }}"><i class="fa fa-arrow-left"></i>Volver</a>
-                    <a class="btn btn-success" target="_blank" href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculums/'.$curriculum->id.'/export') }}"><i class="fa fa-file-pdf-o"></i>Exportar</a>
+                    <a class="btn btn-success" target="_blank" href="{{ url($crud->route.'/'.$curriculum->id.'/export') }}"><i class="fa fa-file-pdf-o"></i>Exportar</a>
                 </div>
             </div>
             @include('curriculum.layout')

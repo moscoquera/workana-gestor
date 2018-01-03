@@ -5,62 +5,48 @@ namespace App\Http\Controllers;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use App\Http\Requests\Curriculum\CreateCurriculumRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Curriculum;
+use Barryvdh\DomPDF\Facade as PDF;
 
-class UserCurriculumCrudController extends CrudController
+
+class UserCurriculumCrudController extends CurriculumCrudController
 {
 
 
     public function setup()
     {
-        $this->crud->setModel('App\Models\PublicUser');
-        $this->crud->setRoute('curriculums');
-        $this->crud->setEntityNameStrings('curriculum', 'curriculums');
-        $this->crud->allowAccess('list');
-        $this->crud->denyAccess(['update','delete','create']);
 
+        parent::setup();
+        $this->crud->setModel('App\Models\Curriculum');
+        $this->crud->setRoute('curriculum');
+        $this->crud->denyAccess(['update','delete','create','list','show']);
+        $user=Auth::user();
+        if($user->isAdmin()){
+            return redirect('/');
+        }
+        if ($user->curriculum){
+            $this->crud->allowAccess(['update','show']);
+        }else{
+            $this->crud->allowAccess(['create']);
+            $this->crud->addField(
+                ['name'=>'user_id',
+                    'type'=>'hidden',
+                    'value'=> $user->id,
+                    'box'=>'personal'
+                ]);
+        }
 
-        $this->crud->setColumns([
-            [
-                'label' => '# Documento',
-                'name' => 'username',
-            ],
-            [
-                'label' => 'Nombres',
-                'name' => 'first_name'
-            ],
-            [
-                'label' => 'Apellidos',
-                'name' => 'last_name'
-            ],
-            'email',
-            [
-                'label' => 'Perfíl',
-                'name' => 'level',
-                'type' => 'select',
-                'entity' => 'level', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => "App\Models\Level" // foreign key model
-            ],
-            [
-                'label' => 'Profesión',
-                'name' => 'profession',
-                'type' => 'select',
-                'entity' => 'profession',
-                'attribute' => 'name',
-                'model' => 'App.Models.Profession'
-            ],
-            [
-                'label' => 'Líder',
-                'name' => 'leader',
-                'type' => 'select',
-                'entity' => 'leader',
-                'attribute' => 'fullname',
-                'model' => PublicUser::class,
-            ]
+        $this->crud->addField([
+            'label'=>'Evidencias',
+            'name'=>'attachments',
+            'box'=>'attachments',
+            'upload' => true,
+            'type' => 'dropzone', // voodoo magic
+            'prefix' => '/uploads/', // upload folder (should match the driver specified in the upload handler defined below)
+            'upload-url' => url('/curriculum/media-dropzone'), // POST route to handle the individual file uploads
         ]);
 
-
-        $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
 
     }
 
@@ -89,5 +75,36 @@ class UserCurriculumCrudController extends CrudController
 
     }
 
+    public function index()
+    {
+        $user = Auth::user();
+        if($user->curriculum){
+            return redirect($this->crud->route.'/'.$user->curriculum->id);
+        }else {
+            return redirect('/');
+        }
+    }
+
+    public function show($id)
+    {
+        $user = Auth::user();
+        if($user->curriculum && $user->curriculum->id==$id) {
+            $curriculum = Curriculum::findOrFail($id);
+            return view('curriculum.show', ['curriculum' => $curriculum,'crud'=>$this->crud]);
+        }
+        return redirect('/');
+    }
+
+    public function export($id)
+    {
+        try {
+            $curriculum = Curriculum::findOrFail($id);
+            $pdf = PDF::loadView('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);
+            return $pdf->stream('curriculum_'.$id.'.pdf');
+            //   return view('curriculum.pdf', ['curriculum' => $curriculum,'show'=>true]);
+        } catch (ModelNotFoundException $mnfe) {
+            return parent::show($id);
+        }
+    }
 
 }

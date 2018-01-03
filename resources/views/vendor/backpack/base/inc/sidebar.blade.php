@@ -84,7 +84,7 @@
                       <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/'.Auth::user()->curriculum->id.'/edit' ) }}"><i class="fa fa-file-text-o"></i> <span>Editar Curriculum</span></a></li>
 
               @else
-                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/create') }}"><i class="fa fa-file-text-o"></i> <span>Crear Curriculum</span></a></li>
+                      <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/curriculum/create?user_id='.Auth::user()->id ) }}"><i class="fa fa-file-text-o"></i> <span>Crear Curriculum</span></a></li>
               @endif
           @endif
           <!-- ======================================= -->
