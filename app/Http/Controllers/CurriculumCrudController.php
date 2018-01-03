@@ -83,8 +83,8 @@ class CurriculumCrudController extends CrudController
         $this->crud->addButtonFromModelFunction('line','curriculum','crudHasCurriculum','beginning');
 
 
-        $this->crud->allowAccess(['list','create']);
-        $this->crud->denyAccess(['delete','update']);
+        $this->crud->allowAccess(['list','create','update']);
+        $this->crud->denyAccess(['delete']);
 
         /*else if (Auth::check() && !Auth::user()->curriculum){
             $this->crud->allowAccess('create');
@@ -199,7 +199,6 @@ class CurriculumCrudController extends CrudController
                     'value'=> $curriculum->user->id,
                     'box'=>'personal'
                 ]);
-            $this->crud->allowAccess(['update']);
         }
 
             /*
