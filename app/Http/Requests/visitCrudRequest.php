@@ -27,9 +27,16 @@ class visitCrudRequest extends CrudRequest
     {
         return [
             'dateandtime'=>'required|date',
-            'address'=>'required|string|max:250',
+            'address'=>'nullable|string|max:250',
             'description'=>'nullable|string|max:250',
             'comments'=>'nullable|string|max:2040',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+          'address'=>'Lugar'
         ];
     }
 }

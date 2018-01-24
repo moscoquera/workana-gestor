@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Backpack\CRUD\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model
 {
     use CrudTrait;
+    use SoftDeletes;
+
     protected $fillable=[
         'name','dateandtime','address','user_id',
         'observations','type_id','status_id','city_id','controlled','place_name',
@@ -41,4 +44,16 @@ class Event extends Model
     public function levels(){
         return $this->belongsToMany(Level::class);
     }
+
+    public function delete()
+    {
+        $res= parent::delete();
+        if($res==true){
+            $this->attendance()->delete();
+        }
+
+        return $res;
+
+    }
+
 }

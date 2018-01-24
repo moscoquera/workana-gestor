@@ -29,6 +29,15 @@
                     <i class="fa fa-search"></i> <span>Buscar:</span>
                 </div>
                 <div class="box-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form class="form-horizontal" method="post">
                         {{ csrf_field() }}
                         <div class="row">
@@ -174,20 +183,6 @@
                                         @endforeach
 
                                     </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label col-sm-2">Con contrato:</label>
-                                <div class="col-sm-1">
-                                    <label class="switch-light" onclick="">
-                                        <input type="checkbox" {{ old('hired')?'checked':'' }} name="hired">
-
-                                        <span class="alert alert-light">
-                                        <span>No</span>
-                                        <span>Si</span>
-                                        <a class="btn btn-primary"></a>
-                                      </span>
-                                    </label>
                                 </div>
                             </div>
 

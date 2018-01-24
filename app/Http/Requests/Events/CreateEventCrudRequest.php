@@ -38,7 +38,7 @@ class CreateEventCrudRequest extends CrudRequest
             'dateandtime'=>'required|date_format:Y-m-d H:i:s',
             'city_id'=>'required|integer|exists:cities,id',
             'address'=>'required|string|max:191',
-            'observations'=>'string|max:2000',
+            'observations'=>'nullable|string|max:2000',
             'user_id'=>'required|integer|exists:users,id',
             'place_name'=>'nullable|string|max:100',
             'controlled'=>'boolean'

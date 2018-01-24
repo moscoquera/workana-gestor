@@ -46,7 +46,7 @@ class PublicUser extends User
     }
 
     public function getDocumentAttribute(){
-        return $thisname;
+        return $this->username;
     }
 
     public function visits(){

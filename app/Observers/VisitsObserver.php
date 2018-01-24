@@ -31,18 +31,19 @@ class VisitsObserver
         if ($attendance){
             $attendance=json_decode($attendance);
             for ($i=0;$i<sizeof($attendance);$i++){
+
                 $attendance[$i]->attende_type='App\Models\PublicUser';
                 $attendance[$i]->attended=1;
             }
         }else{
             $attendance=[];
         }
-        $this->relationSyncFromJson($visit,'attendance',$attendance,false);
+        $this->relationSyncFromJson($visit,'attendance',$attendance,false,'attende_id');
 
     }
 
 
-    protected function relationSyncFromJson($instance,$relation,$newItems,$pivot=false){
+    protected function relationSyncFromJson($instance,$relation,$newItems,$pivot=false,$secondKey=false){
 
         if ($pivot){
             $newData=[];
@@ -59,12 +60,27 @@ class VisitsObserver
         $relationObjectsMaps=$instance->{$relation}->mapWithKeys(function($item){
             return [$item->getKey() => $item];
         });
+
+        $relationObjectsMapSecondKey=[];
+        if($secondKey) {
+            $relationObjectsMapSecondKey = $instance->{$relation}->mapWithKeys(function ($item) use ($secondKey) {
+                return [$item->{$secondKey} => $item];
+            });
+        }
+
+
         foreach($newItems as $newItem){
             if (isset($newItem->id) && $newItem->id){
                 $relationObjectsMaps[$newItem->id]->fill((array)$newItem);
                 $relationObjectsMaps[$newItem->id]->save();
                 unset($relationObjectsMaps[$newItem->id]);
-            }else{
+            }elseif($secondKey && isset($newItem->{$secondKey}) && $newItem->{$secondKey}
+            &&  isset($relationObjectsMapSecondKey[$newItem->{$secondKey}]))
+            {
+                $relationObjectsMapSecondKey[$newItem->{$secondKey}]->fill((array)$newItem);
+                $relationObjectsMapSecondKey[$newItem->{$secondKey}]->save();
+                unset($relationObjectsMaps[$relationObjectsMapSecondKey[$newItem->{$secondKey}]->id]);
+            }elseif(isset($newItem->attende_id)){
                 $instance->$relation()->create((array)$newItem);
             }
         }

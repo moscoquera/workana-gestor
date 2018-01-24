@@ -208,7 +208,6 @@ class ContractsCrudController extends CrudController
         $languages = $request->input('languages');
         $cities = $request->input('cities');
 
-        $hired = $request->input('hired');
 
 
         $users = PublicUser::whereExists(function ($query) {
@@ -216,11 +215,6 @@ class ContractsCrudController extends CrudController
                 ->from('curriculums')
                 ->whereRaw('users.id = curriculums.user_id');
         });
-
-        if (!$hired)
-            $users->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))->from('contracts')->where('users.id', '=', 'contracts.user_id');
-            });
 
 
         if ($professions) {

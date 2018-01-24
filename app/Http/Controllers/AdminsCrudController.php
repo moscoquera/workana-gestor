@@ -40,7 +40,7 @@ class AdminsCrudController extends CrudController
                     'label'=>'Apellidos',
                 ],
                 [
-                    'name'=>'Email',
+                    'name'=>'email',
                     'label'=>'Email',
 
                 ]

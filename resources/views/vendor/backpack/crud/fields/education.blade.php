@@ -31,9 +31,9 @@
         <ui-select ng-model="item.educational_institution_id"
                    style="width: 100%;"
                    title="Institución" on-select="institutionUpdate($item, $model,item)">
-            <ui-select-match placeholder="Seleccione una institución..."><% $select.selected.name %></ui-select-match>
+            <ui-select-match placeholder="Seleccione una institución..."><% $select.selected.fullname %></ui-select-match>
             <ui-select-choices repeat="type.id as type in educational_institution_id_fields">
-                <div ng-bind-html="type.name"></div>
+                <div ng-bind-html="type.fullname"></div>
             </ui-select-choices>
         </ui-select>
 

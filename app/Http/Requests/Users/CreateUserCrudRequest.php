@@ -39,8 +39,7 @@ class CreateUserCrudRequest extends CrudRequest
                 Rule::unique('users')
             ],
             'email2'=>[
-                'nullable','max:100','email',
-                Rule::unique('users')
+                'nullable','max:100','email'
             ],
             'date_of_birth'=>'nullable|date_format:Y-m-d',
             'sex'=>'nullable|string|size:1',

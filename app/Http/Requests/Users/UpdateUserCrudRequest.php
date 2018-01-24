@@ -44,7 +44,6 @@ class UpdateUserCrudRequest extends CrudRequest
             'password'=>'required_if:passwordchange,1|nullable|string|min:6|confirmed',
             'email2'=>[
                 'nullable','max:100','email',
-                Rule::unique('users')
             ],
             'date_of_birth'=>'nullable|date_format:Y-m-d',
             'sex'=>'nullable|string|size:1',

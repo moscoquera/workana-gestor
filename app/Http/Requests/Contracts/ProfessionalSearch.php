@@ -28,7 +28,6 @@ class ProfessionalSearch extends FormRequest
     {
         return [
             'professions.*'=>'integer|exists:professions,id',
-            'hired'=>'boolean'
         ];
     }
 }

@@ -48,6 +48,12 @@ class visitsCrudController extends CrudController
                 'label'=>'Descripción',
                 'name'=>'description'
             ],
+            [
+                'label'=>'Asistentes',
+                'name'=>'attendance_column',
+                'type' => "model_function",
+                'function_name' => 'getAttendanceColumnAttribute', // the method in your Model
+            ],
             [  // Select2
                 'label' => "Resultado",
                 'type' => 'select',
