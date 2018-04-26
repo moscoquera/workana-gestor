@@ -17,27 +17,17 @@ class CandidaciesCrudController extends CrudController
         $this->crud->setEntityNameStrings('candidatura', 'candidaturas');
 
         $this->crud->addColumns([
-            [   'label' => "Fecha Comicio",
-                'type' => 'select',
-                'name' => 'date_election',
-                'entity' => 'election',
-                'attribute' => 'date',
-                'model' => "App\Models\Election",
+            [   'label' => "Fecha",
+                'type' => 'date',
+                'name' => 'election_date',
                 'format'=>'Y-m-d'
-            ],
-            [   'label' => "Comicio",
-                'type' => 'select',
-                'name' => 'election_id',
-                'entity' => 'election',
-                'attribute' => 'name',
-                'model' => "App\Models\Election"
             ],
             [  // Select2
                 'label' => "Candidato",
                 'type' => 'select',
                 'name' => 'candidate_id',
                 'entity' => 'candidate',
-                'attribute' => 'name',
+                'attribute' => 'full_name',
                 'model' => "App\Models\Candidate"
             ],
             [
@@ -50,37 +40,35 @@ class CandidaciesCrudController extends CrudController
                 'name'=>'gotten_votes',
                 'type'=>'number'
             ],
-            [
-                'label'=>'Elegido?',
-                'name'=>'elected',
-                'type'=>'toggle_switch',
-                'switch_labels'=>[
-                    'on'=>'Si',
-                    'off'=>'No'
-                ]
-            ],
-            [
-                'label'=>'Observaciones',
-                'name'=>'observation',
-                'type'=>'textarea'
-            ]
+	        [
+		        'label'=>'Votos partido',
+		        'name'=>'party_votes',
+		        'type'=>'number'
+	        ],
+	        [
+		        'label'=>'Puesto partido',
+		        'name'=>'party_number',
+		        'type'=>'number'
+	        ],
 
         ]);
 
         $this->crud->addFields([
-            [   'label' => "Comicio",
-                'type' => 'select2',
-                'name' => 'election_id',
-                'entity' => 'election',
-                'attribute' => 'name',
-                'model' => "App\Models\Election"
+            [   'label' => "Fecha candidatura",
+                'type' => 'date_picker',
+                'name' => 'election_date',
+                'date_picker_options' => [
+	                'todayBtn' => true,
+	                'format' => 'yyyy-mm-dd',
+	                'language' => 'es'
+                ],
             ],
             [  // Select2
                 'label' => "Candidato",
                 'type' => 'select2',
                 'name' => 'candidate_id',
                 'entity' => 'candidate',
-                'attribute' => 'name',
+                'attribute' => 'full_name',
                 'model' => "App\Models\Candidate"
             ],
             [
@@ -88,25 +76,21 @@ class CandidaciesCrudController extends CrudController
                 'name'=>'proyected_votes',
                 'type'=>'number'
             ],
+	        [
+		        'label'=>'Votos obtenidos',
+		        'name'=>'gotten_votes',
+		        'type'=>'number'
+	        ],
             [
-                'label'=>'Votos obtenidos',
-                'name'=>'gotten_votes',
+                'label'=>'Total del partido',
+                'name'=>'party_votes',
                 'type'=>'number'
             ],
-            [
-                'label'=>'Elegido?',
-                'name'=>'elected',
-                'type'=>'toggle_switch',
-                'switch_labels'=>[
-                    'on'=>'Si',
-                    'off'=>'No'
-                ]
-            ],
-            [
-                'label'=>'Observaciones',
-                'name'=>'observation',
-                'type'=>'textarea'
-            ]
+	        [
+		        'label'=>'Puesto partido',
+		        'name'=>'party_number',
+		        'type'=>'number'
+	        ],
 
         ]);
 

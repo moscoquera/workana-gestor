@@ -94,6 +94,15 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
     CRUD::resource('election-city-results','ElectionCityCrudController');
     CRUD::resource('educational-institutions','EducationalInstitutionCrudController');
     CRUD::resource('levels','LevelCrudController');
+
+    CRUD::resource('houses','SupportHouseController');
+	CRUD::resource('candidacies-zoned','CandidaciesZonedController');
+	CRUD::resource('candidacies-houses','CandidaciesHousesController');
+	CRUD::resource('candidacies-registry','CandidaciesRegistryController');
+	CRUD::resource('candidacies-bonifications','CandidaciesBonificationsController');
+	CRUD::resource('candidacies-transport','CandidaciesTransportController');
+
+
 });
 
 Route::group(['middleware'=>['auth']],function(){

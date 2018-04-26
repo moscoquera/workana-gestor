@@ -26,12 +26,13 @@ class CandidaciesCrudRequest extends CrudRequest
     public function rules()
     {
         return [
-            'election_id'=>'required|integer|exists:elections,id',
             'candidate_id'=>'required|integer|exists:candidates,id',
             'proyected_votes'=>'required|integer|min:0',
             'gotten_votes'=>'required|integer|min:0',
-            'elected'=>'required|boolean',
-            'observation'=>'nullable|string|max:1000'
+            'observation'=>'nullable|string|max:1000',
+	        'election_date'=>'required|date',
+	        'party_votes'=>'required|integer|min:0',
+	        'party_number'=>'required|integer|min:0'
         ];
     }
 }

@@ -26,7 +26,17 @@ class CandidateCrudRequest extends CrudRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|max:100'
+            'first_name'=>'required|string|max:100',
+	        'last_name'=>'required|string|max:100',
+	        'document'=>'required|string|max:20',
+	        'department_id'=>'nullable|integer|exists:departments,id',
+	        'city_id'=>'nullable|integer|exists:cities,id',
+	        'address'=>'nullable|string|max:250',
+	        'phone'=>'nullable|string|max:30',
+            'phone_alt'=>'nullable|string|max:30',
+            'photo'=>'nullable',
+	        'profession_id'=>'nullable|integer|exists:professions,id',
+	        'enter_date'=>'nullable|date'
         ];
     }
 }
