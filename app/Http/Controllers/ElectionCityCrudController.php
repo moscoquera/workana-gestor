@@ -17,7 +17,7 @@ class ElectionCityCrudController extends CrudController
     {
         $this->crud->setRoute('election-city-results');
         $this->crud->setModel(CityElection::class);
-        $this->crud->setEntityNameStrings('resultado','resultados');
+        $this->crud->setEntityNameStrings('registro por municipio y candidatura','registros por municipios y candidaturas');
 
         $citiesQuery=City::join('departments','departments.id','=','cities.department_id')
             ->select('cities.*')
@@ -25,23 +25,14 @@ class ElectionCityCrudController extends CrudController
             ->orderBy('cities.name');
 
         $this->crud->addColumns([
-            [  // Select2
-                'label' => "Comicio",
-                'type' => 'select',
-                'name' => 'election_id', // the db column for the foreign key
-                'entity' => 'candidature', // the method that defines the relationship in your Model
-                'attribute' => 'election.name', // foreign key attribute that is shown to user
-                'model' => ElectionCandidate::class,
-            ],
-            [
-                'label' => "Candidato", // Table column heading
-                'type' => "select",
-                'name' => 'election_candidate_id', // the column that contains the ID of that connected entity
-                'entity' => 'candidature', // the method that defines the relationship in your Model
-                'attribute' => "candidate.name", // foreign key attribute that is shown to user
-                'model' => ElectionCandidate::class,
-            ],
-            [  // Select2
+	        [
+		        'name'=>'candidacy_id',
+		        'label'=>'Candidatura',
+		        'type'=>'select',
+		        'entity'=>'candidacy',
+		        'attribute'=>'full_name'
+	        ],
+	        [  // Select2
                 'label' => "Municipio",
                 'type' => 'select',
                 'name' => 'city_id', // the db column for the foreign key
@@ -50,35 +41,37 @@ class ElectionCityCrudController extends CrudController
                 'model' => City::class,
             ],
             [
-                'label'=>'Total votos',
+                'label'=>'Total planillados',
                 'type'=>'number',
-                'name'=>'votes'
-            ]
+                'name'=>'inscribed'
+            ],
+	        [
+		        'label'=>'Total registrados',
+		        'type'=>'number',
+		        'name'=>'registered'
+	        ],
+	        [
+		        'label'=>'Total votos finales',
+		        'type'=>'number',
+		        'name'=>'votes'
+	        ],
+	        [
+		        'label'=>'Efectividad',
+		        'name'=>'effectivity'
+	        ]
         ]);
 
 
         $this->crud->addFields([
-            [  // Select2
-                'label' => "Comicio",
-                'type' => 'fake_select2',
-                'name' => 'election_id', // the db column for the foreign key
-                'entity' => 'election', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => Election::class,
-            ],
-            [
-                'label' => "Candidato", // Table column heading
-                'type' => "select2_from_ajax_linked",
-                'name' => 'election_candidate_id', // the column that contains the ID of that connected entity
-                'entity' => 'candidate', // the method that defines the relationship in your Model
-                'attribute' => "name", // foreign key attribute that is shown to user
-                'model' => ElectionCandidate::class,
-                'data_source' => url("ajax/election/candidate"), // url to controller search function (with /{id} should return model)
-                'placeholder' => "Seleccione un candidato", // placeholder for the select
-                'minimum_input_length' => 1, // minimum characters to type before querying results
-                'linked_name'=>'election_id',
-            ],
-            [  // Select2
+	        [
+		        'name'=>'candidacy_id',
+		        'label'=>'Candidatura',
+		        'type'=>'select2',
+		        'entity'=>'candidacy',
+		        'attribute'=>'full_name',
+		        'attributes'=>['required'=>'required']
+	        ],
+	        [  // Select2
                 'label' => "Municipio",
                 'type' => 'select2',
                 'name' => 'city_id', // the db column for the foreign key
@@ -87,11 +80,30 @@ class ElectionCityCrudController extends CrudController
                 'model' => City::class,
                 'query'=>$citiesQuery,
             ],
-            [
-                'label'=>'Total votos',
-                'type'=>'number',
-                'name'=>'votes'
-            ]
+	        [
+		        'label'=>'Total planillados',
+		        'name'=>'inscribed',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0]
+	        ],
+	        [
+		        'label'=>'Total registrados',
+		        'name'=>'registered',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0]
+	        ],
+	        [
+		        'label'=>'Total votos finales',
+		        'name'=>'votes',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Efectividad',
+		        'name'=>'effectivity',
+		        'type'=>'textarea',
+	        ],
+
         ]);
     }
 

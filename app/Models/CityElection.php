@@ -10,22 +10,16 @@ class CityElection extends Model
 
     use CrudTrait;
     protected $table='city_election_candidates';
-    protected $fillable=['election_candidate_id','city_id','votes'];
+    protected $fillable=['candidacy_id','city_id','votes','inscribed','registered','effectivity'];
 
-
-    protected $appends=['election_id'];
 
     public function city(){
         return $this->belongsTo(City::class);
     }
 
-    public function candidature(){
-        return $this->belongsTo(ElectionCandidate::class,'election_candidate_id');
+    public function candidacy(){
+        return $this->belongsTo(ElectionCandidate::class);
     }
 
-
-    public function getelectionIdAttribute(){
-        return $this->candidature->election->id;
-    }
 
 }

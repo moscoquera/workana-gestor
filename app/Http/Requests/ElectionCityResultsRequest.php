@@ -26,9 +26,12 @@ class ElectionCityResultsRequest extends CrudRequest
     public function rules()
     {
         return [
-            'election_candidate_id'=>'required|integer|exists:election_candidates,id',
+            'candidacy_id'=>'required|integer|exists:candidacies,id',
             'city_id'=>'required|integer|exists:cities,id',
-            'votes'=>'required|integer|min:0'
+            'votes'=>'required|integer|min:0',
+            'inscribed'=>'nullable|integer|min:0',
+            'registered'=>'nullable|integer|min:0',
+            'effectivity'=>'nullable|string|max:1000',
         ];
     }
 }

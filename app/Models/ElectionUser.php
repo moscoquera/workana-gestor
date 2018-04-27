@@ -11,35 +11,16 @@ class ElectionUser extends Model
     use CrudTrait;
     use SoftDeletes;
 
-    protected $fillable=['election_id','user_id','proyected_votes','registered_votes',
-    'controlled_votes','identified_votes','transport_requeriment','transport_cost','refreshments',
-    'kit','payroll','payment','number_of_payments','house_support','activity_id'];
+    protected $fillable=['user_id','candidacy_id',
+    'zoned','registered','controlled','bonuses',
+    'kit','payroll','payment','number_of_payments','transport_requeriment'];
 
-    public function election(){
-        return $this->belongsTo(Election::class);
+    public function candidacy(){
+        return $this->belongsTo(ElectionCandidate::class);
     }
 
     public function user(){
         return $this->belongsTo(PublicUser::class);
     }
 
-    public function activity(){
-        return $this->belongsTo(ElectionSupportType::class,'activity_id');
-    }
-
-    public function credits(){
-        return $this->hasMany(EconomicalSupport::class)->credit();
-    }
-
-    public function debits(){
-        return $this->hasMany(EconomicalSupport::class)->debit();
-    }
-
-    public function getTotalCreditsAttribute(){
-        return $this->hasMany(EconomicalSupport::class)->credit()->sum('value');
-    }
-
-    public function getTotalDebitsAttribute(){
-        return $this->hasMany(EconomicalSupport::class)->debit()->sum('value');
-    }
 }

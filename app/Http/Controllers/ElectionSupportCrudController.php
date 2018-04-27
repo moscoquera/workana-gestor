@@ -12,29 +12,17 @@ class ElectionSupportCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\ElectionUser');
         $this->crud->setRoute('election-supports');
-        $this->crud->setEntityNameStrings('apoyo', 'apoyos');
-        $this->crud->child_resource_included = ['angular'=>false,'select' => false, 'number' => false, 'date'=>false];
-        $this->crud->child_resource_initialized = ['select' => false, 'number' => false];
-
+        $this->crud->setEntityNameStrings('registro por usuario', 'registros por usuarios');
 
         $this->crud->addColumns([
-            [   'label' => "Fecha Comicio",
-                'type' => 'select',
-                'name' => 'date_election',
-                'entity' => 'election',
-                'attribute' => 'date',
-                'model' => "App\Models\Election",
-                'format'=>'Y-m-d'
-            ],
-            [
-                'label' => "Comicio",
-                'type' => 'select',
-                'name' => 'election_id', // the db column for the foreign key
-                'entity' => 'election', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => "App\Models\Election" // foreign key model
-            ],
-            [
+	        [
+		        'name'=>'candidacy_id',
+		        'label'=>'Candidatura',
+		        'type'=>'select',
+		        'entity'=>'candidacy',
+		        'attribute'=>'full_name'
+	        ],
+	        [
                 'label' => "Usuario",
                 'type' => 'select',
                 'name' => 'user_id', // the db column for the foreign key
@@ -43,42 +31,24 @@ class ElectionSupportCrudController extends CrudController
                 'model' => "App\Models\PublicUser" // foreign key model
             ],
             [
-                'label'=>'Votos proyectados',
-                'name'=>'proyected_votes'
+                'label'=>'Total Zonificados',
+                'name'=>'zoned'
             ],
             [
-                'label'=>'Votos planillados',
-                'name'=>'registered_votes'
+                'label'=>'Total planillados',
+                'name'=>'registered'
             ],
             [
-                'label'=>'Votos controllados',
-                'name'=>'controlled_votes'
+                'label'=>'Total controlados',
+                'name'=>'controlled'
             ],
             [
-                'label'=>'Votos identificados',
-                'name'=>'identified_votes'
-            ],
-            [
-                'label'=>'Transporte solicitado',
-                'name'=>'transport_requeriment',
-            ],
-            [
-                'label'=>'Costo del transporte',
-                'name'=>'transport_cost'
-            ],
-            [
-                'label'=>'# de refrigerios',
-                'name'=>'refreshments'
+                'label'=>'Bonificación',
+                'name'=>'bonuses'
             ],
             [
                 'label'=>'Kit entregado?',
                 'name'=>'kit',
-                'type'=>'boolean',
-                'options' => [0 => 'No', 1 => 'Si']
-            ],
-            [
-                'label'=>'Nomina de apoyo?',
-                'name'=>'payroll',
                 'type'=>'boolean',
                 'options' => [0 => 'No', 1 => 'Si']
             ],
@@ -91,185 +61,90 @@ class ElectionSupportCrudController extends CrudController
                 'name'=>'number_of_payments'
             ],
             [
-                'label'=>'Total aportes entregados',
-                'name'=>'total_credits'
+                'label'=>'Total entregado',
+                'name'=>'payroll'
             ],
-            [
-                'label'=>'Total aportes recibidos',
-                'name'=>'total_debits'
-            ],
-            [
-                'label'=>'Casa de apoyo?',
-                'name'=>'house_support',
-                'type'=>'boolean',
-                'options' => [0 => 'No', 1 => 'Si']
-            ],
-            [
-                'label' => "Actividad electoral",
-                'type' => 'select',
-                'name' => 'activity_id', // the db column for the foreign key
-                'entity' => 'activity', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => "App\Models\ElectionSupportType" // foreign key model
-            ],
+	        [
+		        'label'=>'Transporte entregado',
+		        'name'=>'transport_requeriment'
+	        ],
+
+
         ]);
 
         $this->crud->addFields([
             [
-                'label' => "Comicio",
-                'type' => 'select2',
-                'name' => 'election_id', // the db column for the foreign key
-                'entity' => 'election', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => "App\Models\Election" // foreign key model
-            ],
-            [
-                'label' => "Usuario",
-                'type' => 'select2',
-                'name' => 'user_id', // the db column for the foreign key
-                'entity' => 'user', // the method that defines the relationship in your Model
-                'attribute' => 'fullname', // foreign key attribute that is shown to user
-                'model' => "App\Models\PublicUser" // foreign key model
-            ],
-            [
-                'label'=>'Votos proyectados',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'proyected_votes'
-            ],
-            [
-                'label'=>'Votos planillados',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'registered_votes'
-            ],
-            [
-                'label'=>'Votos controllados',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'controlled_votes'
-            ],
-            [
-                'label'=>'Votos identificados',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'identified_votes'
-            ],
-            [
-                'label'=>'Transporte solicitado',
-                'type'=>'textarea',
-                'name'=>'transport_requeriment',
-            ],
-            [
-                'label'=>'Costo del transporte',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'transport_cost'
-            ],
-            [
-                'label'=>'# de refrigerios',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'refreshments'
-            ],
-            [
-                'label'=>'Kit entregado?',
-                'name'=>'kit',
-                'type'=>'toggle_switch',
-                'switch_labels'=>[
-                    'on'=>'Si',
-                    'off'=>'No'
-                ]
-            ],
-            [
-                'label'=>'Nomina de apoyo?',
-                'name'=>'payroll',
-                'type'=>'toggle_switch',
-                'switch_labels'=>[
-                    'on'=>'Si',
-                    'off'=>'No'
-                ]
-            ],
-            [
-                'label'=>'Valor cuota',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'payment'
-            ],
-            [
-                'label'=>'Número de cuotas',
-                'type'=>'number',
-                'min'=>0,
-                'name'=>'number_of_payments'
-            ],
-            [
-            'label'=>'Casa de apoyo?',
-            'name'=>'house_support',
-            'type'=>'toggle_switch',
-            'switch_labels'=>[
-                'on'=>'Si',
-                'off'=>'No'
-                ]
-            ],
-            [
-                'label' => "Actividad electoral",
-                'type' => 'select2',
-                'name' => 'activity_id', // the db column for the foreign key
-                'entity' => 'activity', // the method that defines the relationship in your Model
-                'attribute' => 'name', // foreign key attribute that is shown to user
-                'model' => "App\Models\ElectionSupportType" // foreign key model
-            ],
+		        'name'=>'candidacy_id',
+		        'label'=>'Candidatura',
+		        'type'=>'select2',
+		        'entity'=>'candidacy',
+		        'attribute'=>'full_name',
+	            'attributes'=>['required'=>'required']
+	        ],
+	        [
+		        'label' => "Usuario",
+		        'type' => 'select',
+		        'name' => 'user_id', // the db column for the foreign key
+		        'entity' => 'user', // the method that defines the relationship in your Model
+		        'attribute' => 'fullname', // foreign key attribute that is shown to user
+		        'model' => "App\Models\PublicUser" // foreign key model
+	        ],
+	        [
+		        'label'=>'Total Zonificados',
+		        'name'=>'zoned',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Total planillados',
+		        'name'=>'registered',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Total controlados',
+		        'name'=>'controlled',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Bonificación',
+		        'name'=>'bonuses',
+		        'type'=>'textarea',
 
-        ]);
+	        ],
+	        [
+		        'label'=>'Kit entregado?',
+		        'name'=>'kit',
+		        'type'=>'toggle_switch',
+		        'switch_labels'=>[
+			        'on'=>'Si',
+			        'off'=>'No'
+		        ]
+	        ],
+	        [
+		        'label'=>'Valor cuota',
+		        'name'=>'payment',
+		        'type'=>'number',
+	        ],
+	        [
+		        'label'=>'Número de cuotas',
+		        'name'=>'number_of_payments',
+	            'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Total entregado',
+		        'name'=>'payroll',
+		        'type'=>'number',
+		        'attributes'=>['min'=>0,'required'=>'required']
+	        ],
+	        [
+		        'label'=>'Transporte entregado',
+		        'name'=>'transport_requeriment',
+		        'type'=>'textarea',
+	        ],
 
-
-        $this->crud->addField([
-            'name' => 'credits',
-            'label' => 'Aportes entregados',
-            'type' => 'child',
-            'entity_singular' => 'aporte',
-            'columns' => [
-                [
-                    'label' => 'Fecha',
-                    'type' => 'child_date',
-                    'name' => 'date',
-                    'date_picker_options'=>[
-                        'format'=>'yyyy-mm-dd'
-                    ]
-                ],
-                [
-                    'label' => 'Valor',
-                    'type' => 'child_number',
-                    'name' => 'value',
-
-                ],
-            ],
-            'max' => 10000, // maximum rows allowed in the table
-            'min' => 0 // minimum rows allowed in the table
-        ]);
-
-        $this->crud->addField([
-            'name' => 'debits',
-            'label' => 'Aportes recibidos',
-            'type' => 'child',
-            'entity_singular' => 'aporte',
-            'columns' => [
-                [
-                    'label' => 'Fecha',
-                    'type' => 'child_date',
-                    'name' => 'date',
-                    'date_picker_options'=>[
-                        'format'=>'yyyy-mm-dd'
-                    ]
-                ],
-                [
-                    'label' => 'Valor',
-                    'type' => 'child_number',
-                    'name' => 'value',
-                ],
-            ],
-            'max' => 10000, // maximum rows allowed in the table
-            'min' => 0 // minimum rows allowed in the table
         ]);
 
 

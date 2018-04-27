@@ -126,8 +126,30 @@
                             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/houses') }}"><i
                                             class="fa fa-users"></i> <span>Casas de apoyo</span></a></li>
                             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/election-supports') }}"><i
-                                            class="fa fa-random"></i> <span>Apoyo electoral</span></a></li>
-                        </ul>
+                                            class="fa fa-random"></i> <span>Registros por usuario</span></a></li>
+
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-link"></i> <span>REGISTRO DE CONTROL</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                      </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="{{ url(config('backpack.base.route_prefix', 'admin').'/election-city-results') }}">
+                                            <i class="fa fa-list-ol"></i> <span>Registro por municipio y candidatura</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url(config('backpack.base.route_prefix', 'admin').'/election-location-results') }}">
+                                            <i class="fa fa-list-ol"></i> <span>Registro por Puesto de votación</span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                                </ul>
                     </li>
 
                 @endif

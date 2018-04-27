@@ -26,23 +26,20 @@ class ElectionSupportCrudRequest extends CrudRequest
     public function rules()
     {
         return [
-            'election_id'=>'required|integer|exists:elections,id',
+            'candidacy_id'=>'required|integer|exists:candidacies,id',
             'user_id'=>'required|integer|exists:users,id',
-            'proyected_votes'=>'nullable|integer|min:0',
-            'registered_votes'=>'nullable|integer|min:0',
-            'controlled_votes'=>'nullable|integer|min:0',
-            'identified_votes'=>'nullable|integer|min:0',
-            'transport_requeriment'=>'nullable|string|max:1000',
-            'transport_cost'=>'nullable|integer|min:0',
-            'refreshments'=>'nullable|integer|min:0',
+            'zoned'=>'nullable|integer|min:0',
+            'registered'=>'nullable|integer|min:0',
+            'controlled'=>'nullable|integer|min:0',
+            'bonuses'=>'nullable|string|max:1000',
             'kit'=>'nullable|boolean',
-            'payroll'=>'nullable|boolean',
+            'payroll'=>'nullable|integer|min:0',
             'payment'=>'nullable|integer|min:0',
             'number_of_payments'=>'nullable|integer|min:0',
             'house_support'=>'nullable|boolean',
-            'activity_id'=>'required|integer|exists:types,id',
-            'credits'=>'nullable|json',
-            'debits'=>'nullable|json'
+            'transport_requeriment'=>'nullable|string|max:10000',
+
+
 
         ];
     }

@@ -101,6 +101,8 @@ Route::group(['middleware'=>['auth','adminsonly']],function(){
 	CRUD::resource('candidacies-registry','CandidaciesRegistryController');
 	CRUD::resource('candidacies-bonifications','CandidaciesBonificationsController');
 	CRUD::resource('candidacies-transport','CandidaciesTransportController');
+	CRUD::resource('election-location-results','CandidaciesRegistryLocationController');
+
 
 
 });

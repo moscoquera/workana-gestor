@@ -28,6 +28,7 @@ class ElectionSupportObserver
 
     public function saved(ElectionUser $support)
     {
+    	return //disabled
         $credits = $this->request->input('credits');
         $debits = $this->request->input('debits');
         if ($credits){
