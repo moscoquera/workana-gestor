@@ -26,14 +26,14 @@ class ElectionController extends Controller
             return $page;
         });
 
-        $results = ElectionCandidate::join('candidates','candidates.id','=','election_candidates.candidate_id')
-            ->where('election_id',$parent);
+        $results = ElectionCandidate::join('candidates','candidates.id','=','candidacies.candidate_id')
+            ->where('candidate_id',$parent);
 
         if ($search_term)
         {
-            $results = $results->where('candidates.name', 'LIKE', '%'.$search_term.'%');
+            $results = $results->where('candidates.first_name', 'LIKE', '%'.$search_term.'%');
         }
-        $results=$results->select(['election_candidates.id','candidates.name']);
+        $results=$results->selectRaw("candidacies.id, concat(candidates.first_name,' ',candidates.last_name) as name");
         $results = $results->orderBy('name','desc')->paginate(10);
         return $results;
     }
@@ -70,7 +70,6 @@ class ElectionController extends Controller
         $department = intval($request->input('department'));
         $city = is_array($request->input('city'))?$request->input('city'):[];
         //$leader = intval($request->input('leader'));
-        $election = intval($request->input('election'));
         $candidate = intval($request->input('candidate'));
 
         if(!$year){
@@ -78,10 +77,9 @@ class ElectionController extends Controller
         }
 
 
-        $query = DB::table('city_election_candidates')->join('election_candidates','election_candidates.id','=','city_election_candidates.election_candidate_id');
-        $query=$query->join('elections','elections.id','=','election_candidates.election_id');
+        $query = DB::table('city_election_candidates')->join('candidacies','candidacies.id','=','city_election_candidates.candidacy_id');
         $query=$query->join('cities','cities.id','=','city_election_candidates.city_id');
-        $query->whereRaw("year(elections.date) = $year ");
+        $query->whereRaw("year(candidacies.election_date) = $year ");
         $query->selectRaw('cities.name as name,sum(city_election_candidates.votes) as votes');
         $query->groupBy(['cities.id','cities.name']);
 
@@ -93,12 +91,8 @@ class ElectionController extends Controller
         if ($city){
             $query->whereIn('cities.id',$city);
         }
-
-        if ($election){
-            $query->where('elections.id',$election);
-        }
         if ($candidate){
-            $query->where('election_candidates.candidate_id',$candidate);
+            $query->where('candidacies.candidate_id',$candidate);
         }
 
 
@@ -112,15 +106,12 @@ class ElectionController extends Controller
         }
         return DataTables::query($query)
             ->make();
-
-
     }
 
     public function resultsLeader(Request $request){
 
         $year = $request->input('year');
         $leader = intval($request->input('leader'));
-        $election = intval($request->input('election'));
 
         if(!$year){
             $year=date('Y');
@@ -129,21 +120,16 @@ class ElectionController extends Controller
 
         $query = DB::table('election_users')
             ->join('users','election_users.user_id','=','users.id')
-            ->join('elections','elections.id','=','election_users.election_id');
+            ->join('candidacies','candidacies.id','=','election_users.candidacy_id');
         $query->leftJoin('users as leader','users.leader_id','=','leader.id');
-        $query->whereRaw("year(elections.date) = $year ");
+        $query->whereRaw("year(candidacies.election_date) = $year ");
         $query->selectRaw("coalesce(concat(leader.first_name,' ',leader.last_name),'Sin líder') as fullname,
-        coalesce(sum(election_users.proyected_votes),0) as proyected_votes,
-        coalesce(sum(election_users.registered_votes),0) as registered_votes,
-        coalesce(sum(election_users.controlled_votes),0) as controlled_votes,
-        coalesce(sum(election_users.identified_votes),0) as identified_votes
+        coalesce(sum(election_users.zoned),0) as zoned,
+        coalesce(sum(election_users.registered),0) as registered,
+        coalesce(sum(election_users.controlled),0) as controlled
         ");
         $query->groupBy(['users.leader_id','leader.first_name','leader.last_name']);
 
-
-        if ($election){
-            $query->where('elections.id',$election);
-        }
 
         if ($leader){
             $query->where('leader.id',$leader);
@@ -157,20 +143,16 @@ class ElectionController extends Controller
                 'categories'=>$res->map(function ($item, $key) { return $item->fullname; }),
                 'series'=>[
                         [
-                            'name'=>'votos proyectados',
-                            'data'=>$res->map(function ($item, $key) { return intval($item->proyected_votes); })
+                            'name'=>'Controlados',
+                            'data'=>$res->map(function ($item, $key) { return intval($item->controlled); })
                         ],
                         [
-                            'name'=>'votos identificados',
-                            'data'=>$res->map(function ($item, $key) { return intval($item->identified_votes); })
+                            'name'=>'Registrados',
+                            'data'=>$res->map(function ($item, $key) { return intval($item->registered); })
                         ],
                         [
-                            'name'=>'votos registrados',
-                            'data'=>$res->map(function ($item, $key) { return intval($item->registered_votes); })
-                        ],
-                        [
-                            'name'=>'votos controlados',
-                            'data'=>$res->map(function ($item, $key) { return intval($item->controlled_votes); })
+                            'name'=>'Zonificados',
+                            'data'=>$res->map(function ($item, $key) { return intval($item->zoned); })
                         ]
                 ],
             ]);
@@ -184,7 +166,6 @@ class ElectionController extends Controller
     public function resultsCandidate(Request $request){
 
         $year = $request->input('year');
-        $election = intval($request->input('election'));
         $candidate = intval($request->input('candidate'));
 
         if(!$year){
@@ -192,23 +173,17 @@ class ElectionController extends Controller
         }
 
 
-        $query = DB::table('election_candidates');
-        $query=$query->join('elections','elections.id','=','election_candidates.election_id');
-        $query=$query->join('candidates','candidates.id','=','election_candidates.candidate_id');
-        $query->whereRaw("year(elections.date) = $year ");
-        $query->selectRaw("candidates.name as name,
-        case coalesce(sum(election_candidates.elected),0) when 0 then 'No' else 'Sí' end as elected,
-        coalesce(sum(election_candidates.proyected_votes),0) as proyected_votes,
-        coalesce(sum(election_candidates.gotten_votes),0) as gotten_votes       
+        $query = DB::table('candidacies');
+        $query=$query->join('candidates','candidates.id','=','candidacies.candidate_id');
+        $query->whereRaw("year(candidacies.election_date) = $year ");
+        $query->selectRaw("concat(candidates.first_name,' ',candidates.last_name) as name,
+        coalesce(sum(candidacies.proyected_votes),0) as proyected_votes,
+        coalesce(sum(candidacies.gotten_votes),0) as gotten_votes       
         ");
-        $query->groupBy(['candidates.id','candidates.name']);
+        $query->groupBy(['candidates.id','name']);
 
-
-        if ($election){
-            $query->where('elections.id',$election);
-        }
-        if ($candidate){
-            $query->where('election_candidates.candidate_id',$candidate);
+		if ($candidate){
+            $query->where('candidacies.candidate_id',$candidate);
         }
 
 
@@ -217,7 +192,7 @@ class ElectionController extends Controller
 
             return response()->json([
                 'labels'=>$res->map(function ($item, $key) { return $item->name; }),
-                'values'=>$res->map(function ($item, $key) { return $item->votes; }),
+                'values'=>$res->map(function ($item, $key) { return $item->proyected_votes; }),
             ]);
         }
         return DataTables::query($query)

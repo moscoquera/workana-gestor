@@ -130,14 +130,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-sm-4 control-label">Comicio</label>
-                                        <div class="col-sm-6">
-                                            <select class="form-control" id="election" >
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
                                         <label class="col-sm-4 control-label">Candidato</label>
                                         <div class="col-sm-6">
                                             <select class="form-control" id="candidate" >

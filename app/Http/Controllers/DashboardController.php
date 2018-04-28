@@ -56,7 +56,6 @@ class DashboardController extends CrudController
                                         d.department = $('#departments').val();
                                         d.city = $('#cities').val();
                                         d.leader = $('#leaders').val();
-                                        d.election = $('#election').val();
                                         d.candidate = $('#candidate').val();
                                         
                                     }",
@@ -68,21 +67,17 @@ class DashboardController extends CrudController
                 'title'=>'Líder'
             ])
                 ->addColumn([
-                    'data'=>'proyected_votes',
-                    'name'=>'proyected_votes',
-                    'title'=>'Votos proyectados'
+                    'data'=>'zoned',
+                    'name'=>'zoned',
+                    'title'=>'Zonificados'
                 ])->addColumn([
-                    'data'=>'registered_votes',
-                    'name'=>'registered_votes',
-                    'title'=>'Votos registrados'
+                    'data'=>'registered',
+                    'name'=>'registered',
+                    'title'=>'Planillados'
                 ])->addColumn([
-                    'data'=>'controlled_votes',
-                    'name'=>'controlled_votes',
-                    'title'=>'Votos controlados'
-                ])->addColumn([
-                    'data'=>'identified_votes',
-                    'name'=>'identified_votes',
-                    'title'=>'Votos identificados'
+                    'data'=>'controlled',
+                    'name'=>'controlled',
+                    'title'=>'Controlados'
                 ])->parameters([
                     'language' => [
                         'url'=>url('vendor/datatables/Spanish.json')
@@ -98,7 +93,6 @@ class DashboardController extends CrudController
                                         d.department = $('#departments').val();
                                         d.city = $('#cities').val();
                                         d.leader = $('#leaders').val();
-                                        d.election = $('#election').val();
                                         d.candidate = $('#candidate').val();
                                         
                                     }",
@@ -109,12 +103,7 @@ class DashboardController extends CrudController
                 'data'=>'name',
                 'name'=>'name',
                 'title'=>'Candidato'
-            ])
-                ->addColumn([
-                    'data'=>'elected',
-                    'name'=>'elected',
-                    'title'=>'Elegido?'
-                ])->addColumn([
+            ])->addColumn([
                     'data'=>'proyected_votes',
                     'name'=>'proyected_votes',
                     'title'=>'Votos proyectados'
@@ -126,7 +115,7 @@ class DashboardController extends CrudController
                     'language' => [
                         'url'=>url('vendor/datatables/Spanish.json')
                     ],
-                    'order'=>[3,'desc'],
+                    'order'=>[2,'desc'],
                     'searching'=>false
                     // other configs
                 ])->setTableAttribute('id','dtCandidates')
@@ -137,7 +126,6 @@ class DashboardController extends CrudController
                                         d.department = $('#departments').val();
                                         d.city = $('#cities').val();
                                         d.leader = $('#leaders').val();
-                                        d.election = $('#election').val();
                                         d.candidate = $('#candidate').val();
                                         
                                     }",
